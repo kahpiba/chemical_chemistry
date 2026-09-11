@@ -1,0 +1,451 @@
+export interface Reagent {
+  id: string;
+  name: string;
+  nameId: string;
+  formula: string;
+  state: 'liquid' | 'solid' | 'powder';
+  color: string;
+  description: string;
+  hazard?: 'corrosive' | 'flammable' | 'toxic' | 'irritant';
+}
+
+export type ReactionType = 
+  | 'acid_base'
+  | 'precipitation'
+  | 'gas_evolution'
+  | 'exothermic_redox'
+  | 'catalytic_decomposition'
+  | 'synthesis';
+
+export interface ReactionEffect {
+  liquidColorStart: string;
+  liquidColorEnd: string;
+  hasGas: boolean;
+  gasSpeed: number; // 0 to 1
+  gasColor: string;
+  hasPrecipitate: boolean;
+  precipitateColor: string;
+  precipitateName: string;
+  temperatureStart: number; // Celcius (default 25)
+  temperatureEnd: number;
+  steamEffect: boolean;
+  glowOrSparks: boolean;
+}
+
+export interface ReactionData {
+  id: string;
+  title: string;
+  titleId: string;
+  type: ReactionType;
+  requiredReagents: string[]; // array of reagent IDs
+  balancedEquation: string;
+  deltaH: number; // kJ/mol (negative = exothermic, positive = endothermic)
+  effects: ReactionEffect;
+  summary: string;
+  molecularExplanation: string;
+  realWorldApplication: string;
+  safetyWarning: string;
+}
+
+export const REAGENTS: Reagent[] = [
+  {
+    id: 'HCl',
+    name: 'Hydrochloric Acid 1M',
+    nameId: 'Asam Klorida (HCl)',
+    formula: 'HCl(aq)',
+    state: 'liquid',
+    color: '#e2e8f0',
+    description: 'Larutan asam kuat tidak berwarna, memiliki bau menyengat.',
+    hazard: 'corrosive',
+  },
+  {
+    id: 'NaOH',
+    name: 'Sodium Hydroxide 1M',
+    nameId: 'Natrium Hidroksida (NaOH)',
+    formula: 'NaOH(aq)',
+    state: 'liquid',
+    color: '#f1f5f9',
+    description: 'Larutan basa kuat kaustik yang licin saat disentuh.',
+    hazard: 'corrosive',
+  },
+  {
+    id: 'Phenolphthalein',
+    name: 'Phenolphthalein Indicator',
+    nameId: 'Indikator Fenolftalein (PP)',
+    formula: 'C₂₀H₁₄O₄',
+    state: 'liquid',
+    color: 'rgba(255, 255, 255, 0.4)',
+    description: 'Indikator pH: tidak berwarna pada asam (pH < 8.2) dan merah muda terang pada basa (pH > 10).',
+    hazard: 'irritant',
+  },
+  {
+    id: 'AgNO3',
+    name: 'Silver Nitrate 0.1M',
+    nameId: 'Perak Nitrat (AgNO₃)',
+    formula: 'AgNO₃(aq)',
+    state: 'liquid',
+    color: '#e2e8f0',
+    description: 'Garam perak larut, sensitif terhadap cahaya matahari.',
+    hazard: 'corrosive',
+  },
+  {
+    id: 'NaCl',
+    name: 'Sodium Chloride 1M',
+    nameId: 'Natrium Klorida (Garam Dapur)',
+    formula: 'NaCl(aq)',
+    state: 'liquid',
+    color: '#f8fafc',
+    description: 'Larutan garam meja standar dalam air murni.',
+  },
+  {
+    id: 'CH3COOH',
+    name: 'Acetic Acid (Vinegar)',
+    nameId: 'Asam Asetat (Cuka Dapur)',
+    formula: 'CH₃COOH(aq)',
+    state: 'liquid',
+    color: '#f8fafc',
+    description: 'Asam organik lemah beraroma asam khas cuka.',
+    hazard: 'irritant',
+  },
+  {
+    id: 'NaHCO3',
+    name: 'Sodium Bicarbonate',
+    nameId: 'Natrium Bikarbonat (Soda Kue)',
+    formula: 'NaHCO₃(s)',
+    state: 'powder',
+    color: '#ffffff',
+    description: 'Bubuk kristal putih yang dapat melepaskan gas karbon dioksida bila bereaksi dengan asam.',
+  },
+  {
+    id: 'Zn',
+    name: 'Zinc Metal Pieces',
+    nameId: 'Lempengan Logam Seng (Zn)',
+    formula: 'Zn(s)',
+    state: 'solid',
+    color: '#94a3b8',
+    description: 'Logam abu-abu mengilap yang reaktif melepaskan gas hidrogen dalam larutan asam.',
+  },
+  {
+    id: 'CuSO4',
+    name: 'Copper(II) Sulfate 0.5M',
+    nameId: 'Tembaga(II) Sulfat (CuSO₄)',
+    formula: 'CuSO₄(aq)',
+    state: 'liquid',
+    color: '#38bdf8',
+    description: 'Larutan biru langit cerah khas ion Cu²⁺ terhidrasi [Cu(H₂O)₆]²⁺.',
+    hazard: 'irritant',
+  },
+  {
+    id: 'KI',
+    name: 'Potassium Iodide 0.5M',
+    nameId: 'Kalium Iodida (KI)',
+    formula: 'KI(aq)',
+    state: 'liquid',
+    color: '#f8fafc',
+    description: 'Larutan garam iodida jernih tanpa warna.',
+  },
+  {
+    id: 'Pb_NO3_2',
+    name: 'Lead(II) Nitrate 0.2M',
+    nameId: 'Timbal(II) Nitrat (Pb(NO₃)₂)',
+    formula: 'Pb(NO₃)₂(aq)',
+    state: 'liquid',
+    color: '#f8fafc',
+    description: 'Larutan garam timbal terlarut tanpa warna.',
+    hazard: 'toxic',
+  },
+  {
+    id: 'CaO',
+    name: 'Calcium Oxide (Quicklime)',
+    nameId: 'Kalsium Oksida (Kapur Tohor)',
+    formula: 'CaO(s)',
+    state: 'powder',
+    color: '#f1f5f9',
+    description: 'Padatan basa putih yang melepaskan panas sangat besar saat disiram air.',
+    hazard: 'corrosive',
+  },
+  {
+    id: 'H2O',
+    name: 'Pure Water',
+    nameId: 'Air Murni (Akuades)',
+    formula: 'H₂O(l)',
+    state: 'liquid',
+    color: '#e0f2fe',
+    description: 'Pelarut universal tanpa ion pengotor.',
+  },
+  {
+    id: 'H2O2',
+    name: 'Hydrogen Peroxide 30%',
+    nameId: 'Hidrogen Peroksida (H₂O₂)',
+    formula: 'H₂O₂(aq)',
+    state: 'liquid',
+    color: '#f0fdf4',
+    description: 'Oksidator kuat tak berwarna yang mudah terurai menjadi air dan gas oksigen.',
+    hazard: 'corrosive',
+  },
+  {
+    id: 'MnO2',
+    name: 'Manganese Dioxide Catalyst',
+    nameId: 'Mangan Dioksida (Katalis MnO₂)',
+    formula: 'MnO₂(s)',
+    state: 'powder',
+    color: '#1e293b',
+    description: 'Serbuk hitam katalisator cepat pengurai hidrogen peroksida.',
+  },
+  {
+    id: 'Na_metal',
+    name: 'Sodium Metal (in mineral oil)',
+    nameId: 'Logam Natrium Murni (Na)',
+    formula: 'Na(s)',
+    state: 'solid',
+    color: '#cbd5e1',
+    description: 'Logam alkali lunak yang bereaksi eksplosif seketika bila menyentuh air.',
+    hazard: 'flammable',
+  },
+];
+
+export const REACTIONS: ReactionData[] = [
+  {
+    id: 'acid-base-neutralization',
+    title: 'Acid-Base Neutralization with Indicator',
+    titleId: 'Netralisasi Asam-Basa (Titrasi)',
+    type: 'acid_base',
+    requiredReagents: ['HCl', 'NaOH', 'Phenolphthalein'],
+    balancedEquation: 'HCl(aq) + NaOH(aq) → NaCl(aq) + H₂O(l)',
+    deltaH: -57.1,
+    effects: {
+      liquidColorStart: '#fce7f3', // Pink from base + PP
+      liquidColorEnd: 'rgba(255, 255, 255, 0.7)', // Clears up when neutralized
+      hasGas: false,
+      gasSpeed: 0,
+      gasColor: '',
+      hasPrecipitate: false,
+      precipitateColor: '',
+      precipitateName: '',
+      temperatureStart: 25,
+      temperatureEnd: 32.5,
+      steamEffect: false,
+      glowOrSparks: false,
+    },
+    summary: 'Reaksi netralisasi antara asam klorida dan natrium hidroksida. Ion H⁺ bereaksi dengan ion OH⁻ membentuk air murni (H₂O) dan garam NaCl, membebaskan kalor eksotermik.',
+    molecularExplanation: 'H⁺(aq) + OH⁻(aq) → H₂O(l). Ikatan kovalen baru terbentuk antara proton dan ion hidroksil. Fenolftalein beralih bentuk dari konjugat merah muda terionisasi ke bentuk tak terionisasi yang bening seiring pH turun ke netral (pH 7).',
+    realWorldApplication: 'Prinsip kerja antasida penetral asam lambung dan pengolahan limbah kimia pabrik sebelum dibuang ke lingkungan.',
+    safetyWarning: 'Gunakan kacamata pengaman. Asam dan basa pekat dapat memercik karena pelepasan panas.',
+  },
+  {
+    id: 'silver-chloride-precipitation',
+    title: 'Silver Chloride Precipitation',
+    titleId: 'Pengendapan Perak Klorida (AgCl)',
+    type: 'precipitation',
+    requiredReagents: ['AgNO3', 'NaCl'],
+    balancedEquation: 'AgNO₃(aq) + NaCl(aq) → AgCl(s)↓ + NaNO₃(aq)',
+    deltaH: -65.5,
+    effects: {
+      liquidColorStart: '#f8fafc',
+      liquidColorEnd: '#f1f5f9',
+      hasGas: false,
+      gasSpeed: 0,
+      gasColor: '',
+      hasPrecipitate: true,
+      precipitateColor: '#ffffff',
+      precipitateName: 'Endapan Putih Susu Perak Klorida (AgCl)',
+      temperatureStart: 25,
+      temperatureEnd: 26.2,
+      steamEffect: false,
+      glowOrSparks: false,
+    },
+    summary: 'Pencampuran dua larutan jernih seketika menghasilkan endapan putih pekat seperti susu akibat sangat rendahnya kelarutan AgCl dalam air (Ksp = 1.8 × 10⁻¹⁰).',
+    molecularExplanation: 'Ag⁺(aq) + Cl⁻(aq) → AgCl(s)↓. Gaya tarik elektrostatik antar kation Ag⁺ dan anion Cl⁻ jauh melampaui gaya hidrasi molekul air, sehingga langsung merajut kisi kristal padatan tak larut.',
+    realWorldApplication: 'Dasar industri fotografi film analog hitam-putih dan uji laboratorium kualitatif untuk mendeteksi keberadaan ion klorida dalam sampel air.',
+    safetyWarning: 'Perak nitrat dapat meninggalkan noda hitam permanen pada kulit bila terkena sinar matahari.',
+  },
+  {
+    id: 'golden-rain',
+    title: 'The Golden Rain Reaction',
+    titleId: 'Reaksi Hujan Emas (Golden Rain)',
+    type: 'precipitation',
+    requiredReagents: ['Pb_NO3_2', 'KI'],
+    balancedEquation: 'Pb(NO₃)₂(aq) + 2KI(aq) → PbI₂(s)↓ + 2KNO₃(aq)',
+    deltaH: -61.2,
+    effects: {
+      liquidColorStart: '#f8fafc',
+      liquidColorEnd: '#fef08a',
+      hasGas: false,
+      gasSpeed: 0,
+      gasColor: '',
+      hasPrecipitate: true,
+      precipitateColor: '#eab308',
+      precipitateName: 'Endapan Kristal Kuning Emas Timbal(II) Iodida (PbI₂)',
+      temperatureStart: 25,
+      temperatureEnd: 26.0,
+      steamEffect: false,
+      glowOrSparks: false,
+    },
+    summary: 'Salah satu reaksi kimia paling indah di laboratorium: dua larutan bening menghasilkan kristal heksagonal berwarna kuning emas cemerlang yang perlahan melayang dan mengendap di dasar bejana.',
+    molecularExplanation: 'Pb²⁺(aq) + 2I⁻(aq) → PbI₂(s)↓. Timbal(II) iodida memiliki struktur kristal berlapis (layered crystal lattice) dengan sifat optik unik yang memantulkan kilauan kuning keemasan berkilauan.',
+    realWorldApplication: 'Digunakan dalam detektor radiasi nuklir gamma/sinar-X beresolusi tinggi dan demonstrasi visual spektakuler sains kimia.',
+    safetyWarning: 'Senyawa timbal beracun! Hanya dilakukan di tabung tertutup di bawah lemari asam.',
+  },
+  {
+    id: 'vinegar-baking-soda',
+    title: 'Vinegar & Baking Soda Volcano',
+    titleId: 'Reaksi Cuka & Soda Kue (Pembentukan Gas CO₂)',
+    type: 'gas_evolution',
+    requiredReagents: ['CH3COOH', 'NaHCO3'],
+    balancedEquation: 'CH₃COOH(aq) + NaHCO₃(s) → CH₃COONa(aq) + H₂O(l) + CO₂(g)↑',
+    deltaH: 28.0, // Endothermic!
+    effects: {
+      liquidColorStart: '#f8fafc',
+      liquidColorEnd: 'rgba(241, 245, 249, 0.85)',
+      hasGas: true,
+      gasSpeed: 0.9,
+      gasColor: '#f8fafc',
+      hasPrecipitate: false,
+      precipitateColor: '',
+      precipitateName: '',
+      temperatureStart: 25,
+      temperatureEnd: 18.5, // Temperature drops!
+      steamEffect: false,
+      glowOrSparks: false,
+    },
+    summary: 'Reaksi asam-basa menghasilkan gas karbon dioksida yang mendidih aktif dan berbusa deras. Reaksi ini bersifat endotermik sehingga dasar gelas terasa dingin saat dipegang.',
+    molecularExplanation: 'Tahap 1: Asam asetat mentransfer proton ke ion bikarbonat membentuk asam karbonat H₂CO₃. Tahap 2: Asam karbonat tidak stabil langsung terurai spontan menjadi H₂O dan gelembung gas CO₂ yang melesat ke udara.',
+    realWorldApplication: 'Pengembang adonan kue (baking powder), pemadam api busa kimiawi, dan roket sains edukatif sederhana.',
+    safetyWarning: 'Aman dan ramah lingkungan. Waspadai tekanan gas jika dilakukan dalam wadah tertutup rapat.',
+  },
+  {
+    id: 'zinc-acid-hydrogen',
+    title: 'Zinc Metal in Acid (Hydrogen Evolution)',
+    titleId: 'Logam Seng dalam Asam (Pelepasan Gas H₂)',
+    type: 'gas_evolution',
+    requiredReagents: ['Zn', 'HCl'],
+    balancedEquation: 'Zn(s) + 2HCl(aq) → ZnCl₂(aq) + H₂(g)↑',
+    deltaH: -152.4, // Exothermic
+    effects: {
+      liquidColorStart: '#e2e8f0',
+      liquidColorEnd: '#cbd5e1',
+      hasGas: true,
+      gasSpeed: 0.75,
+      gasColor: '#ffffff',
+      hasPrecipitate: false,
+      precipitateColor: '',
+      precipitateName: '',
+      temperatureStart: 25,
+      temperatureEnd: 48.0,
+      steamEffect: true,
+      glowOrSparks: false,
+    },
+    summary: 'Reaksi redoks spontan di mana seng mereduksi ion hidrogen menjadi gas H₂ yang ringan dan mudah terbakar, sementara seng sendiri teroksidasi larut menjadi kation Zn²⁺.',
+    molecularExplanation: 'Zn(s) → Zn²⁺(aq) + 2e⁻ (Oksidasi Seng); 2H⁺(aq) + 2e⁻ → H₂(g)↑ (Reduksi Proton). Terjadi transfer elektron langsung pada permukaan logam seng.',
+    realWorldApplication: 'Metode klasik pembuatan gas hidrogen murni di laboratorium dan prinsip dasar baterai seng-karbon (sel Leclanché).',
+    safetyWarning: 'Gas hidrogen yang terbentuk sangat mudah meledak jika terkena percikan api atau api terbuka!',
+  },
+  {
+    id: 'copper-hydroxide-gel',
+    title: 'Copper(II) Hydroxide Gel Formation',
+    titleId: 'Pembentukan Gel Tembaga(II) Hidroksida',
+    type: 'precipitation',
+    requiredReagents: ['CuSO4', 'NaOH'],
+    balancedEquation: 'CuSO₄(aq) + 2NaOH(aq) → Cu(OH)₂(s)↓ + Na₂SO₄(aq)',
+    deltaH: -54.0,
+    effects: {
+      liquidColorStart: '#38bdf8', // Light blue
+      liquidColorEnd: '#1e3a8a', // Deep royal blue
+      hasGas: false,
+      gasSpeed: 0,
+      gasColor: '',
+      hasPrecipitate: true,
+      precipitateColor: '#0284c7',
+      precipitateName: 'Endapan Gelatin Biru Tua Tembaga(II) Hidroksida (Cu(OH)₂)',
+      temperatureStart: 25,
+      temperatureEnd: 31.0,
+      steamEffect: false,
+      glowOrSparks: false,
+    },
+    summary: 'Larutan biru cerah CuSO₄ bila ditetesi basa NaOH langsung membentuk gumpalan endapan agar-agar biru pekat (gelatinous precipitate).',
+    molecularExplanation: 'Cu²⁺(aq) + 2OH⁻(aq) → Cu(OH)₂(s)↓. Kompleks oktahedral ion tembaga terputus dan digantikan oleh jembatan gugus hidroksil polimerik tak larut.',
+    realWorldApplication: 'Dasar uji Fehling dan Benedict untuk menguji keberadaan gula pereduksi (glukosa) pada tes urin diabetes, serta fungisida tanaman.',
+    safetyWarning: 'Hindari kontak kulit dengan larutan basa kuat.',
+  },
+  {
+    id: 'quicklime-slaking',
+    title: 'Exothermic Quicklime Slaking',
+    titleId: 'Pelepasan Kalor Kapur Tohor (Eksotermik Dahsyat)',
+    type: 'exothermic_redox',
+    requiredReagents: ['CaO', 'H2O'],
+    balancedEquation: 'CaO(s) + H₂O(l) → Ca(OH)₂(s) + Kalor (Panas)',
+    deltaH: -63.7,
+    effects: {
+      liquidColorStart: '#f1f5f9',
+      liquidColorEnd: '#f8fafc',
+      hasGas: false,
+      gasSpeed: 0.3,
+      gasColor: '#ffffff',
+      hasPrecipitate: true,
+      precipitateColor: '#ffffff',
+      precipitateName: 'Suspensi Kapur Padam Ca(OH)₂',
+      temperatureStart: 25,
+      temperatureEnd: 88.0, // Super hot!
+      steamEffect: true,
+      glowOrSparks: false,
+    },
+    summary: 'Reaksi hidrasi kalsium oksida melepaskan energi panas yang sangat besar hingga mampu mendidihkan air dan menghasilkan kepulan uap air panas tebal.',
+    molecularExplanation: 'Ion oksida O²⁻ dalam kisi kristal CaO memiliki afinitas proton yang amat kuat, menarik molekul air dan melepaskan energi kisi yang besar ke lingkungan.',
+    realWorldApplication: 'Dasar pembuatan adukan semen/plester kapur konstruksi bangunan dan kaleng makanan pemanas mandiri (*self-heating meal cans*) militer/kemah.',
+    safetyWarning: 'Suhu dapat melampaui 90°C! Jangan menyentuh bejana tanpa pelindung tahan panas.',
+  },
+  {
+    id: 'sodium-water-explosion',
+    title: 'Alkali Metal Water Explosion',
+    titleId: 'Logam Natrium dalam Air (Reaksi Eksplosif)',
+    type: 'exothermic_redox',
+    requiredReagents: ['Na_metal', 'H2O'],
+    balancedEquation: '2Na(s) + 2H₂O(l) → 2NaOH(aq) + H₂(g)↑ + Nyala Api',
+    deltaH: -368.6,
+    effects: {
+      liquidColorStart: '#e0f2fe',
+      liquidColorEnd: '#dbeafe',
+      hasGas: true,
+      gasSpeed: 1.0,
+      gasColor: '#fef08a',
+      hasPrecipitate: false,
+      precipitateColor: '',
+      precipitateName: '',
+      temperatureStart: 25,
+      temperatureEnd: 95.0,
+      steamEffect: true,
+      glowOrSparks: true, // Fire / sparks!
+    },
+    summary: 'Logam natrium meleleh menjadi bola perak yang meluncur cepat di atas air, menghasilkan gelembung gas hidrogen, panas hebat, nyala api oranye terang, dan letupan!',
+    molecularExplanation: 'Natrium memiliki energi ionisasi sangat rendah, mendonasikan elektron ke molekul air secara instan. Kalor reaksi melebihi titik leleh natrium (98°C) dan menyulut gas H₂ yang dihasilkan.',
+    realWorldApplication: 'Mendemonstrasikan reaktivitas ekstrem logam alkali golongan 1 dan alasan natrium harus disimpan terendam dalam minyak tanah parafin.',
+    safetyWarning: 'BAHAYA TINGGI! Reaksi nyata dapat meledak dan memercikkan cairan basa kaustik panas.',
+  },
+  {
+    id: 'catalytic-peroxide-decomposition',
+    title: 'Catalytic Hydrogen Peroxide Decomposition',
+    titleId: 'Dekomposisi Katalitik Hidrogen Peroksida (Uap Oksigen)',
+    type: 'catalytic_decomposition',
+    requiredReagents: ['H2O2', 'MnO2'],
+    balancedEquation: '2H₂O₂(aq) --[MnO₂]--> 2H₂O(l) + O₂(g)↑',
+    deltaH: -98.2,
+    effects: {
+      liquidColorStart: '#f0fdf4',
+      liquidColorEnd: '#1e293b',
+      hasGas: true,
+      gasSpeed: 1.0,
+      gasColor: '#ffffff',
+      hasPrecipitate: false,
+      precipitateColor: '',
+      precipitateName: '',
+      temperatureStart: 25,
+      temperatureEnd: 72.0,
+      steamEffect: true,
+      glowOrSparks: false,
+    },
+    summary: 'Penambahan seujung spatula serbuk hitam MnO₂ seketika memicu semburan gelembung gas oksigen mendidih hebat disertai kepulan uap air panas (prinsip "Elephant Toothpaste").',
+    molecularExplanation: 'MnO₂ bertindak sebagai katalis heterogen yang menurunkan energi aktivasi penguraian H₂O₂ secara drastis tanpa dirinya sendiri ikut terkonsumsi.',
+    realWorldApplication: 'Pendorong bahan bakar roket uap monopropelan peroksida dan enzim katalase tubuh yang melindungi sel dari racun radikal bebas.',
+    safetyWarning: 'Uap panas mengepul deras dan cairan dapat membusa meluap dari bejana.',
+  },
+];
