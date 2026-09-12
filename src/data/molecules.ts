@@ -55,8 +55,8 @@ export const MOLECULES: MoleculeData[] = [
     safetyNotes: 'Non-toksik, aman dikonsumsi.',
     atoms: [
       { id: 'O-1', element: 'O', name: 'Oksigen', color: '#ef4444', radius: 0.38, position: [0, 0.12, 0], explodedOffset: [0, 0.6, 0], charge: 'δ⁻' },
-      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.25, position: [-0.76, -0.48, 0], explodedOffset: [-1.2, -0.8, 0], charge: 'δ⁺' },
-      { id: 'H-2', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.25, position: [0.76, -0.48, 0], explodedOffset: [1.2, -0.8, 0], charge: 'δ⁺' },
+      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.25, position: [-0.76, -0.48, 0], explodedOffset: [-1.2, -0.8, 0], charge: 'δ⁺' },
+      { id: 'H-2', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.25, position: [0.76, -0.48, 0], explodedOffset: [1.2, -0.8, 0], charge: 'δ⁺' },
     ],
     bonds: [
       { atomA: 0, atomB: 1, order: 1 },
@@ -99,10 +99,10 @@ export const MOLECULES: MoleculeData[] = [
     safetyNotes: 'Sangat mudah terbakar, dapat membentuk campuran eksplosif dengan udara.',
     atoms: [
       { id: 'C-1', element: 'C', name: 'Karbon', color: '#334155', radius: 0.38, position: [0, 0, 0], explodedOffset: [0, 0.8, 0] },
-      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.24, position: [0, 1.05, 0], explodedOffset: [0, 1.8, 0] },
-      { id: 'H-2', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.24, position: [0.99, -0.35, 0], explodedOffset: [1.6, -0.6, 0] },
-      { id: 'H-3', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.24, position: [-0.5, -0.35, 0.86], explodedOffset: [-0.9, -0.6, 1.5] },
-      { id: 'H-4', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.24, position: [-0.5, -0.35, -0.86], explodedOffset: [-0.9, -0.6, -1.5] },
+      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.24, position: [0, 1.05, 0], explodedOffset: [0, 1.8, 0] },
+      { id: 'H-2', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.24, position: [0.99, -0.35, 0], explodedOffset: [1.6, -0.6, 0] },
+      { id: 'H-3', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.24, position: [-0.5, -0.35, 0.86], explodedOffset: [-0.9, -0.6, 1.5] },
+      { id: 'H-4', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.24, position: [-0.5, -0.35, -0.86], explodedOffset: [-0.9, -0.6, -1.5] },
     ],
     bonds: [
       { atomA: 0, atomB: 1, order: 1 },
@@ -125,9 +125,9 @@ export const MOLECULES: MoleculeData[] = [
     safetyNotes: 'Korosif terhadap saluran pernapasan, gas berbau sangat tajam dan toksik.',
     atoms: [
       { id: 'N-1', element: 'N', name: 'Nitrogen', color: '#2563eb', radius: 0.37, position: [0, 0.28, 0], explodedOffset: [0, 0.9, 0], charge: 'δ⁻' },
-      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.24, position: [0.94, -0.28, 0], explodedOffset: [1.6, -0.6, 0], charge: 'δ⁺' },
-      { id: 'H-2', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.24, position: [-0.47, -0.28, 0.81], explodedOffset: [-0.9, -0.6, 1.4], charge: 'δ⁺' },
-      { id: 'H-3', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.24, position: [-0.47, -0.28, -0.81], explodedOffset: [-0.9, -0.6, -1.4], charge: 'δ⁺' },
+      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.24, position: [0.94, -0.28, 0], explodedOffset: [1.6, -0.6, 0], charge: 'δ⁺' },
+      { id: 'H-2', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.24, position: [-0.47, -0.28, 0.81], explodedOffset: [-0.9, -0.6, 1.4], charge: 'δ⁺' },
+      { id: 'H-3', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.24, position: [-0.47, -0.28, -0.81], explodedOffset: [-0.9, -0.6, -1.4], charge: 'δ⁺' },
     ],
     bonds: [
       { atomA: 0, atomB: 1, order: 1 },
@@ -148,7 +148,7 @@ export const MOLECULES: MoleculeData[] = [
     realWorldUsage: 'Asam lambung alami pencerna makanan, pembersih kerak logam industri baja (*pickling*), dan pengatur pH.',
     safetyNotes: 'Sangat korosif, menyebabkan luka bakar kimiawi parah pada kulit dan mata.',
     atoms: [
-      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.25, position: [-0.64, 0, 0], explodedOffset: [-1.4, 0, 0], charge: 'δ⁺' },
+      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.25, position: [-0.64, 0, 0], explodedOffset: [-1.4, 0, 0], charge: 'δ⁺' },
       { id: 'Cl-1', element: 'Cl', name: 'Klorin', color: '#22c55e', radius: 0.44, position: [0.64, 0, 0], explodedOffset: [1.4, 0, 0], charge: 'δ⁻' },
     ],
     bonds: [
@@ -170,7 +170,7 @@ export const MOLECULES: MoleculeData[] = [
     atoms: [
       { id: 'Na-1', element: 'Na', name: 'Natrium', color: '#9333ea', radius: 0.45, position: [-0.9, 0, 0], explodedOffset: [-1.6, 0, 0], charge: '+1' },
       { id: 'O-1', element: 'O', name: 'Oksigen', color: '#ef4444', radius: 0.35, position: [0.4, 0, 0], explodedOffset: [0.6, 0.4, 0], charge: '-1' },
-      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.23, position: [1.2, 0, 0], explodedOffset: [1.6, -0.4, 0] },
+      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.23, position: [1.2, 0, 0], explodedOffset: [1.6, -0.4, 0] },
     ],
     bonds: [
       { atomA: 0, atomB: 1, order: 1 },
@@ -231,12 +231,12 @@ export const MOLECULES: MoleculeData[] = [
       { id: 'C-1', element: 'C', name: 'Karbon', color: '#334155', radius: 0.38, position: [-0.75, -0.2, 0], explodedOffset: [-1.2, -0.6, 0] },
       { id: 'C-2', element: 'C', name: 'Karbon', color: '#334155', radius: 0.38, position: [0.65, 0.35, 0], explodedOffset: [0.8, 0.7, 0] },
       { id: 'O-1', element: 'O', name: 'Oksigen', color: '#ef4444', radius: 0.35, position: [1.6, -0.6, 0], explodedOffset: [2.0, -1.1, 0], charge: 'δ⁻' },
-      { id: 'H-O', element: 'H', name: 'Hidrogen (OH)', color: '#f8fafc', radius: 0.24, position: [2.4, -0.2, 0], explodedOffset: [2.8, -0.2, 0], charge: 'δ⁺' },
-      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.24, position: [-1.4, 0.1, 0.8], explodedOffset: [-2.2, 0.2, 1.4] },
-      { id: 'H-2', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.24, position: [-1.4, 0.1, -0.8], explodedOffset: [-2.2, 0.2, -1.4] },
-      { id: 'H-3', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.24, position: [-0.75, -1.25, 0], explodedOffset: [-1.2, -2.0, 0] },
-      { id: 'H-4', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.24, position: [0.65, 1.0, 0.8], explodedOffset: [0.9, 1.7, 1.3] },
-      { id: 'H-5', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.24, position: [0.65, 1.0, -0.8], explodedOffset: [0.9, 1.7, -1.3] },
+      { id: 'H-O', element: 'H', name: 'Hidrogen (OH)', color: '#cbd5e1', radius: 0.24, position: [2.4, -0.2, 0], explodedOffset: [2.8, -0.2, 0], charge: 'δ⁺' },
+      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.24, position: [-1.4, 0.1, 0.8], explodedOffset: [-2.2, 0.2, 1.4] },
+      { id: 'H-2', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.24, position: [-1.4, 0.1, -0.8], explodedOffset: [-2.2, 0.2, -1.4] },
+      { id: 'H-3', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.24, position: [-0.75, -1.25, 0], explodedOffset: [-1.2, -2.0, 0] },
+      { id: 'H-4', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.24, position: [0.65, 1.0, 0.8], explodedOffset: [0.9, 1.7, 1.3] },
+      { id: 'H-5', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.24, position: [0.65, 1.0, -0.8], explodedOffset: [0.9, 1.7, -1.3] },
     ],
     bonds: [
       { atomA: 0, atomB: 1, order: 1 },
@@ -267,8 +267,8 @@ export const MOLECULES: MoleculeData[] = [
       { id: 'O-2', element: 'O', name: 'Oksigen (=O)', color: '#ef4444', radius: 0.35, position: [0, -1.25, 0], explodedOffset: [0, -2.0, 0] },
       { id: 'O-3', element: 'O', name: 'Oksigen (-OH)', color: '#ef4444', radius: 0.35, position: [-1.2, 0, 0.4], explodedOffset: [-1.8, 0, 0.7] },
       { id: 'O-4', element: 'O', name: 'Oksigen (-OH)', color: '#ef4444', radius: 0.35, position: [1.2, 0, -0.4], explodedOffset: [1.8, 0, -0.7] },
-      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.23, position: [-1.9, 0, 0.7], explodedOffset: [-2.7, 0, 1.2] },
-      { id: 'H-2', element: 'H', name: 'Hidrogen', color: '#f8fafc', radius: 0.23, position: [1.9, 0, -0.7], explodedOffset: [2.7, 0, -1.2] },
+      { id: 'H-1', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.23, position: [-1.9, 0, 0.7], explodedOffset: [-2.7, 0, 1.2] },
+      { id: 'H-2', element: 'H', name: 'Hidrogen', color: '#cbd5e1', radius: 0.23, position: [1.9, 0, -0.7], explodedOffset: [2.7, 0, -1.2] },
     ],
     bonds: [
       { atomA: 0, atomB: 1, order: 2 },

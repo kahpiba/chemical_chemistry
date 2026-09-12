@@ -142,8 +142,8 @@ export const ReactionLab: React.FC = () => {
               gap: '8px',
             }}
           >
-            <FlaskConical size={20} color="#38bdf8" />
-            <span style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>
+            <FlaskConical size={20} color="#0284c7" />
+            <span style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a' }}>
               Gelas Kimia Utama (250 mL)
             </span>
           </div>
@@ -195,13 +195,13 @@ export const ReactionLab: React.FC = () => {
                     fontSize: '11px',
                     fontWeight: 700,
                     textTransform: 'uppercase',
-                    color: '#38bdf8',
+                    color: '#0284c7',
                     letterSpacing: '1px',
                   }}
                 >
                   Analisis Reaksi Kimia
                 </span>
-                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#ffffff', marginTop: '4px' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', marginTop: '4px' }}>
                   {matchingReaction.titleId}
                 </h3>
                 <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
@@ -236,7 +236,7 @@ export const ReactionLab: React.FC = () => {
 
               {/* Molecular Explanation */}
               <div className="reaction-narrative">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#38bdf8', marginBottom: '6px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0284c7', marginBottom: '6px' }}>
                   <BookOpen size={16} />
                   <h4>Mekanisme Tingkat Molekuler</h4>
                 </div>
@@ -245,7 +245,7 @@ export const ReactionLab: React.FC = () => {
 
               {/* Real World Uses */}
               <div className="reaction-narrative">
-                <h4 style={{ color: '#10b981' }}>Penerapan di Industri & Kehidupan</h4>
+                <h4 style={{ color: '#059669' }}>Penerapan di Industri & Kehidupan</h4>
                 <p>{matchingReaction.realWorldApplication}</p>
               </div>
 
@@ -255,14 +255,14 @@ export const ReactionLab: React.FC = () => {
                   display: 'flex',
                   alignItems: 'flex-start',
                   gap: '10px',
-                  background: 'rgba(244, 63, 94, 0.1)',
-                  border: '1px solid rgba(244, 63, 94, 0.3)',
+                  background: '#fff1f2',
+                  border: '1px solid #fecdd3',
                   borderRadius: '8px',
                   padding: '12px',
                 }}
               >
-                <ShieldAlert size={18} color="#f43f5e" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <p style={{ fontSize: '12px', color: '#fca5a5', lineHeight: 1.5, margin: 0 }}>
+                <ShieldAlert size={18} color="#e11d48" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <p style={{ fontSize: '12px', color: '#9f1239', lineHeight: 1.5, margin: 0 }}>
                   <strong>Keselamatan Laboratorium:</strong> {matchingReaction.safetyWarning}
                 </p>
               </div>
@@ -281,8 +281,8 @@ export const ReactionLab: React.FC = () => {
                 padding: '40px 20px',
               }}
             >
-              <HelpCircle size={40} color="#64748b" />
-              <h4 style={{ fontSize: '16px', fontWeight: 600, color: '#ffffff' }}>
+              <HelpCircle size={40} color="#94a3b8" />
+              <h4 style={{ fontSize: '16px', fontWeight: 600, color: '#0f172a' }}>
                 Laboratorium Reaksi Interaktif
               </h4>
               <p style={{ fontSize: '13px', lineHeight: 1.6 }}>

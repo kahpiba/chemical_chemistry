@@ -78,7 +78,7 @@ export const AtomScene: React.FC<AtomSceneProps> = ({ element, autoRotate = true
 
     const neutronGeo = new THREE.SphereGeometry(0.18, 16, 16);
     const neutronMat = new THREE.MeshStandardMaterial({
-      color: 0x94a3b8,
+      color: 0x64748b,
       roughness: 0.5,
       metalness: 0.1,
     });
@@ -147,9 +147,9 @@ export const AtomScene: React.FC<AtomSceneProps> = ({ element, autoRotate = true
       }
       const ringGeo = new THREE.BufferGeometry().setFromPoints(points);
       const ringMat = new THREE.LineBasicMaterial({
-        color: 0x38bdf8,
+        color: 0x0284c7,
         transparent: true,
-        opacity: 0.25 - shellIndex * 0.02,
+        opacity: 0.35 - shellIndex * 0.03,
       });
       const ringLine = new THREE.LineLoop(ringGeo, ringMat);
       
@@ -247,9 +247,10 @@ export const AtomScene: React.FC<AtomSceneProps> = ({ element, autoRotate = true
             gap: '8px',
             padding: '6px 14px',
             borderRadius: '8px',
-            background: 'rgba(15, 23, 42, 0.8)',
+            background: 'rgba(255, 255, 255, 0.92)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            border: '1px solid var(--border-color)',
+            boxShadow: '0 2px 8px rgba(15, 23, 42, 0.06)',
           }}
         >
           <div
@@ -260,7 +261,7 @@ export const AtomScene: React.FC<AtomSceneProps> = ({ element, autoRotate = true
               background: '#ef4444',
             }}
           />
-          <span style={{ fontSize: '12px', color: '#f8fafc', fontWeight: 600 }}>
+          <span style={{ fontSize: '12px', color: '#0f172a', fontWeight: 600 }}>
             {element.number} Proton (Inti)
           </span>
         </div>
@@ -272,9 +273,10 @@ export const AtomScene: React.FC<AtomSceneProps> = ({ element, autoRotate = true
             gap: '8px',
             padding: '6px 14px',
             borderRadius: '8px',
-            background: 'rgba(15, 23, 42, 0.8)',
+            background: 'rgba(255, 255, 255, 0.92)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            border: '1px solid var(--border-color)',
+            boxShadow: '0 2px 8px rgba(15, 23, 42, 0.06)',
           }}
         >
           <div
@@ -282,10 +284,10 @@ export const AtomScene: React.FC<AtomSceneProps> = ({ element, autoRotate = true
               width: '10px',
               height: '10px',
               borderRadius: '50%',
-              background: '#38bdf8',
+              background: '#0284c7',
             }}
           />
-          <span style={{ fontSize: '12px', color: '#f8fafc', fontWeight: 600 }}>
+          <span style={{ fontSize: '12px', color: '#0f172a', fontWeight: 600 }}>
             {element.shells.reduce((a, b) => a + b, 0)} Elektron ({element.shells.length} Kulit)
           </span>
         </div>

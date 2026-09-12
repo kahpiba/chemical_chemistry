@@ -114,8 +114,9 @@ export function App() {
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0, 0, 0, 0.75)',
-            backdropFilter: 'blur(12px)',
+            background: 'rgba(15, 23, 42, 0.4)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -134,6 +135,9 @@ export function App() {
               flexDirection: 'column',
               gap: '18px',
               position: 'relative',
+              background: '#ffffff',
+              border: '1px solid var(--border-color)',
+              boxShadow: '0 20px 50px rgba(15, 23, 42, 0.15)',
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -145,8 +149,9 @@ export function App() {
                 right: '18px',
                 background: 'transparent',
                 border: 'none',
-                color: '#94a3b8',
+                color: 'var(--text-muted)',
                 cursor: 'pointer',
+                padding: '4px',
               }}
             >
               <X size={20} />
@@ -168,7 +173,7 @@ export function App() {
                 <Atom size={26} />
               </div>
               <div>
-                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#ffffff', margin: 0 }}>
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
                   Tentang Chemical Atlas
                 </h3>
                 <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
@@ -177,7 +182,7 @@ export function App() {
               </div>
             </div>
 
-            <p style={{ fontSize: '13px', lineHeight: 1.7, color: '#cbd5e1', margin: 0 }}>
+            <p style={{ fontSize: '13px', lineHeight: 1.7, color: 'var(--text-secondary)', margin: 0 }}>
               <strong>Chemical Atlas</strong> adalah platform edukasi kimia interaktif modern yang
               terinspirasi dari konsep arsitektur visualisasi <em>Human Atlas</em>. Dirancang untuk
               membuat pembelajaran kimia menjadi sangat visual, intuitif, dan menarik.
@@ -185,7 +190,7 @@ export function App() {
 
             <div
               style={{
-                background: 'rgba(30, 41, 59, 0.5)',
+                background: '#f8fafc',
                 border: '1px solid var(--border-color)',
                 borderRadius: '10px',
                 padding: '16px',
@@ -194,11 +199,11 @@ export function App() {
                 gap: '10px',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#38bdf8', fontSize: '13px', fontWeight: 600 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent-cyan)', fontSize: '13px', fontWeight: 600 }}>
                 <Sparkles size={16} />
                 Fitur Unggulan:
               </div>
-              <ul style={{ fontSize: '12px', color: '#94a3b8', paddingLeft: '20px', lineHeight: 1.6, margin: 0 }}>
+              <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', paddingLeft: '20px', lineHeight: 1.6, margin: 0 }}>
                 <li><strong>Tabel Periodik 118 Unsur</strong> dengan filter cerdas & model atom 3D Bohr dinamis.</li>
                 <li><strong>3D Molecular Explorer</strong> dengan fitur revolusioner <em>Explode Molecule</em> (mengurai ikatan kimia).</li>
                 <li><strong>Virtual Reaction Lab</strong> simulasi pencampuran senyawa kimia dengan reaksi visual (warna, gelembung gas, endapan, dan suhu termal).</li>

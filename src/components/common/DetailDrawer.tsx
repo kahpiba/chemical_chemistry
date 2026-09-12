@@ -29,11 +29,11 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
         bottom: 0,
         width: '440px',
         maxWidth: '92vw',
-        background: 'rgba(11, 17, 29, 0.88)',
+        background: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(28px)',
         WebkitBackdropFilter: 'blur(28px)',
-        borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
-        boxShadow: '-10px 0 40px rgba(0, 0, 0, 0.6)',
+        borderLeft: '1px solid #cbd5e1',
+        boxShadow: '-10px 0 40px rgba(15, 23, 42, 0.12)',
         zIndex: 100,
         display: 'flex',
         flexDirection: 'column',
@@ -54,7 +54,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '20px 24px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          borderBottom: '1px solid #e2e8f0',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -67,7 +67,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                 ? CATEGORIES[element.category].color
                 : molecule
                 ? MOLECULE_CATEGORIES[molecule.category].color
-                : '#38bdf8',
+                : '#0284c7',
               fontWeight: 700,
             }}
           >
@@ -79,7 +79,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
           style={{
             background: 'transparent',
             border: 'none',
-            color: '#94a3b8',
+            color: '#64748b',
             cursor: 'pointer',
             padding: '4px',
             borderRadius: '6px',
@@ -119,10 +119,10 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#ffffff',
-                  boxShadow: `0 8px 24px ${CATEGORIES[element.category].color}40`,
+                  boxShadow: `0 6px 18px ${CATEGORIES[element.category].color}35`,
                 }}
               >
-                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', opacity: 0.85 }}>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', opacity: 0.9 }}>
                   {element.number}
                 </span>
                 <span style={{ fontSize: '32px', fontWeight: 800, lineHeight: 1 }}>
@@ -130,10 +130,10 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                 </span>
               </div>
               <div>
-                <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#ffffff' }}>
+                <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a' }}>
                   {element.nameId}
                 </h2>
-                <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+                <p style={{ fontSize: '13px', color: '#64748b' }}>
                   {element.name} · Massa: {element.atomicMass} u
                 </p>
                 <span
@@ -141,11 +141,11 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                     display: 'inline-block',
                     marginTop: '6px',
                     fontSize: '11px',
-                    padding: '2px 8px',
+                    padding: '3px 8px',
                     borderRadius: '4px',
                     background: CATEGORIES[element.category].bgLight,
                     color: CATEGORIES[element.category].color,
-                    fontWeight: 600,
+                    fontWeight: 700,
                   }}
                 >
                   {CATEGORIES[element.category].nameId}
@@ -223,11 +223,11 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
 
             {/* Summary & Lore */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#38bdf8' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0284c7' }}>
                 <BookOpen size={16} />
-                <span style={{ fontSize: '13px', fontWeight: 600 }}>Informasi & Penggunaan</span>
+                <span style={{ fontSize: '13px', fontWeight: 700 }}>Informasi & Penggunaan</span>
               </div>
-              <p style={{ fontSize: '13px', lineHeight: 1.6, color: '#cbd5e1' }}>
+              <p style={{ fontSize: '13px', lineHeight: 1.6, color: '#334155' }}>
                 {element.summary}
               </p>
               <p style={{ fontSize: '11px', color: '#64748b' }}>
@@ -246,12 +246,12 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                   width: '74px',
                   height: '74px',
                   borderRadius: '12px',
-                  background: 'linear-gradient(135deg, #0284c7, #38bdf8)',
+                  background: 'linear-gradient(135deg, #0284c7, #0ea5e9)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#ffffff',
-                  boxShadow: '0 8px 24px rgba(56, 189, 248, 0.3)',
+                  boxShadow: '0 6px 18px rgba(2, 132, 199, 0.25)',
                 }}
               >
                 <span style={{ fontSize: '18px', fontWeight: 800, fontFamily: 'var(--font-mono)' }}>
@@ -259,10 +259,10 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                 </span>
               </div>
               <div>
-                <h2 style={{ fontSize: '22px', fontWeight: 700, color: '#ffffff' }}>
+                <h2 style={{ fontSize: '22px', fontWeight: 700, color: '#0f172a' }}>
                   {molecule.nameId}
                 </h2>
-                <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+                <p style={{ fontSize: '13px', color: '#64748b' }}>
                   {molecule.name} · Massa Molar: {molecule.molarMass} g/mol
                 </p>
                 <span
@@ -270,11 +270,11 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                     display: 'inline-block',
                     marginTop: '6px',
                     fontSize: '11px',
-                    padding: '2px 8px',
+                    padding: '3px 8px',
                     borderRadius: '4px',
-                    background: 'rgba(56, 189, 248, 0.15)',
-                    color: '#38bdf8',
-                    fontWeight: 600,
+                    background: '#f0f9ff',
+                    color: '#0284c7',
+                    fontWeight: 700,
                   }}
                 >
                   {MOLECULE_CATEGORIES[molecule.category].nameId}
@@ -310,21 +310,21 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
 
             {/* Description */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#38bdf8' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0284c7' }}>
                 <BookOpen size={16} />
-                <span style={{ fontSize: '13px', fontWeight: 600 }}>Struktur & Karakteristik</span>
+                <span style={{ fontSize: '13px', fontWeight: 700 }}>Struktur & Karakteristik</span>
               </div>
-              <p style={{ fontSize: '13px', lineHeight: 1.6, color: '#cbd5e1' }}>
+              <p style={{ fontSize: '13px', lineHeight: 1.6, color: '#334155' }}>
                 {molecule.description}
               </p>
             </div>
 
             {/* Real World Applications */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: '#10b981' }}>
+              <span style={{ fontSize: '13px', fontWeight: 700, color: '#059669' }}>
                 Peran & Aplikasi Nyata
               </span>
-              <p style={{ fontSize: '13px', lineHeight: 1.6, color: '#cbd5e1' }}>
+              <p style={{ fontSize: '13px', lineHeight: 1.6, color: '#334155' }}>
                 {molecule.realWorldUsage}
               </p>
             </div>
@@ -336,14 +336,14 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                   display: 'flex',
                   alignItems: 'flex-start',
                   gap: '10px',
-                  background: 'rgba(244, 63, 94, 0.1)',
-                  border: '1px solid rgba(244, 63, 94, 0.3)',
+                  background: '#fff1f2',
+                  border: '1px solid #fecdd3',
                   borderRadius: '8px',
                   padding: '12px',
                 }}
               >
-                <ShieldAlert size={18} color="#f43f5e" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <p style={{ fontSize: '12px', color: '#fca5a5', lineHeight: 1.5, margin: 0 }}>
+                <ShieldAlert size={18} color="#e11d48" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <p style={{ fontSize: '12px', color: '#9f1239', lineHeight: 1.5, margin: 0 }}>
                   <strong>Catatan Keselamatan:</strong> {molecule.safetyNotes}
                 </p>
               </div>
@@ -356,7 +356,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
       <div
         style={{
           padding: '16px 24px',
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          borderTop: '1px solid #e2e8f0',
           display: 'flex',
           justifyContent: 'flex-end',
         }}
