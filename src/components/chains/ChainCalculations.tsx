@@ -153,15 +153,27 @@ export const ChainCalculations: React.FC<ChainCalculationsProps> = ({
           </div>
         </div>
 
-        {/* Mass Composition Progress Bar (% C vs % H) */}
+        {/* Mass Composition Progress Bar (% C vs % H vs % Other) */}
         <div className="calc-composition-section">
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 700 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 700, flexWrap: 'wrap', gap: '4px' }}>
             <span style={{ color: '#0f172a' }}>Karbon (C): {calc.percentC}%</span>
             <span style={{ color: '#0284c7' }}>Hidrogen (H): {calc.percentH}%</span>
+            {calc.percentOther && (
+              <span style={{ color: '#ef4444' }}>{calc.otherElementName}</span>
+            )}
           </div>
           <div className="composition-bar-track">
             <div className="composition-fill-c" style={{ width: `${calc.percentC}%` }} />
             <div className="composition-fill-h" style={{ width: `${calc.percentH}%` }} />
+            {calc.percentOther && (
+              <div
+                style={{
+                  width: `${calc.percentOther}%`,
+                  background: '#ef4444',
+                  height: '100%',
+                }}
+              />
+            )}
           </div>
         </div>
       </div>

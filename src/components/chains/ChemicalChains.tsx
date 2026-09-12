@@ -34,22 +34,77 @@ export const ChemicalChains: React.FC = () => {
       setCarbonCount((prev) => Math.max(2, Math.min(12, prev)));
     } else if (newSeries === 'cycloalkane') {
       setCarbonCount((prev) => Math.max(3, Math.min(8, prev)));
+    } else if (newSeries === 'alkane') {
+      setCarbonCount((prev) => Math.max(1, Math.min(20, prev)));
+    } else {
+      setCarbonCount((prev) => Math.max(1, Math.min(12, prev)));
     }
   };
 
-  // Quick preset picks for alkanes
-  const quickPicks = [
-    { n: 1, label: 'C₁ Metana (Biogas)' },
-    { n: 3, label: 'C₃ Propana (LPG)' },
-    { n: 4, label: 'C₄ Butana (Korek)' },
-    { n: 8, label: 'C₈ Oktana (Bensin)' },
-    { n: 10, label: 'C₁₀ Dekana (Avtur)' },
-    { n: 16, label: 'C₁₆ Setana (Solar)' },
-    { n: 20, label: 'C₂₀ Ikosana (Lilin)' },
-  ];
+  // Quick preset picks by series
+  const quickPicks = useMemo(() => {
+    if (series === 'alcohol') {
+      return [
+        { n: 1, label: 'C₁ Metanol (Spiritus)' },
+        { n: 2, label: 'C₂ Etanol (Alkohol 70%)' },
+        { n: 3, label: 'C₃ Propanol (Antiseptik)' },
+        { n: 4, label: 'C₄ Butanol (Pelarut)' },
+        { n: 8, label: 'C₈ Oktanol (Perisa)' },
+      ];
+    }
+    if (series === 'carboxylic_acid') {
+      return [
+        { n: 1, label: 'C₁ Asam Format (Semut)' },
+        { n: 2, label: 'C₂ Asam Asetat (Cuka)' },
+        { n: 3, label: 'C₃ Asam Propionat (Roti)' },
+        { n: 4, label: 'C₄ Asam Butirat (Mentega)' },
+        { n: 6, label: 'C₆ Asam Kaproat' },
+      ];
+    }
+    if (series === 'aldehyde') {
+      return [
+        { n: 1, label: 'C₁ Metanal (Formalin)' },
+        { n: 2, label: 'C₂ Etanal (Asetaldehida)' },
+        { n: 3, label: 'C₃ Propanal' },
+        { n: 4, label: 'C₄ Butanal' },
+      ];
+    }
+    if (series === 'haloalkane') {
+      return [
+        { n: 1, label: 'C₁ Klorometana' },
+        { n: 2, label: 'C₂ Kloroetana' },
+        { n: 3, label: 'C₃ Kloropropana' },
+        { n: 4, label: 'C₄ Klorobutana' },
+      ];
+    }
+    if (series === 'alkene') {
+      return [
+        { n: 2, label: 'C₂ Etena (Etilena)' },
+        { n: 3, label: 'C₃ Propena (Propilena)' },
+        { n: 4, label: 'C₄ Butena' },
+        { n: 6, label: 'C₆ Heksena' },
+      ];
+    }
+    if (series === 'alkyne') {
+      return [
+        { n: 2, label: 'C₂ Etuna (Gas Karbit)' },
+        { n: 3, label: 'C₃ Propuna' },
+        { n: 4, label: 'C₄ Butuna' },
+      ];
+    }
+    return [
+      { n: 1, label: 'C₁ Metana (Biogas)' },
+      { n: 3, label: 'C₃ Propana (LPG)' },
+      { n: 4, label: 'C₄ Butana (Korek)' },
+      { n: 8, label: 'C₈ Oktana (Bensin)' },
+      { n: 10, label: 'C₁₀ Dekana (Avtur)' },
+      { n: 16, label: 'C₁₆ Setana (Solar)' },
+      { n: 20, label: 'C₂₀ Ikosana (Lilin)' },
+    ];
+  }, [series]);
 
   const maxCarbons = series === 'cycloalkane' ? 8 : series === 'alkane' ? 20 : 12;
-  const minCarbons = series === 'cycloalkane' ? 3 : series === 'alkane' ? 1 : 2;
+  const minCarbons = series === 'cycloalkane' ? 3 : (series === 'alkene' || series === 'alkyne') ? 2 : 1;
 
   return (
     <div className="chemical-chains-view">
@@ -58,7 +113,7 @@ export const ChemicalChains: React.FC = () => {
         <div className="chains-series-pills">
           <span className="series-bar-label">
             <GitCommit size={14} color="#0284c7" style={{ display: 'inline', marginRight: '4px' }} />
-            Tipe Rantai:
+            Tipe Senyawa:
           </span>
 
           <button
@@ -86,7 +141,35 @@ export const ChemicalChains: React.FC = () => {
             className={`series-pill ${series === 'cycloalkane' ? 'active' : ''}`}
             onClick={() => handleSeriesChange('cycloalkane')}
           >
-            Sikloalkana (Cincin)
+            Sikloalkana
+          </button>
+
+          <button
+            className={`series-pill ${series === 'alcohol' ? 'active' : ''}`}
+            onClick={() => handleSeriesChange('alcohol')}
+          >
+            Alkohol (-OH)
+          </button>
+
+          <button
+            className={`series-pill ${series === 'carboxylic_acid' ? 'active' : ''}`}
+            onClick={() => handleSeriesChange('carboxylic_acid')}
+          >
+            Asam Karboksilat (-COOH)
+          </button>
+
+          <button
+            className={`series-pill ${series === 'aldehyde' ? 'active' : ''}`}
+            onClick={() => handleSeriesChange('aldehyde')}
+          >
+            Aldehida (-CHO)
+          </button>
+
+          <button
+            className={`series-pill ${series === 'haloalkane' ? 'active' : ''}`}
+            onClick={() => handleSeriesChange('haloalkane')}
+          >
+            Haloalkana (-Cl)
           </button>
 
           <button
@@ -164,8 +247,8 @@ export const ChemicalChains: React.FC = () => {
             </div>
           </div>
 
-          {/* Quick Preset Buttons for Alkanes */}
-          {series === 'alkane' && (
+          {/* Quick Preset Buttons */}
+          {quickPicks.length > 0 && (
             <div className="quick-picks-bar">
               <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700 }}>
                 Pilihan Cepat:

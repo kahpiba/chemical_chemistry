@@ -30,110 +30,112 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   if (!element && !molecule) return null;
 
   return (
-    <>
-      {/* Semi-transparent Backdrop Overlay with click-to-close */}
-      <div
-        className="drawer-backdrop"
-        style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(15, 23, 42, 0.25)',
-          backdropFilter: 'blur(3px)',
-          WebkitBackdropFilter: 'blur(3px)',
-          zIndex: 99,
-          animation: 'drawerFadeIn 0.2s ease-out',
-        }}
-        onClick={onClose}
-      />
+    <div
+      className="detail-modal-overlay"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(15, 23, 42, 0.45)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        zIndex: 1000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px',
+        animation: 'modalBackdropFade 0.22s ease-out',
+      }}
+      onClick={onClose}
+    >
+      <style>{`
+        @keyframes modalBackdropFade {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes modalCardPop {
+          from { opacity: 0; transform: scale(0.94) translateY(12px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+      `}</style>
 
       <div
-        className="detail-drawer-container"
+        className="detail-modal-card"
         style={{
-          position: 'fixed',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          width: '450px',
-          maxWidth: '92vw',
-          background: 'rgba(255, 255, 255, 0.96)',
+          width: '800px',
+          maxWidth: '95vw',
+          maxHeight: '86vh',
+          background: 'rgba(255, 255, 255, 0.98)',
           backdropFilter: 'blur(28px)',
           WebkitBackdropFilter: 'blur(28px)',
-          borderLeft: '1px solid #cbd5e1',
-          boxShadow: '-10px 0 40px rgba(15, 23, 42, 0.15)',
-          zIndex: 100,
+          borderRadius: '20px',
+          border: '1px solid rgba(226, 232, 240, 0.9)',
+          boxShadow: '0 25px 60px -15px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.05)',
           display: 'flex',
           flexDirection: 'column',
-          animation: 'slideInRight 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
+          overflow: 'hidden',
+          animation: 'modalCardPop 0.24s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
+        onClick={(e) => e.stopPropagation()}
       >
-        <style>{`
-          @keyframes drawerFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-          }
-          @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-          }
-        `}</style>
-
-      {/* Drawer Header */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '20px 24px',
-          borderBottom: '1px solid #e2e8f0',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span
-            style={{
-              fontSize: '11px',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              color: element
-                ? CATEGORIES[element.category].color
-                : molecule
-                ? MOLECULE_CATEGORIES[molecule.category].color
-                : '#0284c7',
-              fontWeight: 700,
-            }}
-          >
-            {element ? 'Detail Unsur Kimia' : 'Detail Molekul & Senyawa'}
-          </span>
-        </div>
-        <button
-          onClick={onClose}
+        {/* Modal Header */}
+        <div
           style={{
-            background: 'transparent',
-            border: 'none',
-            color: '#64748b',
-            cursor: 'pointer',
-            padding: '4px',
-            borderRadius: '6px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'space-between',
+            padding: '18px 24px',
+            borderBottom: '1px solid #e2e8f0',
+            background: 'rgba(248, 250, 252, 0.8)',
           }}
-          title="Tutup Panel"
         >
-          <X size={20} />
-        </button>
-      </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span
+              style={{
+                fontSize: '11px',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                color: element
+                  ? CATEGORIES[element.category].color
+                  : molecule
+                  ? MOLECULE_CATEGORIES[molecule.category].color
+                  : '#0284c7',
+                fontWeight: 700,
+              }}
+            >
+              {element ? 'Detail Informasi Unsur Kimia' : 'Detail Molekul & Senyawa'}
+            </span>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              background: '#f1f5f9',
+              border: '1px solid #e2e8f0',
+              color: '#64748b',
+              cursor: 'pointer',
+              padding: '6px',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.15s ease',
+            }}
+            title="Tutup Popup"
+          >
+            <X size={18} />
+          </button>
+        </div>
 
-      {/* Drawer Body Scroll */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '24px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '20px',
-        }}
-      >
+        {/* Modal Body Scroll */}
+        <div
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px',
+          }}
+        >
         {element && (
           <>
             {/* Big Identity Header */}
@@ -199,7 +201,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
                 gap: '10px',
               }}
             >
@@ -214,6 +216,12 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                 <p className="property-val">Blok {element.block.toUpperCase()}</p>
               </div>
               <div className="property-item">
+                <span className="property-label">Wujud Kamar (25°C)</span>
+                <p className="property-val" style={{ textTransform: 'capitalize' }}>
+                  {element.phase === 'solid' ? 'Padat' : element.phase === 'liquid' ? 'Cair' : element.phase === 'gas' ? 'Gas' : 'Tidak Diketahui'}
+                </p>
+              </div>
+              <div className="property-item">
                 <span className="property-label">Konfigurasi Elektron</span>
                 <p className="property-val" style={{ fontSize: '11px' }}>
                   {element.electronConfiguration || '-'}
@@ -226,6 +234,12 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                 </p>
               </div>
               <div className="property-item">
+                <span className="property-label">Energi Ionisasi</span>
+                <p className="property-val">
+                  {element.ionizationEnergy ? `${element.ionizationEnergy} kJ/mol` : 'N/A'}
+                </p>
+              </div>
+              <div className="property-item">
                 <span className="property-label">Titik Lebur</span>
                 <p className="property-val">
                   {element.meltingPoint ? `${(element.meltingPoint - 273.15).toFixed(1)} °C` : 'N/A'}
@@ -235,6 +249,12 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                 <span className="property-label">Titik Didih</span>
                 <p className="property-val">
                   {element.boilingPoint ? `${(element.boilingPoint - 273.15).toFixed(1)} °C` : 'N/A'}
+                </p>
+              </div>
+              <div className="property-item">
+                <span className="property-label">Massa Jenis (Densitas)</span>
+                <p className="property-val">
+                  {element.density ? `${element.density} g/cm³` : 'N/A'}
                 </p>
               </div>
             </div>
@@ -382,20 +402,25 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
         )}
       </div>
 
-      {/* Drawer Footer */}
+      {/* Modal Footer */}
       <div
         style={{
           padding: '16px 24px',
           borderTop: '1px solid #e2e8f0',
+          background: 'rgba(248, 250, 252, 0.8)',
           display: 'flex',
-          justifyContent: 'flex-end',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
+        <span style={{ fontSize: '12px', color: '#94a3b8' }}>
+          Tekan <strong>Esc</strong> atau klik di luar untuk menutup
+        </span>
         <button className="btn btn-ghost" onClick={onClose}>
           Tutup
         </button>
       </div>
     </div>
-    </>
+  </div>
   );
 };

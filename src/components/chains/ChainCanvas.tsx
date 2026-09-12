@@ -310,6 +310,89 @@ export const ChainCanvas: React.FC<ChainCanvasProps> = ({
       }
     });
 
+    // Draw Functional Group Terminal if applicable
+    if (nodes.length > 0) {
+      const lastNode = nodes[nodes.length - 1];
+      const isUp = (nodes.length - 1) % 2 === 0;
+
+      if (series === 'alcohol') {
+        // -OH group
+        const oX = lastNode.x + 36;
+        const oY = lastNode.y + (isUp ? 22 : -22);
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(lastNode.x, lastNode.y);
+        ctx.lineTo(oX, oY);
+        ctx.stroke();
+
+        ctx.fillStyle = '#ef4444';
+        ctx.font = 'bold 13px var(--font-mono, monospace)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('OH', oX + 12, oY);
+      } else if (series === 'carboxylic_acid') {
+        // -COOH group
+        const o1X = lastNode.x + 26;
+        const o1Y = lastNode.y - 32;
+        drawMultipleBond(ctx, lastNode, { x: o1X, y: o1Y }, 2, '#ef4444', 3, 2.5);
+        ctx.fillStyle = '#ef4444';
+        ctx.font = 'bold 13px var(--font-mono, monospace)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('O', o1X + 8, o1Y - 4);
+
+        const o2X = lastNode.x + 30;
+        const o2Y = lastNode.y + 24;
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(lastNode.x, lastNode.y);
+        ctx.lineTo(o2X, o2Y);
+        ctx.stroke();
+
+        ctx.fillText('OH', o2X + 14, o2Y);
+      } else if (series === 'aldehyde') {
+        // -CHO group
+        const o1X = lastNode.x + 26;
+        const o1Y = lastNode.y - 32;
+        drawMultipleBond(ctx, lastNode, { x: o1X, y: o1Y }, 2, '#ef4444', 3, 2.5);
+        ctx.fillStyle = '#ef4444';
+        ctx.font = 'bold 13px var(--font-mono, monospace)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('O', o1X + 8, o1Y - 4);
+
+        const hX = lastNode.x + 30;
+        const hY = lastNode.y + 24;
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(lastNode.x, lastNode.y);
+        ctx.lineTo(hX, hY);
+        ctx.stroke();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.fillText('H', hX + 8, hY);
+      } else if (series === 'haloalkane') {
+        // -Cl group
+        const clX = lastNode.x + 36;
+        const clY = lastNode.y + (isUp ? 22 : -22);
+        ctx.strokeStyle = '#22c55e';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(lastNode.x, lastNode.y);
+        ctx.lineTo(clX, clY);
+        ctx.stroke();
+
+        ctx.fillStyle = '#16a34a';
+        ctx.font = 'bold 13px var(--font-mono, monospace)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Cl', clX + 10, clY);
+      }
+    }
+
     // Angle indicator arc for bond #2
     if (nodes.length >= 3 && displayMode === 'skeletal') {
       const p2 = nodes[1];

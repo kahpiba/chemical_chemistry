@@ -3,7 +3,16 @@
  * Comprehensive hydrocarbon homologous series, polymers, and stoichiometry.
  */
 
-export type HydrocarbonSeries = 'alkane' | 'alkene' | 'alkyne' | 'cycloalkane' | 'polymer';
+export type HydrocarbonSeries =
+  | 'alkane'
+  | 'alkene'
+  | 'alkyne'
+  | 'cycloalkane'
+  | 'alcohol'
+  | 'carboxylic_acid'
+  | 'aldehyde'
+  | 'haloalkane'
+  | 'polymer';
 
 export interface ChainItemData {
   carbonCount: number;
@@ -357,6 +366,33 @@ export const POLYMER_CATALOG: PolymerData[] = [
     applications: 'Serat pakaian parasut, senar pancing, bulu sikat gigi, roda gigi sintetis mesin.',
     recyclingCode: 7,
   },
+  {
+    id: 'pet_polyester',
+    name: 'Polietilena Tereftalat (PET)',
+    tradeName: 'PETE / Dacron',
+    monomerName: 'Asam Tereftalat + Etilen Glikol',
+    monomerFormula: 'C₆H₄(COOH)₂ + C₂H₄(OH)₂',
+    repeatingUnit: '[-OC-C₆H₄-COO-CH₂CH₂O-]',
+    polymerType: 'Kondensasi',
+    density: 1.38,
+    meltingPoint: 260,
+    properties: ['Sangat bening transparan', 'Kedap gas CO₂ dan oksigen', 'Kuat & tahan robek', '100% dapat didaur ulang'],
+    applications: 'Botol plastik air mineral kemasan, serat kain poliester (baju jersey olahraga), kemasan makanan thermoforming.',
+    recyclingCode: 1,
+  },
+  {
+    id: 'natural_rubber',
+    name: 'Poli-isoprena (Karet Alam)',
+    tradeName: 'Lateks / Karet Alam',
+    monomerName: 'Isoprena (2-Metil-1,3-butadiena)',
+    monomerFormula: 'CH₂=C(CH₃)-CH=CH₂',
+    repeatingUnit: '[-CH₂-C(CH₃)=CH-CH₂-]',
+    polymerType: 'Adisi',
+    density: 0.92,
+    meltingPoint: 180,
+    properties: ['Elastisitas & fleksibilitas luar biasa', 'Dapat divulkanisasi dengan belerang', 'Tahan gesekan jalan raya'],
+    applications: 'Ban mobil dan pesawat terbang, sarung tangan bedah medis, kondom, sol sepatu kets.',
+  },
 ];
 
 // -------------------------------------------------------------
@@ -370,6 +406,8 @@ export interface ChainCalculationsResult {
   molecularWeight: number; // g/mol
   percentC: number; // %
   percentH: number; // %
+  percentOther?: number; // % (O atau Cl)
+  otherElementName?: string; // O atau Cl
   estimatedBoilingPoint: number; // °C
   estimatedMeltingPoint: number; // °C
   phase: 'Gas' | 'Cair' | 'Padat';
@@ -393,6 +431,8 @@ export function calculateChainProperties(
 ): ChainCalculationsResult {
   let cCount = n;
   let hCount = 2 * n + 2; // Default Alkane
+  let oCount = 0;
+  let clCount = 0;
   let prefix = getIUPACPrefix(n);
   let name = `${prefix}ana`;
 
@@ -411,10 +451,43 @@ export function calculateChainProperties(
     hCount = 2 * cCount;
     prefix = getIUPACPrefix(cCount);
     name = `Siklo${prefix.toLowerCase()}ana`;
+  } else if (series === 'alcohol') {
+    cCount = Math.max(1, n);
+    hCount = 2 * cCount + 2;
+    oCount = 1;
+    prefix = getIUPACPrefix(cCount);
+    name = cCount <= 2 ? `${prefix}anol` : `1-${prefix}anol`;
+  } else if (series === 'carboxylic_acid') {
+    cCount = Math.max(1, n);
+    hCount = 2 * cCount;
+    oCount = 2;
+    prefix = getIUPACPrefix(cCount);
+    name = `Asam ${prefix.toLowerCase()}anoat`;
+  } else if (series === 'aldehyde') {
+    cCount = Math.max(1, n);
+    hCount = 2 * cCount;
+    oCount = 1;
+    prefix = getIUPACPrefix(cCount);
+    name = `${prefix}anal`;
+  } else if (series === 'haloalkane') {
+    cCount = Math.max(1, n);
+    hCount = 2 * cCount + 1;
+    clCount = 1;
+    prefix = getIUPACPrefix(cCount);
+    name = cCount === 1 ? 'Klorometana' : `1-Kloro${prefix.toLowerCase()}ana`;
   }
 
   // Formula string
-  const formula = `C${cCount > 1 ? cCount : ''}H${hCount}`;
+  let formula = `C${cCount > 1 ? cCount : ''}H${hCount}`;
+  if (series === 'alcohol') {
+    formula = `C${cCount > 1 ? cCount : ''}H${2 * cCount + 1}OH`;
+  } else if (series === 'carboxylic_acid') {
+    formula = `C${cCount > 1 ? cCount : ''}H${hCount}O₂`;
+  } else if (series === 'aldehyde') {
+    formula = `C${cCount > 1 ? cCount : ''}H${hCount}O`;
+  } else if (series === 'haloalkane') {
+    formula = `C${cCount > 1 ? cCount : ''}H${hCount}Cl`;
+  }
 
   // Condensed Formula
   let condensedFormula = '';
@@ -431,29 +504,61 @@ export function calculateChainProperties(
     if (cCount === 2) condensedFormula = 'CH≡CH';
     else if (cCount === 3) condensedFormula = 'CH≡C-CH₃';
     else condensedFormula = `CH≡C-(CH₂)₍${cCount - 3}₎-CH₃`;
-  } else {
+  } else if (series === 'cycloalkane') {
     condensedFormula = `(CH₂)₍${cCount}₎ [Cincin]`;
+  } else if (series === 'alcohol') {
+    if (cCount === 1) condensedFormula = 'CH₃-OH';
+    else if (cCount === 2) condensedFormula = 'CH₃-CH₂-OH';
+    else condensedFormula = `CH₃-(CH₂)₍${cCount - 1}₎-OH`;
+  } else if (series === 'carboxylic_acid') {
+    if (cCount === 1) condensedFormula = 'H-COOH';
+    else if (cCount === 2) condensedFormula = 'CH₃-COOH';
+    else condensedFormula = `CH₃-(CH₂)₍${cCount - 2}₎-COOH`;
+  } else if (series === 'aldehyde') {
+    if (cCount === 1) condensedFormula = 'H-CHO (Formalin)';
+    else if (cCount === 2) condensedFormula = 'CH₃-CHO';
+    else condensedFormula = `CH₃-(CH₂)₍${cCount - 2}₎-CHO`;
+  } else if (series === 'haloalkane') {
+    if (cCount === 1) condensedFormula = 'CH₃-Cl';
+    else if (cCount === 2) condensedFormula = 'CH₃-CH₂-Cl';
+    else condensedFormula = `CH₃-(CH₂)₍${cCount - 1}₎-Cl`;
   }
 
   // Molecular Weight (Mr)
   const cWeight = 12.011;
   const hWeight = 1.008;
-  const molecularWeight = Number((cCount * cWeight + hCount * hWeight).toFixed(3));
+  const oWeight = 15.999;
+  const clWeight = 35.453;
+  const molecularWeight = Number((cCount * cWeight + hCount * hWeight + oCount * oWeight + clCount * clWeight).toFixed(3));
 
   // Mass composition %
   const percentC = Number(((cCount * cWeight / molecularWeight) * 100).toFixed(1));
   const percentH = Number(((hCount * hWeight / molecularWeight) * 100).toFixed(1));
+  let percentOther: number | undefined;
+  let otherElementName: string | undefined;
+  if (oCount > 0) {
+    percentOther = Number(((oCount * oWeight / molecularWeight) * 100).toFixed(1));
+    otherElementName = `Oksigen (${percentOther}%)`;
+  } else if (clCount > 0) {
+    percentOther = Number(((clCount * clWeight / molecularWeight) * 100).toFixed(1));
+    otherElementName = `Klorin (${percentOther}%)`;
+  }
 
-  // Predicted Boiling Point via London dispersion formula:
-  // BP roughly correlates with log/linear function of carbon count
+  // Predicted Boiling Point via London dispersion + functional group formula
   let estimatedBoilingPoint = -162 + (cCount - 1) * 28.5 - Math.log(cCount) * 4;
   if (series === 'alkene') estimatedBoilingPoint -= 5;
   if (series === 'alkyne') estimatedBoilingPoint += 8;
   if (series === 'cycloalkane') estimatedBoilingPoint += 15;
+  if (series === 'alcohol') estimatedBoilingPoint += 145; // Ikatan hidrogen kuat
+  if (series === 'carboxylic_acid') estimatedBoilingPoint += 165; // Dimer karboksilat
+  if (series === 'aldehyde') estimatedBoilingPoint += 60; // Dipol-dipol polar
+  if (series === 'haloalkane') estimatedBoilingPoint += 45; // Polaritas C-Cl
   estimatedBoilingPoint = Number(estimatedBoilingPoint.toFixed(1));
 
   // Predicted Melting Point
   let estimatedMeltingPoint = -183 + (cCount - 1) * 12.0;
+  if (series === 'alcohol') estimatedMeltingPoint += 80;
+  if (series === 'carboxylic_acid') estimatedMeltingPoint += 95;
   estimatedMeltingPoint = Number(estimatedMeltingPoint.toFixed(1));
 
   // Phase at room temperature (25°C)
@@ -467,20 +572,24 @@ export function calculateChainProperties(
   // Density estimation (g/cm³)
   let density = 0.0018 * (molecularWeight / 44.0);
   if (phase === 'Cair' || phase === 'Padat') {
-    density = Number((0.60 + Math.min(0.25, cCount * 0.011)).toFixed(3));
+    let baseDensity = 0.60;
+    if (series === 'alcohol') baseDensity = 0.78;
+    if (series === 'carboxylic_acid') baseDensity = 0.98;
+    if (series === 'haloalkane') baseDensity = 0.90;
+    density = Number((baseDensity + Math.min(0.25, cCount * 0.011)).toFixed(3));
   } else {
     density = Number(density.toFixed(5));
   }
 
-  // Combustion Stoichiometry:
-  // Cn Hm + (n + m/4) O2 -> n CO2 + (m/2) H2O
-  const o2MolesRequired = cCount + hCount / 4;
+  // Combustion Stoichiometry
+  let o2MolesRequired = cCount + hCount / 4;
+  if (oCount > 0) o2MolesRequired -= oCount / 2;
   const co2MolesProduced = cCount;
-  const h2oMolesProduced = hCount / 2;
+  const h2oMolesProduced = Math.floor(hCount / 2);
   const co2VolumeSTP = Number((co2MolesProduced * 22.414).toFixed(1));
 
-  // Enthalpy of Combustion: ~ -650 kJ/mol per CH2 unit + baseline
-  const deltaHCombustion = Number((-280 - cCount * 653).toFixed(1));
+  // Enthalpy of Combustion
+  let deltaHCombustion = Number((-280 - cCount * 653 + (oCount > 0 ? oCount * 140 : 0)).toFixed(1));
   const specificEnergy = Number((Math.abs(deltaHCombustion) / molecularWeight).toFixed(1)); // kJ/g
 
   // Carbon Intensity: g of CO2 per g of fuel burned
@@ -494,6 +603,8 @@ export function calculateChainProperties(
     molecularWeight,
     percentC,
     percentH,
+    percentOther,
+    otherElementName,
     estimatedBoilingPoint,
     estimatedMeltingPoint,
     phase,
