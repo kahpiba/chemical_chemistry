@@ -1,7 +1,7 @@
 import React from 'react';
-import { Atom, Boxes, FlaskConical, Sparkles, Layers } from 'lucide-react';
+import { Atom, Boxes, FlaskConical, Sparkles, Layers, Flame, Trophy, ArrowLeftRight } from 'lucide-react';
 
-export type ActiveTab = 'periodic' | 'molecules' | 'reactions';
+export type ActiveTab = 'periodic' | 'molecules' | 'reactions' | 'flame' | 'quiz' | 'compare';
 
 interface HeaderProps {
   activeTab: ActiveTab;
@@ -36,7 +36,7 @@ export const Header: React.FC<HeaderProps> = ({
           aria-selected={activeTab === 'periodic'}
         >
           <Layers size={16} />
-          <span>Tabel Periodik & Atom 3D</span>
+          <span>Tabel Periodik</span>
         </button>
 
         <button
@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
           aria-selected={activeTab === 'molecules'}
         >
           <Boxes size={16} />
-          <span>Molekul & Exploded View</span>
+          <span>Molekul 3D</span>
         </button>
 
         <button
@@ -56,14 +56,44 @@ export const Header: React.FC<HeaderProps> = ({
           aria-selected={activeTab === 'reactions'}
         >
           <FlaskConical size={16} />
-          <span>Lab Reaksi Kimia</span>
+          <span>Lab Reaksi</span>
+        </button>
+
+        <button
+          className={`nav-tab ${activeTab === 'flame' ? 'active' : ''}`}
+          onClick={() => onTabChange('flame')}
+          role="tab"
+          aria-selected={activeTab === 'flame'}
+        >
+          <Flame size={16} />
+          <span>Uji Nyala Api</span>
+        </button>
+
+        <button
+          className={`nav-tab ${activeTab === 'compare' ? 'active' : ''}`}
+          onClick={() => onTabChange('compare')}
+          role="tab"
+          aria-selected={activeTab === 'compare'}
+        >
+          <ArrowLeftRight size={16} />
+          <span>Bandingkan</span>
+        </button>
+
+        <button
+          className={`nav-tab ${activeTab === 'quiz' ? 'active' : ''}`}
+          onClick={() => onTabChange('quiz')}
+          role="tab"
+          aria-selected={activeTab === 'quiz'}
+        >
+          <Trophy size={16} />
+          <span>Quiz Arena</span>
         </button>
       </nav>
 
       <div className="header-actions">
         <div className="stat-chip">
           <Sparkles size={14} color="#38bdf8" />
-          <span>118 Unsur · 3D Lab</span>
+          <span>118 Unsur · 6 Lab</span>
         </div>
         <button className="btn btn-ghost" onClick={onOpenAbout} title="Tentang Chemical Atlas">
           Tentang

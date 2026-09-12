@@ -6,6 +6,9 @@ import { PeriodicTable } from './components/periodic/PeriodicTable';
 import { MoleculeScene } from './components/molecular/MoleculeScene';
 import { MoleculeControls } from './components/molecular/MoleculeControls';
 import { ReactionLab } from './components/reaction/ReactionLab';
+import { FlameTestLab } from './components/flame/FlameTestLab';
+import { QuizArena } from './components/quiz/QuizArena';
+import { ElementComparison } from './components/periodic/ElementComparison';
 import { ELEMENTS } from './data/elements';
 import type { ElementData } from './data/elements';
 import { MOLECULES } from './data/molecules';
@@ -15,6 +18,8 @@ import './styles/index.css';
 import './styles/periodic.css';
 import './styles/molecular.css';
 import './styles/reaction.css';
+import './styles/quiz.css';
+import './styles/flame.css';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('periodic');
@@ -91,6 +96,9 @@ export function App() {
         )}
 
         {activeTab === 'reactions' && <ReactionLab />}
+        {activeTab === 'flame' && <FlameTestLab />}
+        {activeTab === 'quiz' && <QuizArena />}
+        {activeTab === 'compare' && <ElementComparison />}
       </main>
 
       {/* Slide-out Inspector Drawer */}
@@ -207,6 +215,9 @@ export function App() {
                 <li><strong>Tabel Periodik 118 Unsur</strong> dengan filter cerdas & model atom 3D Bohr dinamis.</li>
                 <li><strong>3D Molecular Explorer</strong> dengan fitur revolusioner <em>Explode Molecule</em> (mengurai ikatan kimia).</li>
                 <li><strong>Virtual Reaction Lab</strong> simulasi pencampuran senyawa kimia dengan reaksi visual (warna, gelembung gas, endapan, dan suhu termal).</li>
+                <li><strong>Uji Nyala Api (Flame Test)</strong> visualisasi Bunsen burner animasi dengan spektrum emisi interaktif.</li>
+                <li><strong>Quiz Arena</strong> gamifikasi kuis kimia dengan streak, timer, dan skor XP.</li>
+                <li><strong>Perbandingan Unsur</strong> bandingkan 2 unsur secara visual side-by-side.</li>
               </ul>
             </div>
 
