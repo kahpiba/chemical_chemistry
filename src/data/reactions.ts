@@ -7,6 +7,7 @@ export interface Reagent {
   color: string;
   description: string;
   hazard?: 'corrosive' | 'flammable' | 'toxic' | 'irritant';
+  pH?: number;
 }
 
 export type ReactionType = 
@@ -30,6 +31,8 @@ export interface ReactionEffect {
   temperatureEnd: number;
   steamEffect: boolean;
   glowOrSparks: boolean;
+  pHStart?: number;
+  pHEnd?: number;
 }
 
 export interface ReactionData {
@@ -57,6 +60,7 @@ export const REAGENTS: Reagent[] = [
     color: '#e2e8f0',
     description: 'Larutan asam kuat tidak berwarna, memiliki bau menyengat.',
     hazard: 'corrosive',
+    pH: 1.0,
   },
   {
     id: 'NaOH',
@@ -67,6 +71,7 @@ export const REAGENTS: Reagent[] = [
     color: '#f1f5f9',
     description: 'Larutan basa kuat kaustik yang licin saat disentuh.',
     hazard: 'corrosive',
+    pH: 13.5,
   },
   {
     id: 'Phenolphthalein',
@@ -77,6 +82,7 @@ export const REAGENTS: Reagent[] = [
     color: 'rgba(255, 255, 255, 0.4)',
     description: 'Indikator pH: tidak berwarna pada asam (pH < 8.2) dan merah muda terang pada basa (pH > 10).',
     hazard: 'irritant',
+    pH: 7.0,
   },
   {
     id: 'AgNO3',
@@ -87,6 +93,7 @@ export const REAGENTS: Reagent[] = [
     color: '#e2e8f0',
     description: 'Garam perak larut, sensitif terhadap cahaya matahari.',
     hazard: 'corrosive',
+    pH: 6.0,
   },
   {
     id: 'NaCl',
@@ -96,6 +103,7 @@ export const REAGENTS: Reagent[] = [
     state: 'liquid',
     color: '#f8fafc',
     description: 'Larutan garam meja standar dalam air murni.',
+    pH: 7.0,
   },
   {
     id: 'CH3COOH',
@@ -106,6 +114,7 @@ export const REAGENTS: Reagent[] = [
     color: '#f8fafc',
     description: 'Asam organik lemah beraroma asam khas cuka.',
     hazard: 'irritant',
+    pH: 2.8,
   },
   {
     id: 'NaHCO3',
@@ -115,6 +124,7 @@ export const REAGENTS: Reagent[] = [
     state: 'powder',
     color: '#ffffff',
     description: 'Bubuk kristal putih yang dapat melepaskan gas karbon dioksida bila bereaksi dengan asam.',
+    pH: 8.4,
   },
   {
     id: 'Zn',
@@ -124,6 +134,7 @@ export const REAGENTS: Reagent[] = [
     state: 'solid',
     color: '#94a3b8',
     description: 'Logam abu-abu mengilap yang reaktif melepaskan gas hidrogen dalam larutan asam.',
+    pH: 7.0,
   },
   {
     id: 'CuSO4',
@@ -134,6 +145,7 @@ export const REAGENTS: Reagent[] = [
     color: '#38bdf8',
     description: 'Larutan biru langit cerah khas ion Cu²⁺ terhidrasi [Cu(H₂O)₆]²⁺.',
     hazard: 'irritant',
+    pH: 4.2,
   },
   {
     id: 'KI',
@@ -143,6 +155,7 @@ export const REAGENTS: Reagent[] = [
     state: 'liquid',
     color: '#f8fafc',
     description: 'Larutan garam iodida jernih tanpa warna.',
+    pH: 7.0,
   },
   {
     id: 'Pb_NO3_2',
@@ -153,6 +166,7 @@ export const REAGENTS: Reagent[] = [
     color: '#f8fafc',
     description: 'Larutan garam timbal terlarut tanpa warna.',
     hazard: 'toxic',
+    pH: 4.5,
   },
   {
     id: 'CaO',
@@ -163,6 +177,7 @@ export const REAGENTS: Reagent[] = [
     color: '#f1f5f9',
     description: 'Padatan basa putih yang melepaskan panas sangat besar saat disiram air.',
     hazard: 'corrosive',
+    pH: 12.5,
   },
   {
     id: 'H2O',
@@ -172,6 +187,7 @@ export const REAGENTS: Reagent[] = [
     state: 'liquid',
     color: '#e0f2fe',
     description: 'Pelarut universal tanpa ion pengotor.',
+    pH: 7.0,
   },
   {
     id: 'H2O2',
@@ -182,6 +198,7 @@ export const REAGENTS: Reagent[] = [
     color: '#f0fdf4',
     description: 'Oksidator kuat tak berwarna yang mudah terurai menjadi air dan gas oksigen.',
     hazard: 'corrosive',
+    pH: 6.2,
   },
   {
     id: 'MnO2',
@@ -191,6 +208,7 @@ export const REAGENTS: Reagent[] = [
     state: 'powder',
     color: '#1e293b',
     description: 'Serbuk hitam katalisator cepat pengurai hidrogen peroksida.',
+    pH: 7.0,
   },
   {
     id: 'Na_metal',
@@ -201,6 +219,7 @@ export const REAGENTS: Reagent[] = [
     color: '#cbd5e1',
     description: 'Logam alkali lunak yang bereaksi eksplosif seketika bila menyentuh air.',
     hazard: 'flammable',
+    pH: 7.0,
   },
 ];
 
@@ -226,6 +245,8 @@ export const REACTIONS: ReactionData[] = [
       temperatureEnd: 32.5,
       steamEffect: false,
       glowOrSparks: false,
+      pHStart: 1.0,
+      pHEnd: 7.0,
     },
     summary: 'Reaksi netralisasi antara asam klorida dan natrium hidroksida. Ion H⁺ bereaksi dengan ion OH⁻ membentuk air murni (H₂O) dan garam NaCl, membebaskan kalor eksotermik.',
     molecularExplanation: 'H⁺(aq) + OH⁻(aq) → H₂O(l). Ikatan kovalen baru terbentuk antara proton dan ion hidroksil. Fenolftalein beralih bentuk dari konjugat merah muda terionisasi ke bentuk tak terionisasi yang bening seiring pH turun ke netral (pH 7).',
@@ -253,6 +274,8 @@ export const REACTIONS: ReactionData[] = [
       temperatureEnd: 26.2,
       steamEffect: false,
       glowOrSparks: false,
+      pHStart: 6.5,
+      pHEnd: 6.8,
     },
     summary: 'Pencampuran dua larutan jernih seketika menghasilkan endapan putih pekat seperti susu akibat sangat rendahnya kelarutan AgCl dalam air (Ksp = 1.8 × 10⁻¹⁰).',
     molecularExplanation: 'Ag⁺(aq) + Cl⁻(aq) → AgCl(s)↓. Gaya tarik elektrostatik antar kation Ag⁺ dan anion Cl⁻ jauh melampaui gaya hidrasi molekul air, sehingga langsung merajut kisi kristal padatan tak larut.',
@@ -280,6 +303,8 @@ export const REACTIONS: ReactionData[] = [
       temperatureEnd: 26.0,
       steamEffect: false,
       glowOrSparks: false,
+      pHStart: 5.5,
+      pHEnd: 5.5,
     },
     summary: 'Salah satu reaksi kimia paling indah di laboratorium: dua larutan bening menghasilkan kristal heksagonal berwarna kuning emas cemerlang yang perlahan melayang dan mengendap di dasar bejana.',
     molecularExplanation: 'Pb²⁺(aq) + 2I⁻(aq) → PbI₂(s)↓. Timbal(II) iodida memiliki struktur kristal berlapis (layered crystal lattice) dengan sifat optik unik yang memantulkan kilauan kuning keemasan berkilauan.',
@@ -307,6 +332,8 @@ export const REACTIONS: ReactionData[] = [
       temperatureEnd: 18.5, // Temperature drops!
       steamEffect: false,
       glowOrSparks: false,
+      pHStart: 2.8,
+      pHEnd: 7.4,
     },
     summary: 'Reaksi asam-basa menghasilkan gas karbon dioksida yang mendidih aktif dan berbusa deras. Reaksi ini bersifat endotermik sehingga dasar gelas terasa dingin saat dipegang.',
     molecularExplanation: 'Tahap 1: Asam asetat mentransfer proton ke ion bikarbonat membentuk asam karbonat H₂CO₃. Tahap 2: Asam karbonat tidak stabil langsung terurai spontan menjadi H₂O dan gelembung gas CO₂ yang melesat ke udara.',
@@ -334,6 +361,8 @@ export const REACTIONS: ReactionData[] = [
       temperatureEnd: 48.0,
       steamEffect: true,
       glowOrSparks: false,
+      pHStart: 1.0,
+      pHEnd: 4.8,
     },
     summary: 'Reaksi redoks spontan di mana seng mereduksi ion hidrogen menjadi gas H₂ yang ringan dan mudah terbakar, sementara seng sendiri teroksidasi larut menjadi kation Zn²⁺.',
     molecularExplanation: 'Zn(s) → Zn²⁺(aq) + 2e⁻ (Oksidasi Seng); 2H⁺(aq) + 2e⁻ → H₂(g)↑ (Reduksi Proton). Terjadi transfer elektron langsung pada permukaan logam seng.',
@@ -361,6 +390,8 @@ export const REACTIONS: ReactionData[] = [
       temperatureEnd: 31.0,
       steamEffect: false,
       glowOrSparks: false,
+      pHStart: 4.2,
+      pHEnd: 12.0,
     },
     summary: 'Larutan biru cerah CuSO₄ bila ditetesi basa NaOH langsung membentuk gumpalan endapan agar-agar biru pekat (gelatinous precipitate).',
     molecularExplanation: 'Cu²⁺(aq) + 2OH⁻(aq) → Cu(OH)₂(s)↓. Kompleks oktahedral ion tembaga terputus dan digantikan oleh jembatan gugus hidroksil polimerik tak larut.',
@@ -388,6 +419,8 @@ export const REACTIONS: ReactionData[] = [
       temperatureEnd: 88.0, // Super hot!
       steamEffect: true,
       glowOrSparks: false,
+      pHStart: 7.0,
+      pHEnd: 12.8,
     },
     summary: 'Reaksi hidrasi kalsium oksida melepaskan energi panas yang sangat besar hingga mampu mendidihkan air dan menghasilkan kepulan uap air panas tebal.',
     molecularExplanation: 'Ion oksida O²⁻ dalam kisi kristal CaO memiliki afinitas proton yang amat kuat, menarik molekul air dan melepaskan energi kisi yang besar ke lingkungan.',
@@ -415,6 +448,8 @@ export const REACTIONS: ReactionData[] = [
       temperatureEnd: 95.0,
       steamEffect: true,
       glowOrSparks: true, // Fire / sparks!
+      pHStart: 7.0,
+      pHEnd: 13.8,
     },
     summary: 'Logam natrium meleleh menjadi bola perak yang meluncur cepat di atas air, menghasilkan gelembung gas hidrogen, panas hebat, nyala api oranye terang, dan letupan!',
     molecularExplanation: 'Natrium memiliki energi ionisasi sangat rendah, mendonasikan elektron ke molekul air secara instan. Kalor reaksi melebihi titik leleh natrium (98°C) dan menyulut gas H₂ yang dihasilkan.',
@@ -442,6 +477,8 @@ export const REACTIONS: ReactionData[] = [
       temperatureEnd: 72.0,
       steamEffect: true,
       glowOrSparks: false,
+      pHStart: 6.2,
+      pHEnd: 7.0,
     },
     summary: 'Penambahan seujung spatula serbuk hitam MnO₂ seketika memicu semburan gelembung gas oksigen mendidih hebat disertai kepulan uap air panas (prinsip "Elephant Toothpaste").',
     molecularExplanation: 'MnO₂ bertindak sebagai katalis heterogen yang menurunkan energi aktivasi penguraian H₂O₂ secara drastis tanpa dirinya sendiri ikut terkonsumsi.',

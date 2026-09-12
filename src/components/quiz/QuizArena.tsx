@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { QUIZ_QUESTIONS } from '../../data/quizData';
 import type { QuizDifficulty, QuizCategory, QuizQuestion } from '../../data/quizData';
-import { playClick, playSuccess, playError, setMuted, isMuted } from '../../utils/audio';
+import { playClick, playSuccess, playError, setMuted } from '../../utils/audio';
 import '../../styles/quiz.css';
 
 type QuizState = 'menu' | 'playing' | 'result';
