@@ -60,8 +60,8 @@
 /* Main Laboratory Workbench Layout */
 .lab-workbench-grid {
   display: grid;
-  grid-template-columns: 340px 1fr 340px;
-  gap: 20px;
+  grid-template-columns: 310px minmax(440px, 1fr) 330px;
+  gap: 18px;
   align-items: start;
 }
 

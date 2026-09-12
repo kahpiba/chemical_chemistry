@@ -9,6 +9,7 @@ import { ReactionLab } from './components/reaction/ReactionLab';
 import { FlameTestLab } from './components/flame/FlameTestLab';
 import { QuizArena } from './components/quiz/QuizArena';
 import { ElementComparison } from './components/periodic/ElementComparison';
+import { ChemicalChains } from './components/chains/ChemicalChains';
 import { ELEMENTS } from './data/elements';
 import type { ElementData } from './data/elements';
 import { MOLECULES } from './data/molecules';
@@ -20,6 +21,7 @@ import './styles/molecular.css';
 import './styles/reaction.css';
 import './styles/quiz.css';
 import './styles/flame.css';
+import './styles/chains.css';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('periodic');
@@ -55,7 +57,11 @@ export function App() {
       {/* Top Application Header */}
       <Header
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          setDrawerElement(null);
+          setDrawerMolecule(null);
+        }}
         onOpenAbout={() => setAboutOpen(true)}
       />
 
@@ -95,6 +101,7 @@ export function App() {
           </div>
         )}
 
+        {activeTab === 'chains' && <ChemicalChains />}
         {activeTab === 'reactions' && <ReactionLab />}
         {activeTab === 'flame' && <FlameTestLab />}
         {activeTab === 'quiz' && <QuizArena />}

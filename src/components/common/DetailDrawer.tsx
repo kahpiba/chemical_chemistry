@@ -18,34 +18,64 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   onClose,
   onOpenInAtomViewer,
 }) => {
+  // Listen for Escape key to close drawer
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!element && !molecule) return null;
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        width: '440px',
-        maxWidth: '92vw',
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(28px)',
-        WebkitBackdropFilter: 'blur(28px)',
-        borderLeft: '1px solid #cbd5e1',
-        boxShadow: '-10px 0 40px rgba(15, 23, 42, 0.12)',
-        zIndex: 100,
-        display: 'flex',
-        flexDirection: 'column',
-        animation: 'slideInRight 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
-      }}
-    >
-      <style>{`
-        @keyframes slideInRight {
-          from { transform: translateX(100%); opacity: 0; }
-          to { transform: translateX(0); opacity: 1; }
-        }
-      `}</style>
+    <>
+      {/* Semi-transparent Backdrop Overlay with click-to-close */}
+      <div
+        className="drawer-backdrop"
+        style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(15, 23, 42, 0.25)',
+          backdropFilter: 'blur(3px)',
+          WebkitBackdropFilter: 'blur(3px)',
+          zIndex: 99,
+          animation: 'drawerFadeIn 0.2s ease-out',
+        }}
+        onClick={onClose}
+      />
+
+      <div
+        className="detail-drawer-container"
+        style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: '450px',
+          maxWidth: '92vw',
+          background: 'rgba(255, 255, 255, 0.96)',
+          backdropFilter: 'blur(28px)',
+          WebkitBackdropFilter: 'blur(28px)',
+          borderLeft: '1px solid #cbd5e1',
+          boxShadow: '-10px 0 40px rgba(15, 23, 42, 0.15)',
+          zIndex: 100,
+          display: 'flex',
+          flexDirection: 'column',
+          animation: 'slideInRight 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
+      >
+        <style>{`
+          @keyframes drawerFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+          }
+        `}</style>
 
       {/* Drawer Header */}
       <div
@@ -366,5 +396,6 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
         </button>
       </div>
     </div>
+    </>
   );
 };

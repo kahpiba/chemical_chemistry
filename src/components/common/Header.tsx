@@ -1,7 +1,7 @@
 import React from 'react';
-import { Atom, Boxes, FlaskConical, Sparkles, Layers, Flame, Trophy, ArrowLeftRight } from 'lucide-react';
+import { Atom, Boxes, FlaskConical, Sparkles, Layers, Flame, Trophy, ArrowLeftRight, GitCommit } from 'lucide-react';
 
-export type ActiveTab = 'periodic' | 'molecules' | 'reactions' | 'flame' | 'quiz' | 'compare';
+export type ActiveTab = 'periodic' | 'molecules' | 'chains' | 'reactions' | 'flame' | 'quiz' | 'compare';
 
 interface HeaderProps {
   activeTab: ActiveTab;
@@ -50,6 +50,16 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
 
         <button
+          className={`nav-tab ${activeTab === 'chains' ? 'active' : ''}`}
+          onClick={() => onTabChange('chains')}
+          role="tab"
+          aria-selected={activeTab === 'chains'}
+        >
+          <GitCommit size={16} />
+          <span>Rantai Kimia</span>
+        </button>
+
+        <button
           className={`nav-tab ${activeTab === 'reactions' ? 'active' : ''}`}
           onClick={() => onTabChange('reactions')}
           role="tab"
@@ -92,8 +102,8 @@ export const Header: React.FC<HeaderProps> = ({
 
       <div className="header-actions">
         <div className="stat-chip">
-          <Sparkles size={14} color="#38bdf8" />
-          <span>118 Unsur · 6 Lab</span>
+          <Sparkles size={14} color="#0284c7" />
+          <span>118 Unsur · 7 Modul</span>
         </div>
         <button className="btn btn-ghost" onClick={onOpenAbout} title="Tentang Chemical Atlas">
           Tentang
