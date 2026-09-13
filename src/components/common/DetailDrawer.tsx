@@ -4,6 +4,8 @@ import { CATEGORIES } from '../../data/elements';
 import type { ElementData } from '../../data/elements';
 import { MOLECULE_CATEGORIES } from '../../data/molecules';
 import type { MoleculeData } from '../../data/molecules';
+import { getHazardProfile } from '../../utils/hazardsLogic';
+import '../../styles/reaction.css';
 
 interface DetailDrawerProps {
   element: ElementData | null;
@@ -11,6 +13,120 @@ interface DetailDrawerProps {
   onClose: () => void;
   onOpenInAtomViewer?: (el: ElementData) => void;
 }
+
+const GHS_MAP: Record<string, { label: string; icon: string; bg: string; color: string }> = {
+  'flame': { label: 'Mudah Terbakar', icon: '🔥', bg: '#fef2f2', color: '#b91c1c' },
+  'flame_over_circle': { label: 'Oksidator Reaktif', icon: '⭕', bg: '#fefce8', color: '#a16207' },
+  'corrosion': { label: 'Korosif Asam/Basa', icon: '⚠️', bg: '#fff7ed', color: '#c2410c' },
+  'skull_crossbones': { label: 'Toksisitas Akut', icon: '☠️', bg: '#fef2f2', color: '#991b1b' },
+  'exploding_bomb': { label: 'Mudah Meledak', icon: '💥', bg: '#fffbeb', color: '#b45309' },
+  'gas_cylinder': { label: 'Gas Bertekanan', icon: '🛢️', bg: '#f0fdf4', color: '#15803d' },
+  'health_hazard': { label: 'Bahaya Organ/Paru', icon: '🫁', bg: '#faf5ff', color: '#7e22ce' },
+  'exclamation_mark': { label: 'Iritasi Kulit/Mata', icon: '⚡', bg: '#fffbeb', color: '#d97706' },
+  'environment': { label: 'Bahaya Lingkungan', icon: '🐟', bg: '#f0fdfa', color: '#0f766e' },
+};
+
+const HazardCard: React.FC<{ identifier: string }> = ({ identifier }) => {
+  const profile = getHazardProfile(identifier);
+  if (!profile) return null;
+
+  return (
+    <div
+      style={{
+        background: '#ffffff',
+        border: '1px solid #e2e8f0',
+        borderRadius: '12px',
+        padding: '16px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <ShieldAlert size={16} color="#d97706" />
+          <span style={{ fontSize: '13px', fontWeight: 700, color: '#1e293b' }}>
+            Standar Keselamatan & NFPA 704 (GHS)
+          </span>
+        </div>
+        <span
+          style={{
+            fontSize: '11px',
+            fontWeight: 800,
+            padding: '2px 8px',
+            borderRadius: '4px',
+            background: profile.signalWord.includes('BAHAYA') ? '#fee2e2' : profile.signalWord.includes('PERINGATAN') ? '#fef3c7' : '#f0fdf4',
+            color: profile.signalWord.includes('BAHAYA') ? '#b91c1c' : profile.signalWord.includes('PERINGATAN') ? '#b45309' : '#15803d',
+            letterSpacing: '0.5px',
+          }}
+        >
+          {profile.signalWord}
+        </span>
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+        {/* NFPA 704 Diamond */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+          <div className="nfpa-diamond-box">
+            <div className="nfpa-quadrant nfpa-flammability" title={`Mudah Terbakar (Flammability): Tingkat ${profile.nfpa.flammability}`}>
+              <span className="nfpa-val">{profile.nfpa.flammability}</span>
+            </div>
+            <div className="nfpa-quadrant nfpa-instability" title={`Ketidakstabilan (Instability): Tingkat ${profile.nfpa.instability}`}>
+              <span className="nfpa-val">{profile.nfpa.instability}</span>
+            </div>
+            <div className="nfpa-quadrant nfpa-health" title={`Kesehatan (Health): Tingkat ${profile.nfpa.health}`}>
+              <span className="nfpa-val">{profile.nfpa.health}</span>
+            </div>
+            <div className="nfpa-quadrant nfpa-special" title={`Bahaya Khusus: ${profile.nfpa.special || 'Normal'}`}>
+              <span className="nfpa-val">{profile.nfpa.special || '-'}</span>
+            </div>
+          </div>
+          <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600 }}>NFPA 704</span>
+        </div>
+
+        {/* Hazard Statements & GHS Pictograms */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '220px' }}>
+          {/* GHS Pictograms Pills */}
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            {profile.ghs.map((pic) => {
+              const info = GHS_MAP[pic] || { label: pic, icon: '⚠️', bg: '#f1f5f9', color: '#475569' };
+              return (
+                <span
+                  key={pic}
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    padding: '2px 8px',
+                    borderRadius: '9999px',
+                    background: info.bg,
+                    color: info.color,
+                    border: `1px solid ${info.color}30`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                  }}
+                >
+                  <span>{info.icon}</span>
+                  <span>{info.label}</span>
+                </span>
+              );
+            })}
+          </div>
+
+          {/* Hazard Statements */}
+          <div style={{ fontSize: '12px', color: '#475569', lineHeight: 1.5 }}>
+            <ul style={{ margin: 0, paddingLeft: '16px' }}>
+              {profile.hazardStatements.map((stmt, idx) => (
+                <li key={idx}>{stmt}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   element,
@@ -284,6 +400,9 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                 Ditemukan oleh: <strong>{element.discoveredBy}</strong>
               </p>
             </div>
+
+            {/* NFPA 704 & GHS Classification */}
+            <HazardCard identifier={element.symbol} />
           </>
         )}
 
@@ -398,6 +517,9 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                 </p>
               </div>
             )}
+
+            {/* NFPA 704 & GHS Classification */}
+            <HazardCard identifier={molecule.formula} />
           </>
         )}
       </div>

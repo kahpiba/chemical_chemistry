@@ -1,0 +1,201 @@
+/* ==========================================================================
+   Certificate of Achievement Styles (Print-Ready & Screen Modal)
+   ========================================================================== */
+
+.certificate-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.certificate-modal-container {
+  background: #ffffff;
+  border-radius: 20px;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.certificate-controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.certificate-canvas-frame {
+  padding: 30px;
+  background: #f1f5f9;
+  display: flex;
+  justify-content: center;
+}
+
+/* Printable Certificate Sheet */
+.certificate-sheet {
+  width: 800px;
+  min-height: 520px;
+  background: #ffffff;
+  border: 8px double #d97706;
+  border-radius: 12px;
+  padding: 36px 44px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(254, 243, 199, 0.25) 0%, transparent 70%);
+}
+
+.cert-corner-ornament {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border: 2px solid #d97706;
+}
+
+.cert-top-left { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+.cert-top-right { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+.cert-bottom-left { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+.cert-bottom-right { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+.cert-header-title {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #1e293b;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.cert-subtitle {
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #b45309;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.cert-recipient-name {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0284c7;
+  border-bottom: 2px solid #cbd5e1;
+  padding-bottom: 4px;
+  min-width: 320px;
+  text-align: center;
+  font-family: Georgia, serif;
+  margin: 12px 0 6px;
+}
+
+.cert-body-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #475569;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.cert-competencies-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 14px 0;
+}
+
+.cert-pill {
+  font-size: 10px;
+  font-weight: 700;
+  background: #f0f9ff;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
+.cert-footer-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.cert-signature-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.cert-signature-line {
+  width: 140px;
+  height: 1px;
+  background: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.cert-gold-seal {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border: 4px double #ffffff;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+/* Print Overrides */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  .certificate-sheet, .certificate-sheet * {
+    visibility: visible !important;
+  }
+
+  .certificate-sheet {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) scale(1.05) !important;
+    width: 95vw !important;
+    min-height: 90vh !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

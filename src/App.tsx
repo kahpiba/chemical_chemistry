@@ -17,6 +17,8 @@ import { ChemicalChains } from './components/chains/ChemicalChains';
 import { SolutionsLab } from './components/solutions/SolutionsLab';
 import { EquilibriumLab } from './components/equilibrium/EquilibriumLab';
 import { ChemistryQuests } from './components/quests/ChemistryQuests';
+import { TitrationLab } from './components/titration/TitrationLab';
+import { CertificateModal } from './components/certificate/CertificateModal';
 import { WorksheetModal } from './components/worksheet/WorksheetModal';
 import { ELEMENTS } from './data/elements';
 import type { ElementData } from './data/elements';
@@ -47,6 +49,7 @@ export function App() {
   const [drawerMolecule, setDrawerMolecule] = useState<MoleculeData | null>(null);
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [worksheetOpen, setWorksheetOpen] = useState<boolean>(false);
+  const [certificateOpen, setCertificateOpen] = useState<boolean>(false);
 
   // When an element is clicked in Periodic Table
   const handleSelectElement = (el: ElementData) => {
@@ -77,6 +80,7 @@ export function App() {
         }}
         onOpenAbout={() => setAboutOpen(true)}
         onOpenWorksheet={() => setWorksheetOpen(true)}
+        onOpenCertificate={() => setCertificateOpen(true)}
       />
 
       {/* Main Content Body */}
@@ -149,6 +153,7 @@ export function App() {
 
         {activeTab === 'chains' && <ChemicalChains />}
         {activeTab === 'reactions' && <ReactionLab />}
+        {activeTab === 'titration' && <TitrationLab />}
         {activeTab === 'stoichiometry' && <EquationBalancer />}
         {activeTab === 'solutions' && <SolutionsLab />}
         {activeTab === 'equilibrium' && <EquilibriumLab />}
@@ -179,6 +184,12 @@ export function App() {
       <WorksheetModal
         isOpen={worksheetOpen}
         onClose={() => setWorksheetOpen(false)}
+      />
+
+      {/* Official Certificate Modal */}
+      <CertificateModal
+        isOpen={certificateOpen}
+        onClose={() => setCertificateOpen(false)}
       />
 
       {/* About Modal */}
@@ -250,14 +261,14 @@ export function App() {
                   Tentang Chemical Atlas
                 </h3>
                 <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                  Interactive 3D Chemistry Explorer · 13 Modul Pembelajaran Lengkap
+                  Interactive 3D Chemistry Explorer · 14 Modul Pembelajaran Lengkap
                 </span>
               </div>
             </div>
 
             <p style={{ fontSize: '13px', lineHeight: 1.7, color: 'var(--text-secondary)', margin: 0 }}>
               <strong>Chemical Atlas</strong> adalah platform edukasi kimia interaktif komprehensif yang
-              dirancang untuk siswa, guru, dan penggemar sains guna memahami dunia atom, molekul, dan reaksi kimia secara visual, intuitif, dan matematis.
+              dirancang untuk siswa, guru, dan penggemar sains guna memahami dunia atom, molekul, reaksi bahaya nyata, dan instrumen laboratorium presisi tinggi secara visual, intuitif, dan matematis.
             </p>
 
             <div
@@ -273,13 +284,14 @@ export function App() {
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent-cyan)', fontSize: '13px', fontWeight: 600 }}>
                 <Sparkles size={16} />
-                13 Modul Pembelajaran Unggulan:
+                14 Modul Pembelajaran Unggulan:
               </div>
               <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', paddingLeft: '20px', lineHeight: 1.6, margin: 0 }}>
-                <li><strong>Tabel Periodik 118 Unsur</strong> model atom 3D Bohr & konfigurasi elektron kulit.</li>
-                <li><strong>Molekul 3D & Perancang Kustom</strong> eksplorasi ikatan, fitur Urai Struktur (Explode) & Atom Legend.</li>
+                <li><strong>Tabel Periodik 118 Unsur & Standar NFPA 704 / GHS</strong> model atom 3D Bohr, kulit elektron, dan klasifikasi bahaya resmi.</li>
+                <li><strong>Molekul 3D & Perancang Kustom</strong> eksplorasi ikatan, tolakan sterik kuantum, disosiasi ikatan, dan Atom Legend.</li>
                 <li><strong>Rantai Kimia & Spektra IR FTIR</strong> 8 deret homolog organik, polimer, dan grafik serapan inframerah.</li>
-                <li><strong>Virtual Reaction Lab</strong> simulasi pencampuran senyawa dengan sensor digital pH meter dan titrasi.</li>
+                <li><strong>Virtual Reaction Lab & Bahaya Nyata</strong> simulasi gas klorin $Cl_2$, thermal shock asam sulfat, dan pemisahan fasa tak campur.</li>
+                <li><strong>Titrasi Asam-Basa Burette Presisi</strong> aparatus kaca interaktif, kurva sigmoid pH dinamis, tetesan cairan, dan mode ujian buta.</li>
                 <li><strong>Penyetara Reaksi Cerdas</strong> eliminasi matriks Gauss-Jordan dan kalkulator stoikiometri pereaksi pembatas.</li>
                 <li><strong>Kalkulator Larutan & pH Penyangga</strong> hukum pengenceran M₁V₁ = M₂V₂, Henderson-Hasselbalch, dan hidrolisis garam.</li>
                 <li><strong>Simulasi Kesetimbangan Kimia</strong> tabung piston gas reversibel, Asas Le Chatelier, dan profil energi aktivasi (Ea).</li>
@@ -288,7 +300,7 @@ export function App() {
                 <li><strong>Misi Detektif Kimia</strong> investigasi kasus misteri laboratorium dengan uji kualitatif & reward skor.</li>
                 <li><strong>Uji Nyala Api</strong> simulasi spektrum emisi Bunsen burner logam alkali dan alkali tanah.</li>
                 <li><strong>Radar Pembanding Unsur</strong> analisis komparasi multi-parameter 2 unsur kimia side-by-side.</li>
-                <li><strong>Lembar Kerja LKPD Siswa</strong> format printable dengan mode kunci jawaban untuk pendidik.</li>
+                <li><strong>Lembar Kerja Siswa (LKPD) & Sertifikat Kelulusan Resmi</strong> instrumen asesmen cetak A4 berstandar akademik.</li>
               </ul>
             </div>
 

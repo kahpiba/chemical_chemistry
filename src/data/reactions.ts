@@ -33,6 +33,12 @@ export interface ReactionEffect {
   glowOrSparks: boolean;
   pHStart?: number;
   pHEnd?: number;
+  beakerCrack?: boolean;
+  spatterEffect?: boolean;
+  isHazardousFailure?: boolean;
+  hazardType?: 'toxic_gas' | 'thermal_crack' | 'immiscible_phase' | 'alkali_explosion';
+  isImmiscible?: boolean;
+  immiscibleColors?: [string, string]; // [topColor, bottomColor]
 }
 
 export interface ReactionData {
@@ -218,6 +224,39 @@ export const REAGENTS: Reagent[] = [
     state: 'solid',
     color: '#cbd5e1',
     description: 'Logam alkali lunak yang bereaksi eksplosif seketika bila menyentuh air.',
+    hazard: 'flammable',
+    pH: 7.0,
+  },
+  {
+    id: 'NaClO',
+    name: 'Sodium Hypochlorite 5% (Bleach)',
+    nameId: 'Natrium Hipoklorit (Pemutih Pakaian)',
+    formula: 'NaClO(aq)',
+    state: 'liquid',
+    color: '#fef9c3',
+    description: 'Larutan oksidator rumah tangga beraroma khas klorin klor.',
+    hazard: 'corrosive',
+    pH: 11.2,
+  },
+  {
+    id: 'H2SO4_conc',
+    name: 'Concentrated Sulfuric Acid 98%',
+    nameId: 'Asam Sulfat Pekat 98% (H₂SO₄)',
+    formula: 'H₂SO₄(l)',
+    state: 'liquid',
+    color: '#f1f5f9',
+    description: 'Cairan kental seperti minyak dengan afinitas air ekstrem dan pelepasan kalor eksoterm dahsyat.',
+    hazard: 'corrosive',
+    pH: 0.1,
+  },
+  {
+    id: 'Organic_Oil',
+    name: 'Mineral Paraffin Oil',
+    nameId: 'Minyak Parafin (Alkana Non-Polar)',
+    formula: 'C₁₄H₃₀(l)',
+    state: 'liquid',
+    color: '#fef08a',
+    description: 'Cairan hidrokarbon hidrofobik yang tidak larut dan memisah dari molekul polar air.',
     hazard: 'flammable',
     pH: 7.0,
   },
@@ -485,4 +524,101 @@ export const REACTIONS: ReactionData[] = [
     realWorldApplication: 'Pendorong bahan bakar roket uap monopropelan peroksida dan enzim katalase tubuh yang melindungi sel dari racun radikal bebas.',
     safetyWarning: 'Uap panas mengepul deras dan cairan dapat membusa meluap dari bejana.',
   },
+  {
+    id: 'bleach-acid-chlorine',
+    title: 'Hazardous Bleach & Acid Reaction (Chlorine Gas Release)',
+    titleId: 'Bahaya Fatal: Pemutih + Asam Klorida (Gas Klorin Beracun)',
+    type: 'gas_evolution',
+    requiredReagents: ['HCl', 'NaClO'],
+    balancedEquation: '2HCl(aq) + NaClO(aq) → Cl₂(g)↑ + NaCl(aq) + H₂O(l)',
+    deltaH: -108.5,
+    effects: {
+      liquidColorStart: '#fef9c3',
+      liquidColorEnd: '#d9f99d', // pale green tint
+      hasGas: true,
+      gasSpeed: 0.95,
+      gasColor: '#a3e635', // lime-yellowish-green toxic chlorine gas
+      hasPrecipitate: false,
+      precipitateColor: '',
+      precipitateName: '',
+      temperatureStart: 25,
+      temperatureEnd: 42.0,
+      steamEffect: true,
+      glowOrSparks: false,
+      pHStart: 1.5,
+      pHEnd: 3.5,
+      isHazardousFailure: true,
+      hazardType: 'toxic_gas',
+    },
+    summary: 'PERINGATAN BAHAYA FATAL! Pencampuran pemutih pakaian (NaClO) dengan pembersih porselen asam (HCl) membebaskan gas Klorin (Cl₂) berwarna kuning kehijauan yang berbau menusuk dan sangat beracun bagi paru-paru.',
+    molecularExplanation: 'Ion hipoklorit (OCl⁻) dalam suasana asam kuat direduksi secara cepat oleh ion klorida (Cl⁻) melalui reaksi disproporsionasi redoks: ClO⁻ + Cl⁻ + 2H⁺ → Cl₂(g)↑ + H₂O.',
+    realWorldApplication: 'Larangan keselamatan rumah tangga dan industri: JANGAN PERNAH mencampur cairan pemutih pakaian dengan cairan pembersih lantai berbasis asam.',
+    safetyWarning: 'BAHAYA TOKSISITAS AKUT GHS! Gas Cl₂ dapat menyebabkan asfiksia, luka bakar paru-paru, dan kematian bila terhirup!',
+  },
+  {
+    id: 'water-to-sulfuric-acid',
+    title: 'Dangerous Water into Concentrated Acid (Thermal Shock)',
+    titleId: 'Pelanggaran Fatal: Air Dituang ke Asam Sulfat Pekat',
+    type: 'exothermic_redox',
+    requiredReagents: ['H2O', 'H2SO4_conc'],
+    balancedEquation: 'H₂SO₄(pekat) + H₂O(l) → Kalor Ekstrem + Percikan Mendidih',
+    deltaH: -95.3,
+    effects: {
+      liquidColorStart: '#f1f5f9',
+      liquidColorEnd: '#f8fafc',
+      hasGas: true,
+      gasSpeed: 1.0,
+      gasColor: '#ffffff',
+      hasPrecipitate: false,
+      precipitateColor: '',
+      precipitateName: '',
+      temperatureStart: 25,
+      temperatureEnd: 118.0, // Exceeds boiling point!
+      steamEffect: true,
+      glowOrSparks: true,
+      pHStart: 0.1,
+      pHEnd: 0.5,
+      beakerCrack: true,
+      spatterEffect: true,
+      isHazardousFailure: true,
+      hazardType: 'thermal_crack',
+    },
+    summary: 'PELANGGARAN ATURAN KESELAMATAN LAB! Menuangkan air ke dalam asam sulfat pekat memicu lonjakan panas hidrasi instan. Lapisan air langsung mendidih meledak, memercikkan asam panas ke segala arah, dan memicu retakan kaca beker akibat kejutan termal (thermal shock).',
+    molecularExplanation: 'Hidrasi asam sulfat (H₂SO₄ + H₂O → H₃O⁺ + HSO₄⁻) memiliki entalpi pelarutan sangat eksotermik. Air memiliki massa jenis lebih ringan sehingga mengapung di atas asam pekat; panas yang terkonsentrasi di permukaan seketika mengubah air menjadi uap ledak bertekanan.',
+    realWorldApplication: 'Aturan baku laboratorium sedunia: "Asam ke Air (AA)", bukan "Air ke Asam". Selalu tuangkan asam perlahan melalui dinding kaca ke dalam wadah air banyak.',
+    safetyWarning: 'KEJUTAN TERMAL & KOROSIF PARAH! Beker kaca dapat pecah seketika dan cairan asam memercik ke mata atau kulit praktikan.',
+  },
+  {
+    id: 'oil-water-immiscible',
+    title: 'Non-Spontaneous Immiscible Phase Separation',
+    titleId: 'Campuran Non-Spontan: Pemisahan Fase Minyak & Air (ΔG > 0)',
+    type: 'synthesis',
+    requiredReagents: ['H2O', 'Organic_Oil'],
+    balancedEquation: 'C₁₄H₃₀(l) + H₂O(l) → 2 Fase Heterogen Terpisah (ΔG > 0)',
+    deltaH: 5.4, // Non-spontaneous positive
+    effects: {
+      liquidColorStart: '#fef08a',
+      liquidColorEnd: '#e0f2fe',
+      hasGas: false,
+      gasSpeed: 0,
+      gasColor: '',
+      hasPrecipitate: false,
+      precipitateColor: '',
+      precipitateName: '',
+      temperatureStart: 25,
+      temperatureEnd: 25.0,
+      steamEffect: false,
+      glowOrSparks: false,
+      pHStart: 7.0,
+      pHEnd: 7.0,
+      isHazardousFailure: false,
+      isImmiscible: true,
+      immiscibleColors: ['#fef08a', '#e0f2fe'], // Oil top, water bottom
+    },
+    summary: 'Tidak terjadi reaksi kimia! Minyak parafin non-polar dan air polar tidak dapat saling melarutkan (prinsip "Like Dissolves Like"). Massa jenis minyak yang lebih kecil membuatnya mengapung di atas air, membentuk bidang batas fase (meniscus) yang tegas.',
+    molecularExplanation: 'Energi bebas Gibbs reaksi ΔG = ΔH - TΔS bernilai positif (> 0). Molekul air membentuk jejaring ikatan hidrogen yang kuat dan menolak molekul hidrokarbon parafin karena efek hidrofobik entropic.',
+    realWorldApplication: 'Prinsip pemisahan tumpahan minyak di laut dengan oil skimmer, formulasi kosmetik dua fase (two-phase micellar water), dan ekstraksi pelarut cair-cair.',
+    safetyWarning: 'Aman dan tidak reaktif. Hindari membuang minyak langsung ke wastafel laboratorium agar pipa tidak tersumbat.',
+  },
 ];
+

@@ -9,7 +9,9 @@ import {
   ShieldCheck,
   AlertCircle,
   Play,
+  Zap,
 } from 'lucide-react';
+import { playPop, playViolentSpatter } from '../../utils/audio';
 
 interface CustomAtom {
   id: string;
@@ -222,10 +224,31 @@ export const MoleculeBuilder: React.FC = () => {
 
     renderer.domElement.addEventListener('click', handleClick);
 
+    const overAtomIds = new Set(
+      formulaInfo.violations.filter((v) => v.status === 'over').map((v) => v.atomId)
+    );
+
     let frameId: number;
     const animate = () => {
       frameId = requestAnimationFrame(animate);
       controls.update();
+
+      // Steric clash vibration effect for illegal overbonded atoms
+      if (overAtomIds.size > 0) {
+        atoms.forEach((atom, i) => {
+          if (overAtomIds.has(atom.id)) {
+            const mesh = atomMeshMap.get(atom.id);
+            if (mesh) {
+              mesh.position.x = atom.position[0] + Math.sin(Date.now() * 0.05 + i) * 0.035;
+              mesh.position.y = atom.position[1] + Math.cos(Date.now() * 0.05 + i) * 0.035;
+              const mat = mesh.material as THREE.MeshStandardMaterial;
+              mat.emissive.setHex(0xdc2626);
+              mat.emissiveIntensity = 0.5 + Math.sin(Date.now() * 0.01) * 0.4;
+            }
+          }
+        });
+      }
+
       renderer.render(scene, camera);
     };
     animate();
@@ -340,6 +363,33 @@ export const MoleculeBuilder: React.FC = () => {
     setAtoms([]);
     setBonds([]);
     setSelectedAtomId(null);
+  };
+
+  const handleSimulateDissociation = () => {
+    const overAtoms = formulaInfo.violations.filter((v) => v.status === 'over');
+    if (overAtoms.length === 0) return;
+
+    playPop();
+    playViolentSpatter();
+
+    // Snap excess bonds on overbonded atoms to restore stability
+    const overIds = new Set(overAtoms.map((v) => v.atomId));
+    setBonds((prev) => {
+      const toRemove = new Set<string>();
+      overIds.forEach((id) => {
+        const connected = prev.filter((b) => b.sourceId === id || b.targetId === id);
+        const atom = atoms.find((a) => a.id === id);
+        const max = atom?.maxBonds || 4;
+        let total = connected.reduce((acc, b) => acc + b.order, 0);
+        for (const b of connected) {
+          if (total > max) {
+            toRemove.add(b.id);
+            total -= b.order;
+          }
+        }
+      });
+      return prev.filter((b) => !toRemove.has(b.id));
+    });
   };
 
   return (
@@ -498,6 +548,47 @@ export const MoleculeBuilder: React.FC = () => {
             <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
               Rumus Kimia: <strong>{formulaInfo.formula}</strong> • {formulaInfo.atomCount} atom • {formulaInfo.bondCount} ikatan
             </div>
+
+            {/* Real-World Failure / Overbonding Alert & Dissociation Simulation */}
+            {formulaInfo.violations.some((v) => v.status === 'over') && (
+              <div
+                style={{
+                  marginTop: '8px',
+                  padding: '10px 12px',
+                  borderRadius: '10px',
+                  background: '#fef2f2',
+                  border: '1px solid #fecaca',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#dc2626', fontSize: '12px', fontWeight: 700 }}>
+                  <AlertCircle size={15} />
+                  <span>Kegagalan Valensi di Alam Nyata!</span>
+                </div>
+                <p style={{ margin: 0, fontSize: '11px', color: '#991b1b', lineHeight: 1.5 }}>
+                  Unsur periode 2 (seperti Karbon, Nitrogen, Oksigen) tidak memiliki subkulit 2d untuk menampung lebih dari 8 elektron oktet. Atom bergetar hebat akibat tolakan sterik antar-elektron!
+                </p>
+                <button
+                  className="btn btn-primary"
+                  onClick={handleSimulateDissociation}
+                  style={{
+                    fontSize: '11px',
+                    padding: '6px 12px',
+                    gap: '6px',
+                    background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                    borderColor: '#b91c1c',
+                    width: '100%',
+                    justifyContent: 'center',
+                  }}
+                  title="Simulasikan pemutusan ikatan spontan akibat ketidakstabilan orbital di dunia nyata"
+                >
+                  <Zap size={14} />
+                  💥 Simulasikan Disosiasi Nyata
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

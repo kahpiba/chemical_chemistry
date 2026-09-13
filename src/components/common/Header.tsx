@@ -17,6 +17,8 @@ import {
   Repeat,
   Volume2,
   VolumeX,
+  Pipette,
+  Award,
 } from 'lucide-react';
 import { isMuted, setMuted, playClick } from '../../utils/audio';
 
@@ -25,6 +27,7 @@ export type ActiveTab =
   | 'molecules'
   | 'chains'
   | 'reactions'
+  | 'titration'
   | 'stoichiometry'
   | 'electrochem'
   | 'orbitals'
@@ -40,6 +43,7 @@ interface HeaderProps {
   onTabChange: (tab: ActiveTab) => void;
   onOpenAbout: () => void;
   onOpenWorksheet: () => void;
+  onOpenCertificate: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -47,6 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
   onTabChange,
   onOpenAbout,
   onOpenWorksheet,
+  onOpenCertificate,
 }) => {
   const [muted, setLocalMuted] = useState<boolean>(() => isMuted());
 
@@ -112,6 +117,16 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <FlaskConical size={16} />
           <span>Lab Reaksi</span>
+        </button>
+
+        <button
+          className={`nav-tab ${activeTab === 'titration' ? 'active' : ''}`}
+          onClick={() => onTabChange('titration')}
+          role="tab"
+          aria-selected={activeTab === 'titration'}
+        >
+          <Pipette size={16} />
+          <span>Titrasi Burette</span>
         </button>
 
         <button
@@ -226,9 +241,19 @@ export const Header: React.FC<HeaderProps> = ({
           <span>LKPD Siswa</span>
         </button>
 
+        <button
+          className="btn btn-secondary"
+          onClick={onOpenCertificate}
+          style={{ fontSize: '12px', gap: '6px', padding: '6px 12px' }}
+          title="Buka dan cetak Sertifikat Kelulusan Praktikum Virtual"
+        >
+          <Award size={14} color="#d97706" />
+          <span>Sertifikat</span>
+        </button>
+
         <div className="stat-chip">
           <Sparkles size={14} color="#0284c7" />
-          <span>13 Modul Edukasi</span>
+          <span>14 Modul Edukasi</span>
         </div>
 
         <button className="btn btn-ghost" onClick={onOpenAbout} title="Tentang Chemical Atlas">
