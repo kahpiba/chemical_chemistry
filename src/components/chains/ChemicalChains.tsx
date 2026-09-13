@@ -14,13 +14,14 @@ import {
 import type { HydrocarbonSeries, PolymerData } from '../../data/chainsData';
 import { ChainCanvas } from './ChainCanvas';
 import { ChainCalculations } from './ChainCalculations';
+import { FTIRSpectrum } from './FTIRSpectrum';
 import '../../styles/chains.css';
 
 export const ChemicalChains: React.FC = () => {
   const [series, setSeries] = useState<HydrocarbonSeries>('alkane');
   const [carbonCount, setCarbonCount] = useState<number>(8); // Default: Oktana (C8)
   const [selectedPolymer, setSelectedPolymer] = useState<PolymerData>(POLYMER_CATALOG[0]);
-  const [displayMode, setDisplayMode] = useState<'skeletal' | 'ballstick' | 'lewis'>('skeletal');
+  const [displayMode, setDisplayMode] = useState<'skeletal' | 'ballstick' | 'lewis' | 'ftir'>('skeletal');
 
   // Dynamic calculations for current hydrocarbon
   const calculations = useMemo(() => {
@@ -204,6 +205,13 @@ export const ChemicalChains: React.FC = () => {
           >
             Lewis
           </button>
+          <button
+            className={`mode-btn ${displayMode === 'ftir' ? 'active' : ''}`}
+            onClick={() => setDisplayMode('ftir')}
+            title="Spektroskopi Inframerah (FTIR)"
+          >
+            Spektra IR (FTIR)
+          </button>
         </div>
       </div>
 
@@ -302,16 +310,23 @@ export const ChemicalChains: React.FC = () => {
             </span>
           </div>
 
-          <ChainCanvas
-            carbonCount={carbonCount}
-            series={series}
-            polymer={selectedPolymer}
-            displayMode={displayMode}
-          />
+          {displayMode === 'ftir' ? (
+            <FTIRSpectrum series={series} carbonCount={carbonCount} />
+          ) : (
+            <ChainCanvas
+              carbonCount={carbonCount}
+              series={series}
+              polymer={selectedPolymer}
+              displayMode={displayMode}
+            />
+          )}
 
           <div className="chains-canvas-footer">
             <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-              💡 <strong>Tips Interaktif:</strong> Rantai karbon hidrokarbon dialam tidak lurus kaku, melainkan membentuk pola zigzag 3D dinamis karena tolakan pasangan elektron ikatan (VSEPR).
+              💡 <strong>Tips Interaktif:</strong>{' '}
+              {displayMode === 'ftir'
+                ? 'Spektra IR mengidentifikasi gugus fungsi spesifik melalui serapan frekuensi foton inframerah yang sepadan dengan energi vibrasi ikatan.'
+                : 'Rantai karbon hidrokarbon dialam tidak lurus kaku, melainkan membentuk pola zigzag 3D dinamis karena tolakan pasangan elektron ikatan (VSEPR).'}
             </span>
           </div>
         </div>

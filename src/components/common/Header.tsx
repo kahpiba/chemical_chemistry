@@ -1,18 +1,44 @@
 import React from 'react';
-import { Atom, Boxes, FlaskConical, Sparkles, Layers, Flame, Trophy, ArrowLeftRight, GitCommit } from 'lucide-react';
+import {
+  Atom,
+  Boxes,
+  FlaskConical,
+  Sparkles,
+  Layers,
+  Flame,
+  Trophy,
+  ArrowLeftRight,
+  GitCommit,
+  Scale,
+  Zap,
+  Compass,
+  FileText,
+} from 'lucide-react';
 
-export type ActiveTab = 'periodic' | 'molecules' | 'chains' | 'reactions' | 'flame' | 'quiz' | 'compare';
+export type ActiveTab =
+  | 'periodic'
+  | 'molecules'
+  | 'chains'
+  | 'reactions'
+  | 'stoichiometry'
+  | 'electrochem'
+  | 'orbitals'
+  | 'flame'
+  | 'compare'
+  | 'quiz';
 
 interface HeaderProps {
   activeTab: ActiveTab;
   onTabChange: (tab: ActiveTab) => void;
   onOpenAbout: () => void;
+  onOpenWorksheet: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   activeTab,
   onTabChange,
   onOpenAbout,
+  onOpenWorksheet,
 }) => {
   return (
     <header className="app-header glass-panel">
@@ -70,13 +96,43 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
 
         <button
+          className={`nav-tab ${activeTab === 'stoichiometry' ? 'active' : ''}`}
+          onClick={() => onTabChange('stoichiometry')}
+          role="tab"
+          aria-selected={activeTab === 'stoichiometry'}
+        >
+          <Scale size={16} />
+          <span>Penyetara Reaksi</span>
+        </button>
+
+        <button
+          className={`nav-tab ${activeTab === 'electrochem' ? 'active' : ''}`}
+          onClick={() => onTabChange('electrochem')}
+          role="tab"
+          aria-selected={activeTab === 'electrochem'}
+        >
+          <Zap size={16} />
+          <span>Elektrokimia</span>
+        </button>
+
+        <button
+          className={`nav-tab ${activeTab === 'orbitals' ? 'active' : ''}`}
+          onClick={() => onTabChange('orbitals')}
+          role="tab"
+          aria-selected={activeTab === 'orbitals'}
+        >
+          <Compass size={16} />
+          <span>Orbital 3D</span>
+        </button>
+
+        <button
           className={`nav-tab ${activeTab === 'flame' ? 'active' : ''}`}
           onClick={() => onTabChange('flame')}
           role="tab"
           aria-selected={activeTab === 'flame'}
         >
           <Flame size={16} />
-          <span>Uji Nyala Api</span>
+          <span>Uji Nyala</span>
         </button>
 
         <button
@@ -101,10 +157,21 @@ export const Header: React.FC<HeaderProps> = ({
       </nav>
 
       <div className="header-actions">
+        <button
+          className="btn btn-secondary"
+          onClick={onOpenWorksheet}
+          style={{ fontSize: '12px', gap: '6px', padding: '6px 12px' }}
+          title="Buka dan cetak Lembar Kerja Peserta Didik (LKPD)"
+        >
+          <FileText size={14} color="#0284c7" />
+          <span>LKPD Siswa</span>
+        </button>
+
         <div className="stat-chip">
           <Sparkles size={14} color="#0284c7" />
-          <span>118 Unsur · 7 Modul</span>
+          <span>10 Modul Edukasi</span>
         </div>
+
         <button className="btn btn-ghost" onClick={onOpenAbout} title="Tentang Chemical Atlas">
           Tentang
         </button>
