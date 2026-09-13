@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from './components/common/Header';
 import type { ActiveTab } from './components/common/Header';
 import { DetailDrawer } from './components/common/DetailDrawer';
@@ -67,6 +67,17 @@ export function App() {
       playClick();
     }
   };
+
+  // Handle ESC to close About modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && aboutOpen) {
+        setAboutOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [aboutOpen]);
 
   // When an element is clicked in Periodic Table
   const handleSelectElement = (el: ElementData) => {
@@ -360,7 +371,7 @@ export function App() {
                 <li><strong>Tabel Periodik 118 Unsur & Standar NFPA 704 / GHS</strong> model atom 3D Bohr, kulit elektron, dan klasifikasi bahaya resmi.</li>
                 <li><strong>Molekul 3D & Perancang Kustom</strong> eksplorasi ikatan, tolakan sterik kuantum, disosiasi ikatan, dan Atom Legend.</li>
                 <li><strong>Rantai Kimia & Spektra IR FTIR</strong> 8 deret homolog organik, polimer, dan grafik serapan inframerah.</li>
-                <li><strong>Virtual Reaction Lab & Bahaya Nyata</strong> simulasi gas klorin $Cl_2$, thermal shock asam sulfat, dan pemisahan fasa tak campur.</li>
+                <li><strong>Virtual Reaction Lab & Bahaya Nyata</strong> simulasi gas klorin Cl₂, thermal shock asam sulfat, dan pemisahan fasa tak campur.</li>
                 <li><strong>Titrasi Asam-Basa Burette Presisi</strong> aparatus kaca interaktif, kurva sigmoid pH dinamis, tetesan cairan, dan mode ujian buta.</li>
                 <li><strong>Penyetara Reaksi Cerdas</strong> eliminasi matriks Gauss-Jordan dan kalkulator stoikiometri pereaksi pembatas.</li>
                 <li><strong>Kalkulator Larutan & pH Penyangga</strong> hukum pengenceran M₁V₁ = M₂V₂, Henderson-Hasselbalch, dan hidrolisis garam.</li>
