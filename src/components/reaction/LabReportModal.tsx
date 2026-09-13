@@ -71,7 +71,7 @@ export const LabReportModal: React.FC<LabReportModalProps> = ({
               <Sparkles size={28} color="#0284c7" />
             </div>
             <div className="report-institution-text">
-              <h2>CHEMICAL ATLAS VIRTUAL LABORATORY</h2>
+              <h2>CHEMICAL CHEMISTRY VIRTUAL LABORATORY</h2>
               <p>Laporan Resmi Praktikum Kimia Sains SMA/MA & Perguruan Tinggi</p>
               <span className="report-date-badge">Tanggal Praktikum: {todayStr}</span>
             </div>

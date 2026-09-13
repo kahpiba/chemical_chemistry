@@ -1,8 +1,8 @@
-# Chemical Atlas (ChemLab 3D)
+# Chemical Chemistry (ChemLab 3D)
 
 > **Platform Edukasi Kimia Interaktif 3D**: Jelajahi 118 unsur tabel periodik dengan simulasi atom Bohr 3D, uraikan ikatan molekul senyawa (*exploded view*), dan simulasikan reaksi kimia virtual secara visual dan nyata.
 
-Terinspirasi dari konsep visualisasi interaktif **Human Atlas**, Chemical Atlas menghadirkan pengalaman belajar kimia yang imersif, saintifik, dan berkinerja tinggi berbasis WebGL (Three.js), React 19, TypeScript, dan Vite.
+Chemical Chemistry menghadirkan pengalaman belajar kimia yang imersif, saintifik, dan berkinerja tinggi berbasis WebGL (Three.js), React 19, TypeScript, dan Vite.
 
 ---
 

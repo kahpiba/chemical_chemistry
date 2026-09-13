@@ -1,5 +1,5 @@
 /**
- * Web Audio API synthesizer for Chemical Atlas.
+ * Web Audio API synthesizer for Chemical Chemistry.
  * Generates realistic laboratory sound effects without any external audio files.
  */
 

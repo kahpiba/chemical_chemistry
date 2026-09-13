@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
               <Atom size={22} />
             </div>
             <div className="brand-text-col">
-              <span className="brand-app-name">Chemical Atlas</span>
+              <span className="brand-app-name">Chemical Chemistry</span>
               <span className="brand-subtitle-tag">Virtual Lab 3D</span>
             </div>
           </button>

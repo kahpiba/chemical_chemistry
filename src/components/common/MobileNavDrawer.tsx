@@ -73,7 +73,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({
             </div>
             <div>
               <div style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a', lineHeight: 1.1 }}>
-                Chemical Atlas
+                Chemical Chemistry
               </div>
               <div style={{ fontSize: '10px', fontWeight: 600, color: '#0284c7', textTransform: 'uppercase' }}>
                 Navigasi 14 Modul

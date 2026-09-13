@@ -328,7 +328,7 @@ export function App() {
               </div>
               <div>
                 <h3 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-                  Tentang Chemical Atlas
+                  Tentang Chemical Chemistry
                 </h3>
                 <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                   Interactive 3D Chemistry Explorer · 14 Modul Pembelajaran Lengkap
@@ -337,7 +337,7 @@ export function App() {
             </div>
 
             <p style={{ fontSize: '13px', lineHeight: 1.7, color: 'var(--text-secondary)', margin: 0 }}>
-              <strong>Chemical Atlas</strong> adalah platform edukasi kimia interaktif komprehensif yang
+              <strong>Chemical Chemistry</strong> adalah platform edukasi kimia interaktif komprehensif yang
               dirancang untuk siswa, guru, dan penggemar sains guna memahami dunia atom, molekul, reaksi bahaya nyata, dan instrumen laboratorium presisi tinggi secara visual, intuitif, dan matematis.
             </p>
 

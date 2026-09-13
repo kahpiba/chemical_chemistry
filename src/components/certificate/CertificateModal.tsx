@@ -130,7 +130,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                 <h1 className="cert-header-title">Sertifikat Kelulusan Praktikum</h1>
                 <span style={{ fontSize: '24px' }}>🔬</span>
               </div>
-              <div className="cert-subtitle">Chemical Atlas Virtual Laboratory & Science Explorer</div>
+              <div className="cert-subtitle">Chemical Chemistry Virtual Laboratory & Science Explorer</div>
               <div style={{ fontSize: '10px', color: '#94a3b8', letterSpacing: '1.5px', marginTop: '2px' }}>
                 NO. REG: {certId}-2026
               </div>
@@ -167,7 +167,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               <div className="cert-signature-box">
                 <div style={{ fontWeight: 700, color: '#334155', marginBottom: '2px' }}>Laboratorium Virtual</div>
                 <div style={{ fontStyle: 'italic', color: '#0284c7', fontFamily: 'cursive', fontSize: '14px', marginBottom: '2px' }}>
-                  Chemical Atlas Engine
+                  Chemical Chemistry Engine
                 </div>
                 <div className="cert-signature-line"></div>
                 <div>Kepala Laboratorium Virtual</div>

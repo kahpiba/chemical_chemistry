@@ -202,7 +202,7 @@ export const ReactionLab: React.FC = () => {
 
     ctx.fillStyle = '#0284c7';
     ctx.font = 'bold 22px system-ui, sans-serif';
-    ctx.fillText('CHEMICAL ATLAS — LABORATORIUM REAKSI VIRTUAL', 55, 68);
+    ctx.fillText('CHEMICAL CHEMISTRY — LABORATORIUM REAKSI VIRTUAL', 55, 68);
 
     ctx.fillStyle = '#64748b';
     ctx.font = '13px system-ui, sans-serif';

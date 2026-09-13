@@ -135,7 +135,7 @@ export const WorksheetModal: React.FC<WorksheetModalProps> = ({ isOpen, onClose 
                 LEMBAR KERJA PESERTA DIDIK (LKPD)
               </h2>
               <div style={{ fontSize: '13px', fontWeight: 600, color: '#475569', marginTop: '2px' }}>
-                Mata Pelajaran: Kimia • Platform: Chemical Atlas Interactive Lab
+                Mata Pelajaran: Kimia • Platform: Chemical Chemistry Interactive Lab
               </div>
             </div>
             <div style={{ textAlign: 'right', fontSize: '12px', color: '#64748b' }}>
