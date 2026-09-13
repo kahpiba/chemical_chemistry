@@ -4,7 +4,7 @@ import type { ActiveTab } from './components/common/Header';
 import { DetailDrawer } from './components/common/DetailDrawer';
 import { PeriodicTable } from './components/periodic/PeriodicTable';
 import { MoleculeScene } from './components/molecular/MoleculeScene';
-import { MoleculeControls } from './components/molecular/MoleculeControls';
+import { MoleculeShelf, MoleculeHUD } from './components/molecular/MoleculeControls';
 import { ReactionLab } from './components/reaction/ReactionLab';
 import { FlameTestLab } from './components/flame/FlameTestLab';
 import { QuizArena } from './components/quiz/QuizArena';
@@ -76,19 +76,11 @@ export function App() {
 
         {activeTab === 'molecules' && (
           <div className="molecular-view">
-            <MoleculeControls
+            <MoleculeShelf
               selectedMolecule={selectedMolecule}
               onSelectMolecule={(mol) => {
                 setSelectedMolecule(mol);
                 setExplodeAmount(0);
-              }}
-              explodeAmount={explodeAmount}
-              onExplodeChange={setExplodeAmount}
-              autoRotate={autoRotate}
-              onToggleAutoRotate={() => setAutoRotate(!autoRotate)}
-              onOpenDetails={() => {
-                setDrawerElement(null);
-                setDrawerMolecule(selectedMolecule);
               }}
             />
 
@@ -97,7 +89,19 @@ export function App() {
               explodeAmount={explodeAmount}
               autoRotate={autoRotate}
               onSelectAtom={handleSelectMoleculeAtom}
-            />
+            >
+              <MoleculeHUD
+                selectedMolecule={selectedMolecule}
+                explodeAmount={explodeAmount}
+                onExplodeChange={setExplodeAmount}
+                autoRotate={autoRotate}
+                onToggleAutoRotate={() => setAutoRotate(!autoRotate)}
+                onOpenDetails={() => {
+                  setDrawerElement(null);
+                  setDrawerMolecule(selectedMolecule);
+                }}
+              />
+            </MoleculeScene>
           </div>
         )}
 

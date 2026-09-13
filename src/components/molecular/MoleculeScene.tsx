@@ -8,6 +8,7 @@ interface MoleculeSceneProps {
   explodeAmount: number; // 0 (assembled) to 1 (fully exploded)
   autoRotate: boolean;
   onSelectAtom?: (atom: MoleculeAtom | null) => void;
+  children?: React.ReactNode;
 }
 
 export const MoleculeScene: React.FC<MoleculeSceneProps> = ({
@@ -15,6 +16,7 @@ export const MoleculeScene: React.FC<MoleculeSceneProps> = ({
   explodeAmount,
   autoRotate,
   onSelectAtom,
+  children,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredAtom, setHoveredAtom] = useState<{ atom: MoleculeAtom; x: number; y: number } | null>(null);
@@ -288,6 +290,9 @@ export const MoleculeScene: React.FC<MoleculeSceneProps> = ({
           )}
         </div>
       )}
+
+      {/* Floating HUD Overlays (Title, Action buttons, Explode Slider & Legend) */}
+      {children}
     </div>
   );
 };
