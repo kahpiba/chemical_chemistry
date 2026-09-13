@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { CRYSTAL_LATTICES } from '../../data/crystalLatticeData';
 import type { CrystalLattice, LatticeAtom } from '../../data/crystalLatticeData';
+import { Scene3DHint } from '../common/Scene3DHint';
 
 export const CrystalLatticeViewer: React.FC = () => {
   const [selectedLattice, setSelectedLattice] = useState<CrystalLattice>(CRYSTAL_LATTICES[0]);
@@ -299,6 +300,9 @@ export const CrystalLatticeViewer: React.FC = () => {
             border: '1px solid #cbd5e1',
           }}
         >
+          {/* 3D Touch Hint */}
+          <Scene3DHint storageKey="chem_lattice_hint_seen" customText="Geser kursor / sentuh untuk rotasi kisi kristal 3D" />
+
           {/* Canvas Mount */}
           <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
 

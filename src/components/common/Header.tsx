@@ -4,8 +4,6 @@ import {
   ChevronDown,
   Menu,
   Search,
-  FileText,
-  Award,
   Volume2,
   VolumeX,
 } from 'lucide-react';
@@ -33,8 +31,8 @@ interface HeaderProps {
   activeTab: ActiveTab;
   onTabChange: (tab: ActiveTab) => void;
   onOpenAbout: () => void;
-  onOpenWorksheet: () => void;
-  onOpenCertificate: () => void;
+  onOpenWorksheet?: () => void;
+  onOpenCertificate?: () => void;
   onOpenMobileDrawer: () => void;
   onOpenQuickSwitcher: () => void;
   muted: boolean;
@@ -45,8 +43,6 @@ export const Header: React.FC<HeaderProps> = ({
   activeTab,
   onTabChange,
   onOpenAbout,
-  onOpenWorksheet,
-  onOpenCertificate,
   onOpenMobileDrawer,
   onOpenQuickSwitcher,
   muted,
@@ -210,40 +206,24 @@ export const Header: React.FC<HeaderProps> = ({
             </kbd>
           </button>
 
-          {/* LKPD Siswa Button */}
-          <button
-            className="btn btn-secondary"
-            onClick={onOpenWorksheet}
-            style={{ fontSize: '12px', gap: '6px', padding: '6px 12px' }}
-            title="Lembar Kerja Peserta Didik (LKPD)"
-          >
-            <FileText size={14} color="#0284c7" />
-            <span>LKPD</span>
-          </button>
-
-          {/* Sertifikat Button */}
-          <button
-            className="btn btn-secondary"
-            onClick={onOpenCertificate}
-            style={{ fontSize: '12px', gap: '6px', padding: '6px 12px' }}
-            title="Sertifikat Kelulusan Praktikum Virtual"
-          >
-            <Award size={14} color="#d97706" />
-            <span>Sertifikat</span>
-          </button>
-
           {/* Audio Toggle */}
           <button
             className="btn btn-secondary"
             onClick={onToggleMute}
             style={{ fontSize: '12px', gap: '4px', padding: '6px 10px' }}
             title={muted ? 'Aktifkan Suara Laboratorium' : 'Bisukan Suara'}
+            aria-label={muted ? 'Aktifkan Suara Laboratorium' : 'Bisukan Suara'}
           >
             {muted ? <VolumeX size={15} color="#dc2626" /> : <Volume2 size={15} color="#16a34a" />}
           </button>
 
           {/* Tentang Modal Link */}
-          <button className="btn btn-ghost" onClick={onOpenAbout} style={{ fontSize: '12px' }}>
+          <button
+            className="btn btn-ghost"
+            onClick={onOpenAbout}
+            style={{ fontSize: '12px' }}
+            aria-label="Informasi Tentang Chemical Chemistry"
+          >
             Tentang
           </button>
 

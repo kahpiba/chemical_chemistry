@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chemical-atlas-v1';
+const CACHE_NAME = 'chemical-chemistry-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

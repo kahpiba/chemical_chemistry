@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import type { MoleculeData, MoleculeAtom } from '../../data/molecules';
+import { Scene3DHint } from '../common/Scene3DHint';
 
 interface MoleculeSceneProps {
   molecule: MoleculeData;
@@ -268,6 +269,9 @@ export const MoleculeScene: React.FC<MoleculeSceneProps> = ({
 
   return (
     <div ref={containerRef} className="mol-viewport-container">
+      {/* 3D Gesture & Touch Interaction Hint */}
+      <Scene3DHint customText="Geser kursor / sentuh untuk memutar 3D • Scroll / cubit untuk zoom" />
+
       {/* Atom Tooltip on Hover */}
       {hoveredAtom && (
         <div

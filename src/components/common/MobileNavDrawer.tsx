@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X, FileText, Award, Volume2, VolumeX, Info, Atom } from 'lucide-react';
+import { X, Volume2, VolumeX, Info, Atom } from 'lucide-react';
 import type { ActiveTab } from './Header';
 import { NAV_CATEGORIES } from '../../data/navigationModules';
 import { NavIcon } from './NavIcon';
@@ -11,8 +11,8 @@ interface MobileNavDrawerProps {
   activeTab: ActiveTab;
   onTabChange: (tab: ActiveTab) => void;
   onOpenAbout: () => void;
-  onOpenWorksheet: () => void;
-  onOpenCertificate: () => void;
+  onOpenWorksheet?: () => void;
+  onOpenCertificate?: () => void;
   muted: boolean;
   onToggleMute: () => void;
 }
@@ -23,8 +23,6 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({
   activeTab,
   onTabChange,
   onOpenAbout,
-  onOpenWorksheet,
-  onOpenCertificate,
   muted,
   onToggleMute,
 }) => {
@@ -173,57 +171,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({
             gap: '8px',
           }}
         >
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-            <button
-              onClick={() => {
-                onClose();
-                onOpenWorksheet();
-              }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                padding: '8px 10px',
-                borderRadius: '8px',
-                border: '1px solid #e2e8f0',
-                background: '#ffffff',
-                color: '#0284c7',
-                fontSize: '12px',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
-              <FileText size={14} />
-              <span>LKPD Siswa</span>
-            </button>
-
-            <button
-              onClick={() => {
-                onClose();
-                onOpenCertificate();
-              }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                padding: '8px 10px',
-                borderRadius: '8px',
-                border: '1px solid #e2e8f0',
-                background: '#ffffff',
-                color: '#d97706',
-                fontSize: '12px',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
-              <Award size={14} />
-              <span>Sertifikat</span>
-            </button>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <button
               onClick={onToggleMute}
               style={{

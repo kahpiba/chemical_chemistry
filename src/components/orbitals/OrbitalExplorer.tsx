@@ -6,6 +6,7 @@ import {
   Sparkles,
   Eye,
 } from 'lucide-react';
+import { Scene3DHint } from '../common/Scene3DHint';
 
 export type OrbitalId =
   | '1s'
@@ -550,6 +551,8 @@ export const OrbitalExplorer: React.FC = () => {
 
         {/* Right 3D Viewport */}
         <div ref={containerRef} className="orbital-viewport">
+          <Scene3DHint storageKey="chem_orbital_hint_seen" customText="Geser kursor / sentuh untuk mengamati fungsi gelombang orbital 3D" />
+
           {/* Top-left HUD info */}
           <div className="orbital-hud-info">
             <h3>{selectedOrbital.name}</h3>

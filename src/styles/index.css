@@ -18,6 +18,22 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Accessibility Focus Rings (WCAG 2.1 AA) */
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25);
+}
+
 #root {
   min-height: 100vh;
   display: flex;
