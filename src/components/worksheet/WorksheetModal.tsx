@@ -31,7 +31,7 @@ export const WorksheetModal: React.FC<WorksheetModalProps> = ({ isOpen, onClose 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 999,
+        zIndex: 1600,
         padding: '20px',
       }}
       onClick={onClose}

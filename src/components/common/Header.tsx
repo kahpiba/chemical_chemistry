@@ -1,26 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Atom,
-  Boxes,
-  FlaskConical,
-  Sparkles,
-  Layers,
-  Flame,
-  Trophy,
-  ArrowLeftRight,
-  GitCommit,
-  Scale,
-  Zap,
-  Compass,
+  ChevronDown,
+  Menu,
+  Search,
   FileText,
-  Droplets,
-  Repeat,
+  Award,
   Volume2,
   VolumeX,
-  Pipette,
-  Award,
 } from 'lucide-react';
-import { isMuted, setMuted, playClick } from '../../utils/audio';
+import { playClick } from '../../utils/audio';
+import { NAV_CATEGORIES, getModuleCategory, getModuleInfo } from '../../data/navigationModules';
+import { NavIcon } from './NavIcon';
 
 export type ActiveTab =
   | 'periodic'
@@ -44,6 +35,10 @@ interface HeaderProps {
   onOpenAbout: () => void;
   onOpenWorksheet: () => void;
   onOpenCertificate: () => void;
+  onOpenMobileDrawer: () => void;
+  onOpenQuickSwitcher: () => void;
+  muted: boolean;
+  onToggleMute: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -52,213 +47,217 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAbout,
   onOpenWorksheet,
   onOpenCertificate,
+  onOpenMobileDrawer,
+  onOpenQuickSwitcher,
+  muted,
+  onToggleMute,
 }) => {
-  const [muted, setLocalMuted] = useState<boolean>(() => isMuted());
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleToggleMute = () => {
-    const nextMuted = !muted;
-    setMuted(nextMuted);
-    setLocalMuted(nextMuted);
-    if (!nextMuted) {
-      playClick();
-    }
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Keyboard shortcut: Ctrl+K or Cmd+K to open Quick Switcher
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        onOpenQuickSwitcher();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onOpenQuickSwitcher]);
+
+  const activeCategory = getModuleCategory(activeTab);
+  const activeInfo = getModuleInfo(activeTab);
+
+  const handleCategoryClick = (categoryId: string) => {
+    setOpenDropdown(openDropdown === categoryId ? null : categoryId);
+  };
+
+  const handleSelectModule = (tabId: ActiveTab) => {
+    playClick();
+    onTabChange(tabId);
+    setOpenDropdown(null);
   };
 
   return (
-    <header className="app-header glass-panel">
-      <div className="header-brand">
-        <div className="brand-icon">
-          <Atom size={24} />
-        </div>
-        <div>
-          <div className="brand-title">
-            <span>Chemical Atlas</span>
-            <span className="brand-tag">3D Explorer</span>
+    <header className="app-header-container">
+      <div className="app-header-main">
+        {/* Brand Group */}
+        <div className="header-brand-group">
+          <button
+            className="brand-badge-link"
+            onClick={() => handleSelectModule('periodic')}
+            title="Kembali ke Tabel Periodik"
+          >
+            <div className="brand-icon-box">
+              <Atom size={22} />
+            </div>
+            <div className="brand-text-col">
+              <span className="brand-app-name">Chemical Atlas</span>
+              <span className="brand-subtitle-tag">Virtual Lab 3D</span>
+            </div>
+          </button>
+
+          {/* Active Module Indicator Badge (Desktop & Tablet) */}
+          <div className="active-module-pill" title={`Kategori: ${activeCategory.title}`}>
+            <NavIcon name={activeInfo.iconName} size={14} color="#0284c7" />
+            <span>{activeInfo.title}</span>
           </div>
         </div>
-      </div>
 
-      <nav className="nav-tabs" role="tablist">
-        <button
-          className={`nav-tab ${activeTab === 'periodic' ? 'active' : ''}`}
-          onClick={() => onTabChange('periodic')}
-          role="tab"
-          aria-selected={activeTab === 'periodic'}
-        >
-          <Layers size={16} />
-          <span>Tabel Periodik</span>
-        </button>
+        {/* Desktop Categorized Navigation Hub (4 Logical Clusters) */}
+        <nav className="desktop-nav-hub" ref={dropdownRef} aria-label="Kategori Modul">
+          {NAV_CATEGORIES.map((cat) => {
+            const isCategoryActive = cat.id === activeCategory.id;
+            const isOpen = openDropdown === cat.id;
 
-        <button
-          className={`nav-tab ${activeTab === 'molecules' ? 'active' : ''}`}
-          onClick={() => onTabChange('molecules')}
-          role="tab"
-          aria-selected={activeTab === 'molecules'}
-        >
-          <Boxes size={16} />
-          <span>Molekul 3D</span>
-        </button>
+            return (
+              <div
+                key={cat.id}
+                className="category-nav-dropdown-trigger"
+                onMouseEnter={() => setOpenDropdown(cat.id)}
+                onMouseLeave={() => setOpenDropdown(null)}
+              >
+                <button
+                  className={`category-pill-btn ${isCategoryActive ? 'active' : ''} ${isOpen ? 'open' : ''}`}
+                  onClick={() => handleCategoryClick(cat.id)}
+                  aria-expanded={isOpen}
+                >
+                  <NavIcon name={cat.icon} size={15} color={isCategoryActive ? '#0284c7' : '#64748b'} />
+                  <span>{cat.title}</span>
+                  <ChevronDown size={14} className="category-chevron" />
+                </button>
 
-        <button
-          className={`nav-tab ${activeTab === 'chains' ? 'active' : ''}`}
-          onClick={() => onTabChange('chains')}
-          role="tab"
-          aria-selected={activeTab === 'chains'}
-        >
-          <GitCommit size={16} />
-          <span>Rantai Kimia</span>
-        </button>
+                {/* Floating Dropdown */}
+                {isOpen && (
+                  <div className="category-floating-dropdown">
+                    {cat.items.map((item) => {
+                      const isSelected = activeTab === item.id;
+                      return (
+                        <button
+                          key={item.id}
+                          className={`dropdown-item-btn ${isSelected ? 'selected' : ''}`}
+                          onClick={() => handleSelectModule(item.id)}
+                        >
+                          <div className="dropdown-item-icon">
+                            <NavIcon name={item.iconName} size={16} />
+                          </div>
+                          <div className="dropdown-item-info">
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4px' }}>
+                              <span className="dropdown-item-title">{item.title}</span>
+                              {item.badge && (
+                                <span
+                                  style={{
+                                    fontSize: '9px',
+                                    fontWeight: 700,
+                                    padding: '1px 5px',
+                                    borderRadius: '4px',
+                                    background: isSelected ? '#bae6fd' : '#f1f5f9',
+                                    color: isSelected ? '#0369a1' : '#64748b',
+                                  }}
+                                >
+                                  {item.badge}
+                                </span>
+                              )}
+                            </div>
+                            <span className="dropdown-item-desc">{item.shortDesc}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </nav>
 
-        <button
-          className={`nav-tab ${activeTab === 'reactions' ? 'active' : ''}`}
-          onClick={() => onTabChange('reactions')}
-          role="tab"
-          aria-selected={activeTab === 'reactions'}
-        >
-          <FlaskConical size={16} />
-          <span>Lab Reaksi</span>
-        </button>
+        {/* Actions & Utilities */}
+        <div className="header-actions-group">
+          {/* Quick Switcher Button */}
+          <button
+            className="btn btn-secondary"
+            onClick={onOpenQuickSwitcher}
+            style={{ fontSize: '12px', gap: '6px', padding: '6px 12px' }}
+            title="Cari dan buka 14 modul (Shortcut: Ctrl+K)"
+          >
+            <Search size={14} color="#0284c7" />
+            <span>Jelajahi</span>
+            <kbd
+              style={{
+                fontSize: '10px',
+                background: '#e2e8f0',
+                color: '#64748b',
+                padding: '1px 4px',
+                borderRadius: '3px',
+                fontFamily: 'monospace',
+                marginLeft: '2px',
+              }}
+            >
+              ⌘K
+            </kbd>
+          </button>
 
-        <button
-          className={`nav-tab ${activeTab === 'titration' ? 'active' : ''}`}
-          onClick={() => onTabChange('titration')}
-          role="tab"
-          aria-selected={activeTab === 'titration'}
-        >
-          <Pipette size={16} />
-          <span>Titrasi Burette</span>
-        </button>
+          {/* LKPD Siswa Button */}
+          <button
+            className="btn btn-secondary"
+            onClick={onOpenWorksheet}
+            style={{ fontSize: '12px', gap: '6px', padding: '6px 12px' }}
+            title="Lembar Kerja Peserta Didik (LKPD)"
+          >
+            <FileText size={14} color="#0284c7" />
+            <span>LKPD</span>
+          </button>
 
-        <button
-          className={`nav-tab ${activeTab === 'stoichiometry' ? 'active' : ''}`}
-          onClick={() => onTabChange('stoichiometry')}
-          role="tab"
-          aria-selected={activeTab === 'stoichiometry'}
-        >
-          <Scale size={16} />
-          <span>Penyetara Reaksi</span>
-        </button>
+          {/* Sertifikat Button */}
+          <button
+            className="btn btn-secondary"
+            onClick={onOpenCertificate}
+            style={{ fontSize: '12px', gap: '6px', padding: '6px 12px' }}
+            title="Sertifikat Kelulusan Praktikum Virtual"
+          >
+            <Award size={14} color="#d97706" />
+            <span>Sertifikat</span>
+          </button>
 
-        <button
-          className={`nav-tab ${activeTab === 'solutions' ? 'active' : ''}`}
-          onClick={() => onTabChange('solutions')}
-          role="tab"
-          aria-selected={activeTab === 'solutions'}
-        >
-          <Droplets size={16} />
-          <span>Larutan & pH</span>
-        </button>
+          {/* Audio Toggle */}
+          <button
+            className="btn btn-secondary"
+            onClick={onToggleMute}
+            style={{ fontSize: '12px', gap: '4px', padding: '6px 10px' }}
+            title={muted ? 'Aktifkan Suara Laboratorium' : 'Bisukan Suara'}
+          >
+            {muted ? <VolumeX size={15} color="#dc2626" /> : <Volume2 size={15} color="#16a34a" />}
+          </button>
 
-        <button
-          className={`nav-tab ${activeTab === 'equilibrium' ? 'active' : ''}`}
-          onClick={() => onTabChange('equilibrium')}
-          role="tab"
-          aria-selected={activeTab === 'equilibrium'}
-        >
-          <Repeat size={16} />
-          <span>Kesetimbangan</span>
-        </button>
+          {/* Tentang Modal Link */}
+          <button className="btn btn-ghost" onClick={onOpenAbout} style={{ fontSize: '12px' }}>
+            Tentang
+          </button>
 
-        <button
-          className={`nav-tab ${activeTab === 'electrochem' ? 'active' : ''}`}
-          onClick={() => onTabChange('electrochem')}
-          role="tab"
-          aria-selected={activeTab === 'electrochem'}
-        >
-          <Zap size={16} />
-          <span>Elektrokimia</span>
-        </button>
-
-        <button
-          className={`nav-tab ${activeTab === 'orbitals' ? 'active' : ''}`}
-          onClick={() => onTabChange('orbitals')}
-          role="tab"
-          aria-selected={activeTab === 'orbitals'}
-        >
-          <Compass size={16} />
-          <span>Orbital 3D</span>
-        </button>
-
-        <button
-          className={`nav-tab ${activeTab === 'quests' ? 'active' : ''}`}
-          onClick={() => onTabChange('quests')}
-          role="tab"
-          aria-selected={activeTab === 'quests'}
-        >
-          <Sparkles size={16} />
-          <span>Detektif Kimia</span>
-        </button>
-
-        <button
-          className={`nav-tab ${activeTab === 'flame' ? 'active' : ''}`}
-          onClick={() => onTabChange('flame')}
-          role="tab"
-          aria-selected={activeTab === 'flame'}
-        >
-          <Flame size={16} />
-          <span>Uji Nyala</span>
-        </button>
-
-        <button
-          className={`nav-tab ${activeTab === 'compare' ? 'active' : ''}`}
-          onClick={() => onTabChange('compare')}
-          role="tab"
-          aria-selected={activeTab === 'compare'}
-        >
-          <ArrowLeftRight size={16} />
-          <span>Bandingkan</span>
-        </button>
-
-        <button
-          className={`nav-tab ${activeTab === 'quiz' ? 'active' : ''}`}
-          onClick={() => onTabChange('quiz')}
-          role="tab"
-          aria-selected={activeTab === 'quiz'}
-        >
-          <Trophy size={16} />
-          <span>Quiz Arena</span>
-        </button>
-      </nav>
-
-      <div className="header-actions">
-        <button
-          className="btn btn-secondary"
-          onClick={handleToggleMute}
-          style={{ fontSize: '12px', gap: '6px', padding: '6px 10px' }}
-          title={muted ? 'Aktifkan Efek Suara Laboratorium' : 'Bisukan Suara'}
-        >
-          {muted ? <VolumeX size={15} color="#dc2626" /> : <Volume2 size={15} color="#16a34a" />}
-          <span style={{ fontSize: '11px' }}>{muted ? 'Mute' : 'Audio'}</span>
-        </button>
-
-        <button
-          className="btn btn-secondary"
-          onClick={onOpenWorksheet}
-          style={{ fontSize: '12px', gap: '6px', padding: '6px 12px' }}
-          title="Buka dan cetak Lembar Kerja Peserta Didik (LKPD)"
-        >
-          <FileText size={14} color="#0284c7" />
-          <span>LKPD Siswa</span>
-        </button>
-
-        <button
-          className="btn btn-secondary"
-          onClick={onOpenCertificate}
-          style={{ fontSize: '12px', gap: '6px', padding: '6px 12px' }}
-          title="Buka dan cetak Sertifikat Kelulusan Praktikum Virtual"
-        >
-          <Award size={14} color="#d97706" />
-          <span>Sertifikat</span>
-        </button>
-
-        <div className="stat-chip">
-          <Sparkles size={14} color="#0284c7" />
-          <span>14 Modul Edukasi</span>
+          {/* Mobile Hamburger Button */}
+          <button
+            className="mobile-hamburger-btn"
+            onClick={onOpenMobileDrawer}
+            title="Buka Navigasi Lengkap"
+            aria-label="Menu Navigasi"
+          >
+            <Menu size={18} />
+            <span>Modul</span>
+          </button>
         </div>
-
-        <button className="btn btn-ghost" onClick={onOpenAbout} title="Tentang Chemical Atlas">
-          Tentang
-        </button>
       </div>
     </header>
   );

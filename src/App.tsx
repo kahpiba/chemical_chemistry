@@ -20,6 +20,10 @@ import { ChemistryQuests } from './components/quests/ChemistryQuests';
 import { TitrationLab } from './components/titration/TitrationLab';
 import { CertificateModal } from './components/certificate/CertificateModal';
 import { WorksheetModal } from './components/worksheet/WorksheetModal';
+import { MobileNavDrawer } from './components/common/MobileNavDrawer';
+import { MobileBottomBar } from './components/common/MobileBottomBar';
+import { QuickSwitcherModal } from './components/common/QuickSwitcherModal';
+import { isMuted, setMuted, playClick } from './utils/audio';
 import { ELEMENTS } from './data/elements';
 import type { ElementData } from './data/elements';
 import { MOLECULES } from './data/molecules';
@@ -50,6 +54,18 @@ export function App() {
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [worksheetOpen, setWorksheetOpen] = useState<boolean>(false);
   const [certificateOpen, setCertificateOpen] = useState<boolean>(false);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState<boolean>(false);
+  const [quickSwitcherOpen, setQuickSwitcherOpen] = useState<boolean>(false);
+  const [muted, setLocalMuted] = useState<boolean>(() => isMuted());
+
+  const handleToggleMute = () => {
+    const nextMuted = !muted;
+    setMuted(nextMuted);
+    setLocalMuted(nextMuted);
+    if (!nextMuted) {
+      playClick();
+    }
+  };
 
   // When an element is clicked in Periodic Table
   const handleSelectElement = (el: ElementData) => {
@@ -81,6 +97,10 @@ export function App() {
         onOpenAbout={() => setAboutOpen(true)}
         onOpenWorksheet={() => setWorksheetOpen(true)}
         onOpenCertificate={() => setCertificateOpen(true)}
+        onOpenMobileDrawer={() => setMobileDrawerOpen(true)}
+        onOpenQuickSwitcher={() => setQuickSwitcherOpen(true)}
+        muted={muted}
+        onToggleMute={handleToggleMute}
       />
 
       {/* Main Content Body */}
@@ -192,6 +212,45 @@ export function App() {
         onClose={() => setCertificateOpen(false)}
       />
 
+      {/* Mobile Slide-over Drawer */}
+      <MobileNavDrawer
+        isOpen={mobileDrawerOpen}
+        onClose={() => setMobileDrawerOpen(false)}
+        activeTab={activeTab}
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          setDrawerElement(null);
+          setDrawerMolecule(null);
+        }}
+        onOpenAbout={() => setAboutOpen(true)}
+        onOpenWorksheet={() => setWorksheetOpen(true)}
+        onOpenCertificate={() => setCertificateOpen(true)}
+        muted={muted}
+        onToggleMute={handleToggleMute}
+      />
+
+      {/* Sticky Mobile Bottom Navigation Bar (< 768px) */}
+      <MobileBottomBar
+        activeTab={activeTab}
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          setDrawerElement(null);
+          setDrawerMolecule(null);
+        }}
+        onOpenDrawer={() => setMobileDrawerOpen(true)}
+      />
+
+      {/* Quick Switcher Command Palette (Ctrl+K) */}
+      <QuickSwitcherModal
+        isOpen={quickSwitcherOpen}
+        onClose={() => setQuickSwitcherOpen(false)}
+        onSelectTab={(tab) => {
+          setActiveTab(tab);
+          setDrawerElement(null);
+          setDrawerMolecule(null);
+        }}
+      />
+
       {/* About Modal */}
       {aboutOpen && (
         <div
@@ -204,7 +263,7 @@ export function App() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 200,
+            zIndex: 1500,
             padding: '20px',
           }}
           onClick={() => setAboutOpen(false)}
