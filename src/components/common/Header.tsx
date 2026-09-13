@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Atom,
   Boxes,
@@ -13,7 +13,12 @@ import {
   Zap,
   Compass,
   FileText,
+  Droplets,
+  Repeat,
+  Volume2,
+  VolumeX,
 } from 'lucide-react';
+import { isMuted, setMuted, playClick } from '../../utils/audio';
 
 export type ActiveTab =
   | 'periodic'
@@ -23,6 +28,9 @@ export type ActiveTab =
   | 'stoichiometry'
   | 'electrochem'
   | 'orbitals'
+  | 'solutions'
+  | 'equilibrium'
+  | 'quests'
   | 'flame'
   | 'compare'
   | 'quiz';
@@ -40,6 +48,17 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAbout,
   onOpenWorksheet,
 }) => {
+  const [muted, setLocalMuted] = useState<boolean>(() => isMuted());
+
+  const handleToggleMute = () => {
+    const nextMuted = !muted;
+    setMuted(nextMuted);
+    setLocalMuted(nextMuted);
+    if (!nextMuted) {
+      playClick();
+    }
+  };
+
   return (
     <header className="app-header glass-panel">
       <div className="header-brand">
@@ -106,6 +125,26 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
 
         <button
+          className={`nav-tab ${activeTab === 'solutions' ? 'active' : ''}`}
+          onClick={() => onTabChange('solutions')}
+          role="tab"
+          aria-selected={activeTab === 'solutions'}
+        >
+          <Droplets size={16} />
+          <span>Larutan & pH</span>
+        </button>
+
+        <button
+          className={`nav-tab ${activeTab === 'equilibrium' ? 'active' : ''}`}
+          onClick={() => onTabChange('equilibrium')}
+          role="tab"
+          aria-selected={activeTab === 'equilibrium'}
+        >
+          <Repeat size={16} />
+          <span>Kesetimbangan</span>
+        </button>
+
+        <button
           className={`nav-tab ${activeTab === 'electrochem' ? 'active' : ''}`}
           onClick={() => onTabChange('electrochem')}
           role="tab"
@@ -123,6 +162,16 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <Compass size={16} />
           <span>Orbital 3D</span>
+        </button>
+
+        <button
+          className={`nav-tab ${activeTab === 'quests' ? 'active' : ''}`}
+          onClick={() => onTabChange('quests')}
+          role="tab"
+          aria-selected={activeTab === 'quests'}
+        >
+          <Sparkles size={16} />
+          <span>Detektif Kimia</span>
         </button>
 
         <button
@@ -159,6 +208,16 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="header-actions">
         <button
           className="btn btn-secondary"
+          onClick={handleToggleMute}
+          style={{ fontSize: '12px', gap: '6px', padding: '6px 10px' }}
+          title={muted ? 'Aktifkan Efek Suara Laboratorium' : 'Bisukan Suara'}
+        >
+          {muted ? <VolumeX size={15} color="#dc2626" /> : <Volume2 size={15} color="#16a34a" />}
+          <span style={{ fontSize: '11px' }}>{muted ? 'Mute' : 'Audio'}</span>
+        </button>
+
+        <button
+          className="btn btn-secondary"
           onClick={onOpenWorksheet}
           style={{ fontSize: '12px', gap: '6px', padding: '6px 12px' }}
           title="Buka dan cetak Lembar Kerja Peserta Didik (LKPD)"
@@ -169,7 +228,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         <div className="stat-chip">
           <Sparkles size={14} color="#0284c7" />
-          <span>10 Modul Edukasi</span>
+          <span>13 Modul Edukasi</span>
         </div>
 
         <button className="btn btn-ghost" onClick={onOpenAbout} title="Tentang Chemical Atlas">

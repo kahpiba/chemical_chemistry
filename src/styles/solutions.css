@@ -1,0 +1,121 @@
+/* Solutions, Dilution & pH Buffer Lab Styles */
+.solutions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.solutions-header-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+}
+
+.solutions-main-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .solutions-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Glass Beaker & Flask Visualizer */
+.flask-stage {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 30px 20px;
+  background: radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 65%, #e2e8f0 100%);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+}
+
+.flask-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.beaker-glass {
+  position: relative;
+  width: 110px;
+  height: 160px;
+  border: 3px solid #94a3b8;
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.beaker-liquid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.beaker-liquid-surface {
+  position: absolute;
+  top: -4px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Graduation marks on beaker */
+.beaker-grad-line {
+  position: absolute;
+  left: 6px;
+  width: 14px;
+  height: 1px;
+  background: #cbd5e1;
+}
+
+/* pH Meter Big Digital Badge */
+.ph-digital-meter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-radius: var(--radius-lg);
+  background: #ffffff;
+  border: 1.5px solid var(--border-color);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+}
+
+.ph-value-display {
+  font-family: var(--font-mono);
+  font-size: 38px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+.ph-rainbow-bar {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 10px 0 6px;
+}
+
+.ph-rainbow-segment {
+  flex: 1;
+  height: 100%;
+}

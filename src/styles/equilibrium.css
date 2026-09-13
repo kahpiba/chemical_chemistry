@@ -1,0 +1,285 @@
+/* ==========================================================================
+   Equilibrium Lab Styles (Clean Scientific Light Theme)
+   ========================================================================== */
+
+.equilibrium-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 12px 16px 40px;
+  box-sizing: border-box;
+}
+
+.eq-header-card {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 16px;
+  padding: 18px 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.eq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 960px) {
+  .eq-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.eq-card {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.eq-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+/* Cylinder Glassware & Piston */
+.piston-chamber-wrapper {
+  position: relative;
+  background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+  border-radius: 16px;
+  padding: 24px 20px;
+  border: 1px solid #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 380px;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+.cylinder-glass {
+  position: relative;
+  width: 240px;
+  border-left: 5px solid rgba(148, 163, 184, 0.8);
+  border-right: 5px solid rgba(148, 163, 184, 0.8);
+  border-bottom: 7px solid rgba(100, 116, 139, 0.9);
+  border-radius: 0 0 16px 16px;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    inset 0 0 20px rgba(255, 255, 255, 0.8),
+    0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+.piston-rod {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 60px;
+  background: linear-gradient(90deg, #94a3b8, #cbd5e1, #64748b);
+  border-radius: 4px 4px 0 0;
+  z-index: 10;
+}
+
+.piston-head {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 18px;
+  background: linear-gradient(180deg, #475569 0%, #334155 100%);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  border: 1px solid #1e293b;
+  z-index: 10;
+}
+
+.gas-contents {
+  width: 100%;
+  transition: background-color 0.5s ease, height 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Measurement ticks on cylinder */
+.cylinder-ticks {
+  position: absolute;
+  right: 8px;
+  top: 10px;
+  bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.cylinder-tick {
+  width: 8px;
+  height: 2px;
+  background: #64748b;
+  position: relative;
+}
+
+.cylinder-tick span {
+  position: absolute;
+  right: 12px;
+  top: -6px;
+  font-size: 9px;
+  font-family: monospace;
+  font-weight: 700;
+  color: #64748b;
+}
+
+/* Heat or Ice Source */
+.thermal-effect {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.burner-flame {
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.flame-particle {
+  width: 12px;
+  height: 24px;
+  background: linear-gradient(to top, #ef4444, #f59e0b, #fbbf24);
+  border-radius: 50% 50% 20% 20%;
+  animation: flicker 0.6s infinite alternate ease-in-out;
+}
+
+.flame-particle:nth-child(2) {
+  height: 32px;
+  animation-duration: 0.4s;
+  animation-delay: 0.1s;
+}
+
+.flame-particle:nth-child(3) {
+  height: 26px;
+  animation-duration: 0.5s;
+  animation-delay: 0.2s;
+}
+
+@keyframes flicker {
+  0% { transform: scale(0.9) rotate(-3deg); opacity: 0.85; }
+  100% { transform: scale(1.1) rotate(3deg); opacity: 1; }
+}
+
+/* Controls Grid */
+.eq-controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 600px) {
+  .eq-controls-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.eq-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9;
+}
+
+.eq-slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary, #475569);
+}
+
+.eq-slider-value {
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--accent-blue, #2563eb);
+}
+
+/* Shift Indicator Banner */
+.shift-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.shift-banner.forward {
+  background: rgba(16, 185, 129, 0.1);
+  color: #065f46;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.shift-banner.reverse {
+  background: rgba(239, 68, 68, 0.1);
+  color: #991b1b;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.shift-banner.neutral {
+  background: rgba(59, 130, 246, 0.1);
+  color: #1e40af;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Activation Energy Graph */
+.ea-graph-container {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ea-svg {
+  width: 100%;
+  height: 200px;
+  overflow: visible;
+}
+
+/* Molecule Count badges */
+.particle-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}

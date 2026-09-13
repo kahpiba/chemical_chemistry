@@ -14,6 +14,9 @@ import { FlameTestLab } from './components/flame/FlameTestLab';
 import { QuizArena } from './components/quiz/QuizArena';
 import { ElementComparison } from './components/periodic/ElementComparison';
 import { ChemicalChains } from './components/chains/ChemicalChains';
+import { SolutionsLab } from './components/solutions/SolutionsLab';
+import { EquilibriumLab } from './components/equilibrium/EquilibriumLab';
+import { ChemistryQuests } from './components/quests/ChemistryQuests';
 import { WorksheetModal } from './components/worksheet/WorksheetModal';
 import { ELEMENTS } from './data/elements';
 import type { ElementData } from './data/elements';
@@ -147,8 +150,11 @@ export function App() {
         {activeTab === 'chains' && <ChemicalChains />}
         {activeTab === 'reactions' && <ReactionLab />}
         {activeTab === 'stoichiometry' && <EquationBalancer />}
+        {activeTab === 'solutions' && <SolutionsLab />}
+        {activeTab === 'equilibrium' && <EquilibriumLab />}
         {activeTab === 'electrochem' && <ElectrochemistryLab />}
         {activeTab === 'orbitals' && <OrbitalExplorer />}
+        {activeTab === 'quests' && <ChemistryQuests />}
         {activeTab === 'flame' && <FlameTestLab />}
         {activeTab === 'compare' && <ElementComparison />}
         {activeTab === 'quiz' && <QuizArena />}
@@ -244,7 +250,7 @@ export function App() {
                   Tentang Chemical Atlas
                 </h3>
                 <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                  Interactive 3D Chemistry Explorer · 10 Modul Pembelajaran
+                  Interactive 3D Chemistry Explorer · 13 Modul Pembelajaran Lengkap
                 </span>
               </div>
             </div>
@@ -267,7 +273,7 @@ export function App() {
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent-cyan)', fontSize: '13px', fontWeight: 600 }}>
                 <Sparkles size={16} />
-                10 Modul Pembelajaran Unggulan:
+                13 Modul Pembelajaran Unggulan:
               </div>
               <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', paddingLeft: '20px', lineHeight: 1.6, margin: 0 }}>
                 <li><strong>Tabel Periodik 118 Unsur</strong> model atom 3D Bohr & konfigurasi elektron kulit.</li>
@@ -275,8 +281,11 @@ export function App() {
                 <li><strong>Rantai Kimia & Spektra IR FTIR</strong> 8 deret homolog organik, polimer, dan grafik serapan inframerah.</li>
                 <li><strong>Virtual Reaction Lab</strong> simulasi pencampuran senyawa dengan sensor digital pH meter dan titrasi.</li>
                 <li><strong>Penyetara Reaksi Cerdas</strong> eliminasi matriks Gauss-Jordan dan kalkulator stoikiometri pereaksi pembatas.</li>
+                <li><strong>Kalkulator Larutan & pH Penyangga</strong> hukum pengenceran M₁V₁ = M₂V₂, Henderson-Hasselbalch, dan hidrolisis garam.</li>
+                <li><strong>Simulasi Kesetimbangan Kimia</strong> tabung piston gas reversibel, Asas Le Chatelier, dan profil energi aktivasi (Ea).</li>
                 <li><strong>Lab Sel Elektrokimia</strong> simulasi sel volta baterai spontan, aliran elektron, jembatan garam, dan Deret Volta.</li>
                 <li><strong>Orbital 3D & Hibridisasi</strong> awan probabilitas elektron s, p, d dan hibridisasi ikatan kimia sp-sp³d².</li>
+                <li><strong>Misi Detektif Kimia</strong> investigasi kasus misteri laboratorium dengan uji kualitatif & reward skor.</li>
                 <li><strong>Uji Nyala Api</strong> simulasi spektrum emisi Bunsen burner logam alkali dan alkali tanah.</li>
                 <li><strong>Radar Pembanding Unsur</strong> analisis komparasi multi-parameter 2 unsur kimia side-by-side.</li>
                 <li><strong>Lembar Kerja LKPD Siswa</strong> format printable dengan mode kunci jawaban untuk pendidik.</li>
