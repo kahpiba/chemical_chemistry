@@ -6,6 +6,7 @@ import { PeriodicTable } from './components/periodic/PeriodicTable';
 import { MoleculeScene } from './components/molecular/MoleculeScene';
 import { MoleculeShelf, MoleculeHUD } from './components/molecular/MoleculeControls';
 import { MoleculeBuilder } from './components/molecular/MoleculeBuilder';
+import { CrystalLatticeViewer } from './components/molecular/CrystalLatticeViewer';
 import { ReactionLab } from './components/reaction/ReactionLab';
 import { EquationBalancer } from './components/stoichiometry/EquationBalancer';
 import { ElectrochemistryLab } from './components/electrochem/ElectrochemistryLab';
@@ -28,7 +29,7 @@ import { ELEMENTS } from './data/elements';
 import type { ElementData } from './data/elements';
 import { MOLECULES } from './data/molecules';
 import type { MoleculeData, MoleculeAtom } from './data/molecules';
-import { Sparkles, Atom, X, Boxes, Wrench } from 'lucide-react';
+import { Sparkles, Atom, X, Boxes, Wrench, Box } from 'lucide-react';
 import './styles/index.css';
 import './styles/periodic.css';
 import './styles/molecular.css';
@@ -46,7 +47,7 @@ export function App() {
   const [selectedMolecule, setSelectedMolecule] = useState<MoleculeData>(MOLECULES[0]); // Default: Water (H2O)
   const [explodeAmount, setExplodeAmount] = useState<number>(0);
   const [autoRotate, setAutoRotate] = useState<boolean>(true);
-  const [moleculeSubMode, setMoleculeSubMode] = useState<'catalog' | 'builder'>('catalog');
+  const [moleculeSubMode, setMoleculeSubMode] = useState<'catalog' | 'builder' | 'crystal'>('catalog');
 
   // Modal States
   const [drawerElement, setDrawerElement] = useState<ElementData | null>(null);
@@ -133,6 +134,14 @@ export function App() {
                   <Wrench size={14} />
                   Perancang Molekul Kustom 3D
                 </button>
+                <button
+                  className={`filter-pill ${moleculeSubMode === 'crystal' ? 'active' : ''}`}
+                  onClick={() => setMoleculeSubMode('crystal')}
+                  style={{ gap: '6px', fontSize: '12px' }}
+                >
+                  <Box size={14} />
+                  Kisi Kristal Padatan 3D
+                </button>
               </div>
             </div>
 
@@ -165,8 +174,10 @@ export function App() {
                   />
                 </MoleculeScene>
               </>
-            ) : (
+            ) : moleculeSubMode === 'builder' ? (
               <MoleculeBuilder />
+            ) : (
+              <CrystalLatticeViewer />
             )}
           </div>
         )}

@@ -92,6 +92,72 @@ export const TitrationLab: React.FC = () => {
     return (selectedSystem.analyteMolarity * selectedSystem.analyteVolume) / selectedSystem.titrantMolarity;
   }, [selectedSystem]);
 
+  // Equivalence pH and Half-Equivalence pH
+  const pHEq = useMemo(() => {
+    if (selectedSystem.type === 'strong_strong') return 7.0;
+    if (selectedSystem.type === 'weak_strong') {
+      const Ka = selectedSystem.ka || 1.8e-5;
+      const totalV = selectedSystem.analyteVolume + vEq;
+      const C_salt = (selectedSystem.analyteMolarity * selectedSystem.analyteVolume) / totalV;
+      const Kh = 1e-14 / Ka;
+      const OH = Math.sqrt(Kh * C_salt);
+      return parseFloat((14.0 - (-Math.log10(OH))).toFixed(2));
+    }
+    const Kb = selectedSystem.kb || 1.8e-5;
+    const totalV = selectedSystem.analyteVolume + vEq;
+    const C_salt = (selectedSystem.analyteMolarity * selectedSystem.analyteVolume) / totalV;
+    const Kh = 1e-14 / Kb;
+    const H = Math.sqrt(Kh * C_salt);
+    return parseFloat((-Math.log10(H)).toFixed(2));
+  }, [selectedSystem, vEq]);
+
+  const vHalf = useMemo(() => vEq / 2.0, [vEq]);
+  const pHHalf = useMemo(() => {
+    if (selectedSystem.type === 'weak_strong') {
+      const pKa = -Math.log10(selectedSystem.ka || 1.8e-5);
+      return parseFloat(pKa.toFixed(2)); // At half-eq, pH = pKa
+    }
+    if (selectedSystem.type === 'strong_weak') {
+      const pKb = -Math.log10(selectedSystem.kb || 1.8e-5);
+      return parseFloat((14.0 - pKb).toFixed(2)); // At half-eq, pOH = pKb -> pH = 14 - pKb
+    }
+    return 1.48; // Strong-strong at half volume
+  }, [selectedSystem]);
+
+  // Current Titration Zone
+  const currentZone = useMemo(() => {
+    if (volumeAdded <= 0.05) {
+      return {
+        name: 'Awal Titrasi',
+        desc: 'Larutan analit murni dalam labu Erlenmeyer sebelum penambahan titran.',
+        color: '#64748b',
+        badgeBg: '#f1f5f9',
+      };
+    }
+    if (volumeAdded < vEq - 1.5) {
+      return {
+        name: 'Zona Larutan Penyangga (Buffer Region)',
+        desc: `Resistensi perubahan pH tinggi. Titik setengah ekuivalen: V = ${vHalf.toFixed(1)} mL (pH = ${pHHalf.toFixed(2)}).`,
+        color: '#0284c7',
+        badgeBg: '#e0f2fe',
+      };
+    }
+    if (Math.abs(volumeAdded - vEq) <= 1.5) {
+      return {
+        name: 'Zona Lonjakan Ekuivalen (Equivalence Jump)',
+        desc: `Kecuraman pH ekstrem (pH ekuivalen = ${pHEq.toFixed(2)}). Indikator warna mengalami transisi stabil.`,
+        color: '#8b5cf6',
+        badgeBg: '#f3e8ff',
+      };
+    }
+    return {
+      name: 'Zona Kelebihan Titran (Excess Region)',
+      desc: 'Analit telah habis bereaksi. pH kurva mendatar didominasi oleh titran standar berlebih.',
+      color: '#10b981',
+      badgeBg: '#dcfce7',
+    };
+  }, [volumeAdded, vEq, pHEq, vHalf, pHHalf]);
+
   // Exact pH calculation along titration trajectory
   const calculateCurrentPH = (v: number): number => {
     const Va = selectedSystem.analyteVolume; // mL
@@ -570,7 +636,7 @@ export const TitrationLab: React.FC = () => {
               </h3>
               {!examMode && (
                 <span style={{ fontSize: '11px', fontWeight: 700, color: '#6d28d9' }}>
-                  Titik Ekivalen Teoretis: V = {vEq.toFixed(1)} mL
+                  Titik Ekivalen Teoretis: V = {vEq.toFixed(1)} mL • pH = {pHEq.toFixed(2)}
                 </span>
               )}
             </div>
@@ -603,17 +669,69 @@ export const TitrationLab: React.FC = () => {
                 <text x="28" y="177" fontSize="8" fill="#64748b" textAnchor="end">0</text>
                 <text x="28" y="28" fontSize="8" fill="#64748b" textAnchor="end">14</text>
 
-                {/* Theoretical Equivalence Line (if not exam mode) */}
+                {/* Theoretical Equivalence Line and Projection Coordinates */}
                 {!examMode && (
-                  <line
-                    x1={35 + (vEq / 50.0) * (400 - 55)}
-                    y1="20"
-                    x2={35 + (vEq / 50.0) * (400 - 55)}
-                    y2="175"
-                    stroke="#8b5cf6"
-                    strokeWidth="1.5"
-                    strokeDasharray="4 4"
-                  />
+                  <g>
+                    {/* Vertical Equivalence Line */}
+                    <line
+                      x1={35 + (vEq / 50.0) * (400 - 55)}
+                      y1="20"
+                      x2={35 + (vEq / 50.0) * (400 - 55)}
+                      y2="175"
+                      stroke="#8b5cf6"
+                      strokeWidth="1.5"
+                      strokeDasharray="4 4"
+                    />
+
+                    {/* Horizontal Projection to pH axis */}
+                    <line
+                      x1="35"
+                      y1={175 - (pHEq / 14.0) * (175 - 25)}
+                      x2={35 + (vEq / 50.0) * (400 - 55)}
+                      y2={175 - (pHEq / 14.0) * (175 - 25)}
+                      stroke="#8b5cf6"
+                      strokeWidth="1.2"
+                      strokeDasharray="3 3"
+                    />
+
+                    {/* Outer Equivalence Glow Ring */}
+                    <circle
+                      cx={35 + (vEq / 50.0) * (400 - 55)}
+                      cy={175 - (pHEq / 14.0) * (175 - 25)}
+                      r="8"
+                      fill="#8b5cf6"
+                      opacity="0.25"
+                    />
+
+                    {/* Equivalence Point Center Dot */}
+                    <circle
+                      cx={35 + (vEq / 50.0) * (400 - 55)}
+                      cy={175 - (pHEq / 14.0) * (175 - 25)}
+                      r="4"
+                      fill="#8b5cf6"
+                      stroke="#ffffff"
+                      strokeWidth="1.5"
+                    />
+
+                    {/* Equivalence Callout Tag */}
+                    <g transform={`translate(${Math.min(270, 35 + (vEq / 50.0) * (400 - 55) + 8)}, ${Math.max(25, 175 - (pHEq / 14.0) * (175 - 25) - 26)})`}>
+                      <rect
+                        width="114"
+                        height="26"
+                        rx="5"
+                        fill="#ffffff"
+                        stroke="#8b5cf6"
+                        strokeWidth="1.2"
+                        filter="drop-shadow(0 2px 4px rgba(0,0,0,0.1))"
+                      />
+                      <text x="6" y="11" fontSize="8.5" fontWeight="bold" fill="#6d28d9">
+                        Titik Ekuivalen (V_eq)
+                      </text>
+                      <text x="6" y="21" fontSize="7.5" fill="#475569" fontFamily="var(--font-mono)">
+                        {vEq.toFixed(1)} mL • pH {pHEq.toFixed(2)}
+                      </text>
+                    </g>
+                  </g>
                 )}
 
                 {/* Plotted Live Curve */}
@@ -641,10 +759,67 @@ export const TitrationLab: React.FC = () => {
                 )}
               </svg>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#64748b' }}>
-                <span>• Rumus Titrasi: <b>V₁ × M₁ × n₁ = V₂ × M₂ × n₂</b></span>
-                <span>• Titik Akhir: Terjadi saat warna indikator berubah stabil</span>
+              {/* Titration Zone Live HUD */}
+              <div
+                style={{
+                  background: currentZone.badgeBg,
+                  border: `1px solid ${currentZone.color}40`,
+                  borderRadius: '10px',
+                  padding: '8px 14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '10px',
+                  flexWrap: 'wrap',
+                  marginTop: '6px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span
+                    style={{
+                      width: '10px',
+                      height: '10px',
+                      borderRadius: '50%',
+                      background: currentZone.color,
+                      display: 'inline-block',
+                    }}
+                  />
+                  <strong style={{ fontSize: '12px', color: currentZone.color }}>
+                    {currentZone.name}
+                  </strong>
+                </div>
+                <span style={{ fontSize: '11px', color: '#475569' }}>
+                  {currentZone.desc}
+                </span>
               </div>
+
+              {/* Guided Molarity Calculation Formula */}
+              {!examMode && (
+                <div
+                  style={{
+                    background: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '10px',
+                    padding: '10px 14px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
+                    fontSize: '11px',
+                    color: '#334155',
+                    marginTop: '6px',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
+                    <span>Kalkulasi Stoikiometri Titrasi:</span>
+                    <span style={{ color: '#0284c7' }}>
+                      V₁ × M₁ × n₁ = V₂ × M₂ × n₂
+                    </span>
+                  </div>
+                  <div style={{ color: '#64748b' }}>
+                    M_analit = (V_titran × M_titran) / V_analit = ({vEq.toFixed(1)} mL × {selectedSystem.titrantMolarity.toFixed(3)} M) / {selectedSystem.analyteVolume.toFixed(1)} mL = <strong style={{ color: '#0284c7', fontFamily: 'var(--font-mono)' }}>{selectedSystem.analyteMolarity.toFixed(3)} M</strong>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

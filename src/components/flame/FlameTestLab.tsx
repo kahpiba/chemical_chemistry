@@ -12,10 +12,12 @@ import {
 } from 'lucide-react';
 import { FLAME_TEST_ELEMENTS } from '../../data/flameTestData';
 import type { FlameTestElement } from '../../data/flameTestData';
+import { BohrSpectroscopyLab } from './BohrSpectroscopyLab';
 import { playBunsenIgnite, playClick, setMuted, isMuted } from '../../utils/audio';
 import '../../styles/flame.css';
 
 export const FlameTestLab: React.FC = () => {
+  const [flameSubMode, setFlameSubMode] = useState<'bunsen' | 'bohr'>('bunsen');
   const [selectedElement, setSelectedElement] = useState<FlameTestElement | null>(null);
   const [isIgnited, setIsIgnited] = useState(false);
   const [showSpectrum, setShowSpectrum] = useState(false);
@@ -185,174 +187,210 @@ export const FlameTestLab: React.FC = () => {
 
   return (
     <div className="flame-lab-view">
-      {/* Element selector */}
-      <div className="flame-elements-bar glass-panel">
-        <div className="flame-bar-header">
-          <Sparkles size={14} color="#f59e0b" />
-          <span>Pilih Unsur untuk Uji Nyala Api</span>
-          <button className="btn-icon-sm" onClick={toggleMute} title={audioMuted ? 'Unmute' : 'Mute'}>
-            {audioMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-          </button>
-        </div>
-        <div className="flame-element-chips">
-          {FLAME_TEST_ELEMENTS.map(el => (
-            <button
-              key={el.symbol}
-              className={`flame-element-chip ${selectedElement?.symbol === el.symbol ? 'active' : ''}`}
-              onClick={() => handleSelectElement(el)}
-              style={{
-                '--el-color': el.flameColor,
-              } as React.CSSProperties}
-            >
-              <span className="flame-chip-symbol">{el.symbol}</span>
-              <span className="flame-chip-name">{el.nameId}</span>
-            </button>
-          ))}
-        </div>
+      {/* Sub-mode switcher */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '-4px' }}>
+        <button
+          className={`filter-pill ${flameSubMode === 'bunsen' ? 'active' : ''}`}
+          onClick={() => setFlameSubMode('bunsen')}
+          style={{ gap: '6px', fontSize: '12px' }}
+        >
+          <Flame size={14} />
+          Uji Nyala Api Bunsen (Flame Test)
+        </button>
+        <button
+          className={`filter-pill ${flameSubMode === 'bohr' ? 'active' : ''}`}
+          onClick={() => setFlameSubMode('bohr')}
+          style={{ gap: '6px', fontSize: '12px' }}
+        >
+          <Zap size={14} />
+          Spektroskopi Emisi & Model Bohr
+        </button>
       </div>
 
-      {/* Main layout */}
-      <div className="flame-workbench">
-        {/* Left: Bunsen burner canvas */}
-        <div className="flame-stage glass-panel">
-          <div className="flame-stage-header">
-            <Flame size={18} color={isIgnited ? selectedElement?.flameColor : '#64748b'} />
-            <span>Bunsen Burner</span>
+      {flameSubMode === 'bunsen' ? (
+        <>
+          {/* Element selector */}
+          <div className="flame-elements-bar glass-panel">
+            <div className="flame-bar-header">
+              <Sparkles size={14} color="#f59e0b" />
+              <span>Pilih Unsur untuk Uji Nyala Api</span>
+              <button className="btn-icon-sm" onClick={toggleMute} title={audioMuted ? 'Unmute' : 'Mute'}>
+                {audioMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+              </button>
+            </div>
+            <div className="flame-element-chips">
+              {FLAME_TEST_ELEMENTS.map(el => (
+                <button
+                  key={el.symbol}
+                  className={`flame-element-chip ${selectedElement?.symbol === el.symbol ? 'active' : ''}`}
+                  onClick={() => handleSelectElement(el)}
+                  style={{
+                    '--el-color': el.flameColor,
+                  } as React.CSSProperties}
+                >
+                  <span className="flame-chip-symbol">{el.symbol}</span>
+                  <span className="flame-chip-name">{el.nameId}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
-          <canvas ref={canvasRef} className="flame-canvas" />
-
-          {selectedElement && (
-            <div className="flame-controls">
-              <button
-                className={`btn ${isIgnited ? 'btn-danger' : 'btn-primary'} flame-ignite-btn`}
-                onClick={handleIgnite}
-              >
-                <Flame size={18} />
-                {isIgnited ? 'Nyala: ' + selectedElement.symbol : 'Nyalakan Api!'}
-              </button>
-
-              {isIgnited && (
-                <div
-                  className="flame-color-indicator"
-                  style={{ background: selectedElement.flameColor }}
-                >
-                  {selectedElement.flameColorNameId}
+          {/* Main layout */}
+          <div className="flame-workbench">
+            {/* Left: Bunsen burner canvas */}
+            <div className="flame-stage glass-panel">
+              <div className="flame-stage-header">
+                <div className="flame-status">
+                  <span className={`status-dot ${isIgnited ? 'active' : ''}`} />
+                  <span>{isIgnited ? 'Api Menyala' : 'Api Mati'}</span>
                 </div>
-              )}
-            </div>
-          )}
-
-          {!selectedElement && (
-            <div className="flame-empty-hint">
-              <Eye size={24} color="#94a3b8" />
-              <p>Pilih unsur dari daftar di atas untuk memulai uji nyala api.</p>
-            </div>
-          )}
-        </div>
-
-        {/* Right: Spectrum & Explanation */}
-        <div className="flame-info-panel glass-panel">
-          {selectedElement && isIgnited ? (
-            <>
-              <div className="flame-info-header">
-                <div
-                  className="flame-info-icon"
-                  style={{ background: selectedElement.flameColor }}
-                >
-                  {selectedElement.symbol}
-                </div>
-                <div>
-                  <h3>{selectedElement.nameId} ({selectedElement.name})</h3>
-                  <span className="flame-atomic-num">Z = {selectedElement.atomicNumber}</span>
-                </div>
+                {selectedElement && (
+                  <span className="flame-current-element">
+                    Sampel: <strong>{selectedElement.nameId}</strong> ({selectedElement.symbol})
+                  </span>
+                )}
               </div>
 
-              {/* Emission Spectrum Visualization */}
-              {showSpectrum && (
-                <div className="spectrum-section">
-                  <h4>
-                    <Zap size={14} />
-                    Spektrum Emisi
-                  </h4>
-                  <div className="spectrum-bar">
-                    {/* Rainbow gradient background */}
-                    <div className="spectrum-gradient" />
-                    {/* Emission lines */}
-                    {selectedElement.emissionLines.map((line, i) => {
-                      const pct = ((line.wavelength - 380) / (780 - 380)) * 100;
-                      return (
-                        <div
-                          key={i}
-                          className="emission-line"
-                          style={{
-                            left: `${pct}%`,
-                            background: line.color,
-                            opacity: line.intensity,
-                            height: `${60 + line.intensity * 40}%`,
-                          }}
-                          title={`${line.wavelength} nm`}
-                        >
-                          <span className="line-label">{line.wavelength} nm</span>
-                        </div>
-                      );
-                    })}
-                    {/* Scale markers */}
-                    <div className="spectrum-scale">
-                      <span>380</span>
-                      <span>480</span>
-                      <span>580</span>
-                      <span>680</span>
-                      <span>780 nm</span>
+              <div className="flame-canvas-container">
+                <canvas ref={canvasRef} className="flame-canvas" />
+                {isIgnited && selectedElement && (
+                  <div
+                    className="flame-glow"
+                    style={{
+                      '--glow-color': selectedElement.flameColor,
+                    } as React.CSSProperties}
+                  />
+                )}
+              </div>
+
+              {/* Controls */}
+              <div className="flame-controls">
+                <button
+                  className={`btn ${isIgnited ? 'btn-danger' : 'btn-primary'} flame-ignite-btn`}
+                  onClick={isIgnited ? () => setIsIgnited(false) : handleIgnite}
+                  disabled={!selectedElement}
+                >
+                  <Flame size={16} />
+                  {isIgnited ? 'Padamkan Api' : 'Nyalakan Api!'}
+                </button>
+                {selectedElement && isIgnited && (
+                  <button
+                    className={`btn btn-secondary ${showSpectrum ? 'active' : ''}`}
+                    onClick={() => setShowSpectrum(!showSpectrum)}
+                  >
+                    <Eye size={16} />
+                    {showSpectrum ? 'Sembunyikan Spektrum' : 'Lihat Spektrum'}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Right: Spectrum & Explanation */}
+            <div className="flame-info-panel glass-panel">
+              {selectedElement && isIgnited ? (
+                <>
+                  <div className="flame-info-header">
+                    <div
+                      className="flame-info-icon"
+                      style={{ background: selectedElement.flameColor }}
+                    >
+                      {selectedElement.symbol}
+                    </div>
+                    <div>
+                      <h3>{selectedElement.nameId} ({selectedElement.name})</h3>
+                      <span className="flame-atomic-num">Z = {selectedElement.atomicNumber}</span>
                     </div>
                   </div>
+
+                  {/* Emission Spectrum Visualization */}
+                  {showSpectrum && (
+                    <div className="spectrum-section">
+                      <h4>
+                        <Zap size={14} />
+                        Spektrum Emisi
+                      </h4>
+                      <div className="spectrum-bar">
+                        {/* Rainbow gradient background */}
+                        <div className="spectrum-gradient" />
+                        {/* Emission lines */}
+                        {selectedElement.emissionLines.map((line, i) => {
+                          const pct = ((line.wavelength - 380) / (780 - 380)) * 100;
+                          return (
+                            <div
+                              key={i}
+                              className="emission-line"
+                              style={{
+                                left: `${pct}%`,
+                                background: line.color,
+                                opacity: line.intensity,
+                                height: `${60 + line.intensity * 40}%`,
+                              }}
+                              title={`${line.wavelength} nm`}
+                            >
+                              <span className="line-label">{line.wavelength} nm</span>
+                            </div>
+                          );
+                        })}
+                        {/* Scale markers */}
+                        <div className="spectrum-scale">
+                          <span>380</span>
+                          <span>480</span>
+                          <span>580</span>
+                          <span>680</span>
+                          <span>780 nm</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Orbital transition */}
+                  <div className="flame-narrative">
+                    <h4>
+                      <Lightbulb size={14} />
+                      Transisi Elektron
+                    </h4>
+                    <div className="orbital-note">{selectedElement.orbitalNote}</div>
+                    <p>{selectedElement.explanation}</p>
+                  </div>
+
+                  {/* Real world */}
+                  <div className="flame-narrative">
+                    <h4>
+                      <Info size={14} />
+                      Aplikasi Dunia Nyata
+                    </h4>
+                    <p>{selectedElement.realWorldUse}</p>
+                  </div>
+                </>
+              ) : selectedElement ? (
+                <div className="flame-prompt">
+                  <ArrowRight size={24} color="#f59e0b" />
+                  <h4>Siap menguji {selectedElement.nameId}!</h4>
+                  <p>
+                    Tekan tombol "Nyalakan Api!" pada Bunsen Burner untuk melihat warna nyala api
+                    khas unsur {selectedElement.nameId} ({selectedElement.symbol}).
+                  </p>
+                </div>
+              ) : (
+                <div className="flame-prompt">
+                  <Flame size={32} color="#94a3b8" />
+                  <h4>Laboratorium Uji Nyala Api</h4>
+                  <p>
+                    Uji nyala api (flame test) adalah teknik analisis kimia kualitatif yang digunakan
+                    untuk mengidentifikasi unsur logam berdasarkan warna nyala api yang dihasilkan.
+                  </p>
+                  <p>
+                    Saat logam dipanaskan, elektronnya tereksitasi ke tingkat energi lebih tinggi.
+                    Saat kembali ke keadaan dasar, elektron memancarkan foton dengan panjang gelombang spesifik.
+                  </p>
                 </div>
               )}
-
-              {/* Orbital transition */}
-              <div className="flame-narrative">
-                <h4>
-                  <Lightbulb size={14} />
-                  Transisi Elektron
-                </h4>
-                <div className="orbital-note">{selectedElement.orbitalNote}</div>
-                <p>{selectedElement.explanation}</p>
-              </div>
-
-              {/* Real world */}
-              <div className="flame-narrative">
-                <h4>
-                  <Info size={14} />
-                  Aplikasi Dunia Nyata
-                </h4>
-                <p>{selectedElement.realWorldUse}</p>
-              </div>
-            </>
-          ) : selectedElement ? (
-            <div className="flame-prompt">
-              <ArrowRight size={24} color="#f59e0b" />
-              <h4>Siap menguji {selectedElement.nameId}!</h4>
-              <p>
-                Tekan tombol "Nyalakan Api!" pada Bunsen Burner untuk melihat warna nyala api
-                khas unsur {selectedElement.nameId} ({selectedElement.symbol}).
-              </p>
             </div>
-          ) : (
-            <div className="flame-prompt">
-              <Flame size={32} color="#94a3b8" />
-              <h4>Laboratorium Uji Nyala Api</h4>
-              <p>
-                Uji nyala api (flame test) adalah teknik analisis kimia kualitatif yang digunakan
-                untuk mengidentifikasi unsur logam berdasarkan warna nyala api yang dihasilkan.
-              </p>
-              <p>
-                Saat logam dipanaskan, elektronnya tereksitasi ke tingkat energi lebih tinggi.
-                Saat kembali ke keadaan dasar, elektron memancarkan foton dengan panjang gelombang spesifik.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
+          </div>
+        </>
+      ) : (
+        <BohrSpectroscopyLab />
+      )}
     </div>
   );
 };

@@ -283,3 +283,44 @@
   font-weight: 600;
   color: var(--text-secondary);
 }
+
+/* MRS Table Styling */
+.mrs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.mrs-table th {
+  background: #f8fafc;
+  padding: 8px 12px;
+  border-bottom: 2px solid #e2e8f0;
+  border-right: 1px solid #f1f5f9;
+  font-size: 11px;
+}
+
+.mrs-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  border-right: 1px solid #f1f5f9;
+}
+
+.mrs-row-label {
+  background: #f8fafc;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-right: 2px solid #e2e8f0 !important;
+}
+
+@media (max-width: 768px) {
+  .conservation-bar {
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+}

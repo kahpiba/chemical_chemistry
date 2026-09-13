@@ -413,6 +413,12 @@
   border-radius: 50%;
 }
 
+@media (max-width: 1024px) {
+  .crystal-grid-layout {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 @media (max-width: 768px) {
   .mol-viewport-container {
     height: 480px;

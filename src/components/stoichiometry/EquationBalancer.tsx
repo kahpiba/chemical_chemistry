@@ -24,11 +24,23 @@ export const EquationBalancer: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
   const [copied, setCopied] = useState<boolean>(false);
 
+  // Unit toggle: 'gram' or 'mol'
+  const [inputUnit, setInputUnit] = useState<'gram' | 'mol'>('gram');
+
   // Stoichiometry mass inputs (in grams) for each reactant
   const [reactantGrams, setReactantGrams] = useState<Record<string, number>>({
     'Fe2O3': 160,
     'CO': 84,
   });
+
+  // Stoichiometry mole inputs (in mol) for each reactant
+  const [reactantMoles, setReactantMoles] = useState<Record<string, number>>({
+    'Fe2O3': 1.0,
+    'CO': 3.0,
+  });
+
+  // Actual yield in grams for Percent Yield calculation
+  const [actualYieldGrams, setActualYieldGrams] = useState<string>('95');
 
   // Calculate balance result
   const balanceResult: BalancedResult = useMemo(() => {
@@ -70,18 +82,27 @@ export const EquationBalancer: React.FC = () => {
     );
   };
 
-  // Stoichiometry Calculations
+  // Stoichiometry Calculations & MRS Table
   const stoichAnalysis = useMemo(() => {
     if (!balanceResult.success) return null;
 
     const reactants = balanceResult.reactants;
     const products = balanceResult.products;
 
-    // Calculate moles of each reactant based on user gram input
+    // Calculate moles and grams of each reactant based on selected unit
     const reactantData = reactants.map((r) => {
       const mr = calculateMolarMass(r.atoms);
-      const grams = reactantGrams[r.raw] ?? mr * r.coefficient; // default to stoichiometric amount
-      const moles = grams > 0 && mr > 0 ? grams / mr : 0;
+      let moles = 0;
+      let grams = 0;
+
+      if (inputUnit === 'mol') {
+        moles = reactantMoles[r.raw] ?? r.coefficient;
+        grams = moles * mr;
+      } else {
+        grams = reactantGrams[r.raw] ?? mr * r.coefficient;
+        moles = grams > 0 && mr > 0 ? grams / mr : 0;
+      }
+
       const molePerCoeff = r.coefficient > 0 ? moles / r.coefficient : 0;
       return {
         raw: r.raw,
@@ -131,6 +152,49 @@ export const EquationBalancer: React.FC = () => {
       };
     });
 
+    // Consolidated MRS Table Columns (all reactants + products)
+    const mrsColumns = [
+      ...reactantData.map((r) => {
+        const molesConsumed = r.coeff * limitingRatio;
+        const molesLeft = Math.max(0, r.moles - molesConsumed);
+        const gramsLeft = molesLeft * r.mr;
+        return {
+          raw: r.raw,
+          coeff: r.coeff,
+          mr: r.mr,
+          isProduct: false,
+          isLimiting: r.raw === limitingReactant?.raw,
+          mInitial: r.moles,
+          gInitial: r.grams,
+          mDelta: -molesConsumed,
+          mFinal: molesLeft,
+          gFinal: gramsLeft,
+        };
+      }),
+      ...productData.map((p) => {
+        return {
+          raw: p.raw,
+          coeff: p.coeff,
+          mr: p.mr,
+          isProduct: true,
+          isLimiting: false,
+          mInitial: 0,
+          gInitial: 0,
+          mDelta: p.molesFormed,
+          mFinal: p.molesFormed,
+          gFinal: p.gramsFormed,
+        };
+      }),
+    ];
+
+    // Percent Yield Analysis for the primary product
+    const primaryProduct = productData[0];
+    const theoreticalYieldGrams = primaryProduct ? primaryProduct.gramsFormed : 0;
+    const actualGrams = parseFloat(actualYieldGrams) || 0;
+    const percentYield = theoreticalYieldGrams > 0 && actualGrams > 0
+      ? (actualGrams / theoreticalYieldGrams) * 100
+      : 0;
+
     // Mass conservation
     const totalMassInitial = reactantData.reduce((sum, r) => sum + r.grams, 0);
     const totalMassProducts = productData.reduce((sum, p) => sum + p.gramsFormed, 0);
@@ -142,11 +206,15 @@ export const EquationBalancer: React.FC = () => {
       limitingReactant,
       productData,
       remainingReactants,
+      mrsColumns,
+      primaryProduct,
+      theoreticalYieldGrams,
+      percentYield: parseFloat(percentYield.toFixed(1)),
       totalMassInitial: parseFloat(totalMassInitial.toFixed(2)),
       totalMassFinal: parseFloat(totalMassFinal.toFixed(2)),
       massConserved: Math.abs(totalMassInitial - totalMassFinal) < 0.1,
     };
-  }, [balanceResult, reactantGrams]);
+  }, [balanceResult, reactantGrams, reactantMoles, inputUnit, actualYieldGrams]);
 
   const handlePresetSelect = (preset: ReactionPreset) => {
     setInputEquation(preset.equation);
@@ -376,21 +444,37 @@ export const EquationBalancer: React.FC = () => {
             </table>
           </div>
 
-          {/* Interactive Stoichiometry & Limiting Reactant */}
+          {/* Interactive Stoichiometry, MRS Table & Percent Yield */}
           <div className="stoich-card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: '15px', fontWeight: 700 }}>
                 <Calculator size={18} color="#0284c7" />
-                Kalkulator Stoikiometri & Pereaksi Pembatas
+                Kalkulator Stoikiometri & Tabel MRS
               </div>
-              <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                Ubah gram reaktan di bawah
-              </span>
+
+              {/* Unit Switcher: Gram vs Mol */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#f1f5f9', padding: '3px', borderRadius: '8px' }}>
+                <button
+                  className={`filter-pill ${inputUnit === 'gram' ? 'active' : ''}`}
+                  onClick={() => setInputUnit('gram')}
+                  style={{ padding: '3px 10px', fontSize: '11px', height: 'auto', border: 'none' }}
+                >
+                  Basis Massa (Gram)
+                </button>
+                <button
+                  className={`filter-pill ${inputUnit === 'mol' ? 'active' : ''}`}
+                  onClick={() => setInputUnit('mol')}
+                  style={{ padding: '3px 10px', fontSize: '11px', height: 'auto', border: 'none' }}
+                >
+                  Basis Mol (mol)
+                </button>
+              </div>
             </div>
 
+            {/* Step 1: Reactant Input Form */}
             <div className="stoich-inputs-row">
               <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
-                1. Masukkan Massa Reaktan Awal:
+                1. Masukkan Kuantitas Pereaksi Awal ({inputUnit === 'gram' ? 'Gram' : 'Mol'}):
               </span>
               {stoichAnalysis.reactantData.map((r) => {
                 const isLimiting = stoichAnalysis.limitingReactant?.raw === r.raw;
@@ -406,7 +490,7 @@ export const EquationBalancer: React.FC = () => {
                         )}
                       </div>
                       <span>
-                        Mr: {r.mr} g/mol • Koefisien: {r.coeff} • {r.moles.toFixed(3)} mol
+                        Mr: {r.mr} g/mol • Koefisien: {r.coeff} • {r.moles.toFixed(3)} mol ({r.grams.toFixed(2)} g)
                       </span>
                     </div>
 
@@ -416,17 +500,28 @@ export const EquationBalancer: React.FC = () => {
                         min="0"
                         step="any"
                         className="stoich-val-input"
-                        value={reactantGrams[r.raw] ?? r.grams}
+                        value={
+                          inputUnit === 'mol'
+                            ? (reactantMoles[r.raw] ?? r.moles)
+                            : (reactantGrams[r.raw] ?? r.grams)
+                        }
                         onChange={(e) => {
                           const val = parseFloat(e.target.value) || 0;
-                          setReactantGrams((prev) => ({
-                            ...prev,
-                            [r.raw]: val,
-                          }));
+                          if (inputUnit === 'mol') {
+                            setReactantMoles((prev) => ({
+                              ...prev,
+                              [r.raw]: val,
+                            }));
+                          } else {
+                            setReactantGrams((prev) => ({
+                              ...prev,
+                              [r.raw]: val,
+                            }));
+                          }
                         }}
                       />
                       <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                        gram
+                        {inputUnit === 'mol' ? 'mol' : 'gram'}
                       </span>
                     </div>
                   </div>
@@ -434,14 +529,102 @@ export const EquationBalancer: React.FC = () => {
               })}
             </div>
 
-            {/* Product Yields */}
+            {/* Step 2: Official MRS Table (Mula-mula, Reaksi, Sisa) */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '6px' }}>
-              <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
-                2. Hasil Reaksi Teoritis (Produk Terbentuk):
-              </span>
-              <div className="product-yield-card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
+                  2. Tabel MRS (Mula-mula, Reaksi, Sisa):
+                </span>
+                <span style={{ fontSize: '11px', color: '#0284c7', fontWeight: 600 }}>
+                  Pereaksi Pembatas: {stoichAnalysis.limitingReactant ? formatFormula(stoichAnalysis.limitingReactant.raw) : '-'}
+                </span>
+              </div>
+
+              <div style={{ overflowX: 'auto' }}>
+                <table className="mrs-table">
+                  <thead>
+                    <tr>
+                      <th style={{ width: '130px' }}>Tahapan Reaksi</th>
+                      {stoichAnalysis.mrsColumns.map((col, idx) => (
+                        <th key={`col-${idx}`} style={{ textAlign: 'center' }}>
+                          <span style={{ color: col.isProduct ? '#16a34a' : '#0284c7', fontWeight: 800 }}>
+                            {col.coeff > 1 ? `${col.coeff} ` : ''}
+                            {col.raw}
+                          </span>
+                          <span style={{ display: 'block', fontSize: '10px', color: '#94a3b8', fontWeight: 400 }}>
+                            Mr: {col.mr} g/mol
+                          </span>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="mrs-row-label">
+                        <strong>M</strong> (Mula-mula)
+                      </td>
+                      {stoichAnalysis.mrsColumns.map((col, idx) => (
+                        <td key={`m-${idx}`} style={{ textAlign: 'center', fontFamily: 'var(--font-mono)' }}>
+                          {col.mInitial.toFixed(3)} mol
+                        </td>
+                      ))}
+                    </tr>
+                    <tr>
+                      <td className="mrs-row-label" style={{ color: '#d97706' }}>
+                        <strong>R</strong> (Bereaksi)
+                      </td>
+                      {stoichAnalysis.mrsColumns.map((col, idx) => (
+                        <td
+                          key={`r-${idx}`}
+                          style={{
+                            textAlign: 'center',
+                            fontFamily: 'var(--font-mono)',
+                            color: col.isProduct ? '#16a34a' : '#dc2626',
+                            fontWeight: 700,
+                          }}
+                        >
+                          {col.isProduct ? `+${col.mDelta.toFixed(3)}` : col.mDelta.toFixed(3)} mol
+                        </td>
+                      ))}
+                    </tr>
+                    <tr style={{ background: '#f8fafc', fontWeight: 700 }}>
+                      <td className="mrs-row-label" style={{ color: '#0284c7' }}>
+                        <strong>S</strong> (Sisa / Akhir)
+                      </td>
+                      {stoichAnalysis.mrsColumns.map((col, idx) => (
+                        <td
+                          key={`s-${idx}`}
+                          style={{
+                            textAlign: 'center',
+                            fontFamily: 'var(--font-mono)',
+                            color: col.isLimiting ? '#ef4444' : 'var(--text-primary)',
+                          }}
+                        >
+                          {col.isLimiting ? (
+                            <span style={{ color: '#ef4444' }}>0.000 mol (Habis)</span>
+                          ) : (
+                            `${col.mFinal.toFixed(3)} mol`
+                          )}
+                          <span style={{ display: 'block', fontSize: '10px', color: '#64748b', fontWeight: 600 }}>
+                            ≈ {col.gFinal.toFixed(2)} g
+                          </span>
+                        </td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Step 3: Theoretical Product Yields & Percent Yield Calculator */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px', marginTop: '6px' }}>
+              {/* Theoretical Yield summary */}
+              <div className="product-yield-card" style={{ padding: '12px 14px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
+                  Hasil Teoretis Maksimum:
+                </span>
                 {stoichAnalysis.productData.map((p) => (
-                  <div key={p.raw} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
+                  <div key={p.raw} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px', marginTop: '4px' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <Beaker size={14} color="#16a34a" />
                       <strong>{formatFormula(p.raw)}:</strong>
@@ -454,6 +637,67 @@ export const EquationBalancer: React.FC = () => {
                     </span>
                   </div>
                 ))}
+              </div>
+
+              {/* Percent Yield Calculator */}
+              <div
+                style={{
+                  background: '#f8fafc',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '12px',
+                  padding: '12px 14px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
+                    Kalkulator % Hasil Reaksi (Percent Yield):
+                  </span>
+                  {stoichAnalysis.primaryProduct && (
+                    <span style={{ fontSize: '11px', color: '#64748b' }}>
+                      Produk: {stoichAnalysis.primaryProduct.raw}
+                    </span>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '12px', color: '#475569' }}>Massa Nyata Lab:</span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    className="stoich-val-input"
+                    style={{ width: '90px' }}
+                    value={actualYieldGrams}
+                    onChange={(e) => setActualYieldGrams(e.target.value)}
+                    placeholder="Massa nyata"
+                  />
+                  <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                    gram
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', marginTop: '2px' }}>
+                  <span style={{ color: '#64748b' }}>
+                    Rumus: (Massa Nyata / Teoretis) × 100%
+                  </span>
+                  <strong
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '15px',
+                      color:
+                        stoichAnalysis.percentYield >= 90
+                          ? '#16a34a'
+                          : stoichAnalysis.percentYield >= 70
+                          ? '#0284c7'
+                          : '#d97706',
+                    }}
+                  >
+                    {stoichAnalysis.percentYield}% Yield
+                  </strong>
+                </div>
               </div>
             </div>
 
