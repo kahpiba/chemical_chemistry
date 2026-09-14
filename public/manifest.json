@@ -1,7 +1,11 @@
 {
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
   "short_name": "ChemChemistry",
   "name": "Chemical Chemistry · 3D Laboratorium & Sains Interaktif",
-  "description": "Platform edukasi kimia interaktif: 118 unsur tabel periodik, molekul 3D, lab reaksi, sel volta, larutan & kesetimbangan kimia.",
+  "description": "Platform edukasi kimia interaktif: 118 unsur tabel periodik dengan simulasi atom Bohr 3D, molekul 3D, lab reaksi, sel volta, larutan & kesetimbangan kimia.",
+  "categories": ["education", "science", "productivity"],
   "icons": [
     {
       "src": "/favicon.svg",
@@ -10,9 +14,38 @@
       "purpose": "any maskable"
     }
   ],
-  "start_url": "/",
+  "shortcuts": [
+    {
+      "name": "Tabel Periodik 118 Unsur",
+      "short_name": "Tabel Periodik",
+      "description": "Jelajahi 118 unsur dan simulasi partikel atom Bohr 3D",
+      "url": "/#periodic",
+      "icons": [{ "src": "/favicon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Koleksi Molekul 3D",
+      "short_name": "Molekul 3D",
+      "description": "Urai struktur molekul dan kisi kristal padatan 3D",
+      "url": "/#molecules",
+      "icons": [{ "src": "/favicon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Virtual Chemical Reaction Lab",
+      "short_name": "Reaction Lab",
+      "description": "Simulasi pencampuran reagen kimia & termodinamika",
+      "url": "/#reactions",
+      "icons": [{ "src": "/favicon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Titrasi Asam-Basa Presisi",
+      "short_name": "Titrasi",
+      "description": "Praktikum buret kimia analitik dan kurva sigmoid",
+      "url": "/#titration",
+      "icons": [{ "src": "/favicon.svg", "sizes": "192x192" }]
+    }
+  ],
   "background_color": "#f8fafc",
-  "theme_color": "#ffffff",
+  "theme_color": "#0284c7",
   "display": "standalone",
   "orientation": "any"
 }

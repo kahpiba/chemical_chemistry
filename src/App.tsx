@@ -1,35 +1,39 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Header } from './components/common/Header';
 import type { ActiveTab } from './components/common/Header';
 import { DetailDrawer } from './components/common/DetailDrawer';
 import { PeriodicTable } from './components/periodic/PeriodicTable';
-import { MoleculeScene } from './components/molecular/MoleculeScene';
 import { MoleculeShelf, MoleculeHUD } from './components/molecular/MoleculeControls';
-import { MoleculeBuilder } from './components/molecular/MoleculeBuilder';
-import { CrystalLatticeViewer } from './components/molecular/CrystalLatticeViewer';
-import { ReactionLab } from './components/reaction/ReactionLab';
-import { EquationBalancer } from './components/stoichiometry/EquationBalancer';
-import { ElectrochemistryLab } from './components/electrochem/ElectrochemistryLab';
-import { OrbitalExplorer } from './components/orbitals/OrbitalExplorer';
-import { FlameTestLab } from './components/flame/FlameTestLab';
-import { QuizArena } from './components/quiz/QuizArena';
-import { ElementComparison } from './components/periodic/ElementComparison';
-import { ChemicalChains } from './components/chains/ChemicalChains';
-import { SolutionsLab } from './components/solutions/SolutionsLab';
-import { EquilibriumLab } from './components/equilibrium/EquilibriumLab';
-import { ChemistryQuests } from './components/quests/ChemistryQuests';
-import { TitrationLab } from './components/titration/TitrationLab';
-import { CertificateModal } from './components/certificate/CertificateModal';
-import { WorksheetModal } from './components/worksheet/WorksheetModal';
 import { MobileNavDrawer } from './components/common/MobileNavDrawer';
 import { MobileBottomBar } from './components/common/MobileBottomBar';
 import { QuickSwitcherModal } from './components/common/QuickSwitcherModal';
+import { LabLoadingFallback } from './components/common/LabLoadingFallback';
 import { isMuted, setMuted, playClick } from './utils/audio';
 import { ELEMENTS } from './data/elements';
 import type { ElementData } from './data/elements';
 import { MOLECULES } from './data/molecules';
 import type { MoleculeData, MoleculeAtom } from './data/molecules';
 import { Sparkles, Atom, X, Boxes, Wrench, Box } from 'lucide-react';
+
+// Code-split dynamic lab modules for instant initial load and low memory footprint
+const MoleculeScene = lazy(() => import('./components/molecular/MoleculeScene').then((m) => ({ default: m.MoleculeScene })));
+const MoleculeBuilder = lazy(() => import('./components/molecular/MoleculeBuilder').then((m) => ({ default: m.MoleculeBuilder })));
+const CrystalLatticeViewer = lazy(() => import('./components/molecular/CrystalLatticeViewer').then((m) => ({ default: m.CrystalLatticeViewer })));
+const ReactionLab = lazy(() => import('./components/reaction/ReactionLab').then((m) => ({ default: m.ReactionLab })));
+const EquationBalancer = lazy(() => import('./components/stoichiometry/EquationBalancer').then((m) => ({ default: m.EquationBalancer })));
+const ElectrochemistryLab = lazy(() => import('./components/electrochem/ElectrochemistryLab').then((m) => ({ default: m.ElectrochemistryLab })));
+const OrbitalExplorer = lazy(() => import('./components/orbitals/OrbitalExplorer').then((m) => ({ default: m.OrbitalExplorer })));
+const FlameTestLab = lazy(() => import('./components/flame/FlameTestLab').then((m) => ({ default: m.FlameTestLab })));
+const QuizArena = lazy(() => import('./components/quiz/QuizArena').then((m) => ({ default: m.QuizArena })));
+const ElementComparison = lazy(() => import('./components/periodic/ElementComparison').then((m) => ({ default: m.ElementComparison })));
+const ChemicalChains = lazy(() => import('./components/chains/ChemicalChains').then((m) => ({ default: m.ChemicalChains })));
+const SolutionsLab = lazy(() => import('./components/solutions/SolutionsLab').then((m) => ({ default: m.SolutionsLab })));
+const EquilibriumLab = lazy(() => import('./components/equilibrium/EquilibriumLab').then((m) => ({ default: m.EquilibriumLab })));
+const ChemistryQuests = lazy(() => import('./components/quests/ChemistryQuests').then((m) => ({ default: m.ChemistryQuests })));
+const TitrationLab = lazy(() => import('./components/titration/TitrationLab').then((m) => ({ default: m.TitrationLab })));
+const CertificateModal = lazy(() => import('./components/certificate/CertificateModal').then((m) => ({ default: m.CertificateModal })));
+const WorksheetModal = lazy(() => import('./components/worksheet/WorksheetModal').then((m) => ({ default: m.WorksheetModal })));
+
 import './styles/index.css';
 import './styles/periodic.css';
 import './styles/molecular.css';
@@ -167,45 +171,53 @@ export function App() {
                   }}
                 />
 
-                <MoleculeScene
-                  molecule={selectedMolecule}
-                  explodeAmount={explodeAmount}
-                  autoRotate={autoRotate}
-                  onSelectAtom={handleSelectMoleculeAtom}
-                >
-                  <MoleculeHUD
-                    selectedMolecule={selectedMolecule}
+                <Suspense fallback={<LabLoadingFallback title="Memuat Simulasi Molekul 3D..." subtitle="Menghitung koordinat ikatan & muatan parsial atom..." />}>
+                  <MoleculeScene
+                    molecule={selectedMolecule}
                     explodeAmount={explodeAmount}
-                    onExplodeChange={setExplodeAmount}
                     autoRotate={autoRotate}
-                    onToggleAutoRotate={() => setAutoRotate(!autoRotate)}
-                    onOpenDetails={() => {
-                      setDrawerElement(null);
-                      setDrawerMolecule(selectedMolecule);
-                    }}
-                  />
-                </MoleculeScene>
+                    onSelectAtom={handleSelectMoleculeAtom}
+                  >
+                    <MoleculeHUD
+                      selectedMolecule={selectedMolecule}
+                      explodeAmount={explodeAmount}
+                      onExplodeChange={setExplodeAmount}
+                      autoRotate={autoRotate}
+                      onToggleAutoRotate={() => setAutoRotate(!autoRotate)}
+                      onOpenDetails={() => {
+                        setDrawerElement(null);
+                        setDrawerMolecule(selectedMolecule);
+                      }}
+                    />
+                  </MoleculeScene>
+                </Suspense>
               </>
             ) : moleculeSubMode === 'builder' ? (
-              <MoleculeBuilder />
+              <Suspense fallback={<LabLoadingFallback title="Menyiapkan Perancang Molekul..." subtitle="Menginisialisasi kanvas editor 3D & palet atom..." />}>
+                <MoleculeBuilder />
+              </Suspense>
             ) : (
-              <CrystalLatticeViewer />
+              <Suspense fallback={<LabLoadingFallback title="Memuat Kisi Kristal Padatan 3D..." subtitle="Mengonfigurasi unit cell & geometri kisi kristal..." />}>
+                <CrystalLatticeViewer />
+              </Suspense>
             )}
           </div>
         )}
 
-        {activeTab === 'chains' && <ChemicalChains />}
-        {activeTab === 'reactions' && <ReactionLab />}
-        {activeTab === 'titration' && <TitrationLab />}
-        {activeTab === 'stoichiometry' && <EquationBalancer />}
-        {activeTab === 'solutions' && <SolutionsLab />}
-        {activeTab === 'equilibrium' && <EquilibriumLab />}
-        {activeTab === 'electrochem' && <ElectrochemistryLab />}
-        {activeTab === 'orbitals' && <OrbitalExplorer />}
-        {activeTab === 'quests' && <ChemistryQuests />}
-        {activeTab === 'flame' && <FlameTestLab />}
-        {activeTab === 'compare' && <ElementComparison />}
-        {activeTab === 'quiz' && <QuizArena />}
+        <Suspense fallback={<LabLoadingFallback />}>
+          {activeTab === 'chains' && <ChemicalChains />}
+          {activeTab === 'reactions' && <ReactionLab />}
+          {activeTab === 'titration' && <TitrationLab />}
+          {activeTab === 'stoichiometry' && <EquationBalancer />}
+          {activeTab === 'solutions' && <SolutionsLab />}
+          {activeTab === 'equilibrium' && <EquilibriumLab />}
+          {activeTab === 'electrochem' && <ElectrochemistryLab />}
+          {activeTab === 'orbitals' && <OrbitalExplorer />}
+          {activeTab === 'quests' && <ChemistryQuests />}
+          {activeTab === 'flame' && <FlameTestLab />}
+          {activeTab === 'compare' && <ElementComparison />}
+          {activeTab === 'quiz' && <QuizArena />}
+        </Suspense>
       </main>
       </div>
 
@@ -225,16 +237,24 @@ export function App() {
       />
 
       {/* Student LKPD Worksheet Modal */}
-      <WorksheetModal
-        isOpen={worksheetOpen}
-        onClose={() => setWorksheetOpen(false)}
-      />
+      {worksheetOpen && (
+        <Suspense fallback={null}>
+          <WorksheetModal
+            isOpen={worksheetOpen}
+            onClose={() => setWorksheetOpen(false)}
+          />
+        </Suspense>
+      )}
 
       {/* Official Certificate Modal */}
-      <CertificateModal
-        isOpen={certificateOpen}
-        onClose={() => setCertificateOpen(false)}
-      />
+      {certificateOpen && (
+        <Suspense fallback={null}>
+          <CertificateModal
+            isOpen={certificateOpen}
+            onClose={() => setCertificateOpen(false)}
+          />
+        </Suspense>
+      )}
 
       {/* Mobile Slide-over Drawer */}
       <MobileNavDrawer

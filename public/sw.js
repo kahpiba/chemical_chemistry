@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chemical-chemistry-v2';
+const CACHE_NAME = 'chemical-chemistry-v3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -6,6 +6,7 @@ const STATIC_ASSETS = [
   '/manifest.json',
 ];
 
+// Install: Cache essential core shell
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -15,6 +16,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
+// Activate: Clean up old outdated caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -26,16 +28,48 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+// Fetch: Smart caching strategy for offline support
 self.addEventListener('fetch', (event) => {
-  // Navigation request (HTML pages)
+  // Only handle GET requests
+  if (event.request.method !== 'GET') return;
+
+  const url = new URL(event.request.url);
+
+  // 1. Navigation request (HTML pages): Network-First, fallback to cached /index.html
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request).catch(() => caches.match('/index.html'))
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match('/index.html'))
     );
     return;
   }
 
-  // Cache-first strategy for static assets, network fallback
+  // 2. Google Fonts: Stale-While-Revalidate
+  if (url.origin.includes('fonts.googleapis.com') || url.origin.includes('fonts.gstatic.com')) {
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        const fetchPromise = fetch(event.request).then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return networkResponse;
+        }).catch(() => null);
+
+        return cachedResponse || fetchPromise;
+      })
+    );
+    return;
+  }
+
+  // 3. Static Assets & Dynamic Chunks (/assets/*, images, svg): Cache-First, Network Fallback
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -46,7 +80,7 @@ self.addEventListener('fetch', (event) => {
           if (
             networkResponse &&
             networkResponse.status === 200 &&
-            (event.request.url.startsWith('http') || event.request.url.startsWith('https'))
+            (event.request.url.startsWith('http://') || event.request.url.startsWith('https://'))
           ) {
             const clone = networkResponse.clone();
             caches.open(CACHE_NAME).then((cache) => {
