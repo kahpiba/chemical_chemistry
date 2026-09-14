@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, RotateCcw, Sparkles } from 'lucide-react';
+import { Search, RotateCcw, Sparkles, Filter, X } from 'lucide-react';
 import { ELEMENTS, CATEGORIES } from '../../data/elements';
 import type { ElementData, ElementCategory } from '../../data/elements';
 import { AtomScene } from './AtomScene';
@@ -38,75 +38,117 @@ export const PeriodicTable: React.FC<PeriodicTableProps> = ({
   // Current active preview element (default to Hydrogen or Carbon if none selected)
   const currentPreview = selectedElement || ELEMENTS[5]; // Default to Carbon (C)
 
+  const isFiltered = Boolean(searchQuery || activeCategory !== 'all' || phaseFilter !== 'all');
+
   return (
     <div className="periodic-view">
       {/* Search & Category Filter Bar */}
       <div className="periodic-controls glass-panel">
-        <div className="search-wrapper">
-          <Search size={16} className="search-icon" />
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Cari simbol, nama, nomor atom (cth: Fe, Emas, 26)..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-
-        {/* Categories Bar */}
-        <div className="category-filters">
-          <button
-            className={`filter-pill ${activeCategory === 'all' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('all')}
-          >
-            Semua Golongan
-          </button>
-          {(Object.keys(CATEGORIES) as ElementCategory[]).map((catKey) => {
-            const cat = CATEGORIES[catKey];
-            const isActive = activeCategory === catKey;
-            return (
+        {/* Top Tier: Search Bar (Left) + Counter & Phase Control (Right) */}
+        <div className="controls-top-row">
+          <div className="search-wrapper">
+            <Search size={16} className="search-icon" />
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Cari simbol, nama, atau nomor atom (cth: Fe, Emas, 26)..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
               <button
-                key={catKey}
-                className={`filter-pill ${isActive ? 'active' : ''}`}
-                style={isActive ? { backgroundColor: cat.color, borderColor: cat.color } : {}}
-                onClick={() => setActiveCategory(activeCategory === catKey ? 'all' : catKey)}
+                type="button"
+                className="search-clear-btn"
+                onClick={() => setSearchQuery('')}
+                title="Hapus pencarian"
               >
-                <span
-                  className="filter-color-dot"
-                  style={{ backgroundColor: cat.color }}
-                />
-                <span>{cat.nameId}</span>
+                <X size={14} />
               </button>
-            );
-          })}
+            )}
+          </div>
+
+          <div className="controls-top-actions">
+            {/* Matched Count Badge */}
+            <div className="matched-counter-badge">
+              <span>Menampilkan: <strong>{matchingNumbers.size}</strong> / 118 Unsur</span>
+            </div>
+
+            {/* Segmented Phase (Wujud Zat) Selector */}
+            <div className="phase-segmented-control" role="group" aria-label="Filter Wujud Zat">
+              <span className="control-section-label">Wujud:</span>
+              {(['all', 'solid', 'liquid', 'gas'] as const).map((p) => {
+                const label = p === 'all' ? 'Semua' : p === 'solid' ? 'Padat' : p === 'liquid' ? 'Cair' : 'Gas';
+                const isSelected = phaseFilter === p;
+                return (
+                  <button
+                    key={p}
+                    type="button"
+                    className={`phase-segment-btn ${isSelected ? 'active' : ''}`}
+                    onClick={() => setPhaseFilter(p)}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Reset All Filters Button */}
+            {isFiltered && (
+              <button
+                type="button"
+                className="btn btn-secondary reset-filter-btn"
+                onClick={() => {
+                  setSearchQuery('');
+                  setActiveCategory('all');
+                  setPhaseFilter('all');
+                }}
+                title="Reset Semua Filter"
+              >
+                <RotateCcw size={13} />
+                <span>Reset</span>
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Phase Filter Buttons */}
-        <div style={{ display: 'flex', gap: '4px' }}>
-          {(['all', 'solid', 'liquid', 'gas'] as const).map((p) => (
+        {/* Subtle Divider */}
+        <div className="controls-divider" />
+
+        {/* Bottom Tier: Category Chips */}
+        <div className="controls-bottom-row">
+          <div className="category-row-label">
+            <Filter size={13} color="#0284c7" />
+            <span>Golongan:</span>
+          </div>
+
+          <div className="category-filters-list">
             <button
-              key={p}
-              className={`btn btn-ghost ${phaseFilter === p ? 'btn-primary' : ''}`}
-              style={{ padding: '4px 10px', fontSize: '11px', textTransform: 'capitalize' }}
-              onClick={() => setPhaseFilter(p)}
+              type="button"
+              className={`filter-pill ${activeCategory === 'all' ? 'active' : ''}`}
+              onClick={() => setActiveCategory('all')}
             >
-              {p === 'all' ? 'Semua Wujud' : p === 'solid' ? 'Padat' : p === 'liquid' ? 'Cair' : 'Gas'}
+              Semua Golongan
             </button>
-          ))}
-          {(searchQuery || activeCategory !== 'all' || phaseFilter !== 'all') && (
-            <button
-              className="btn btn-ghost"
-              style={{ padding: '4px 8px' }}
-              onClick={() => {
-                setSearchQuery('');
-                setActiveCategory('all');
-                setPhaseFilter('all');
-              }}
-              title="Reset Filter"
-            >
-              <RotateCcw size={14} />
-            </button>
-          )}
+            {(Object.keys(CATEGORIES) as ElementCategory[]).map((catKey) => {
+              const cat = CATEGORIES[catKey];
+              const isActive = activeCategory === catKey;
+              return (
+                <button
+                  key={catKey}
+                  type="button"
+                  className={`filter-pill ${isActive ? 'active' : ''}`}
+                  style={isActive ? { backgroundColor: cat.color, borderColor: cat.color } : {}}
+                  onClick={() => setActiveCategory(activeCategory === catKey ? 'all' : catKey)}
+                >
+                  <span
+                    className="filter-color-dot"
+                    style={{ backgroundColor: cat.color }}
+                  />
+                  <span>{cat.nameId}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 

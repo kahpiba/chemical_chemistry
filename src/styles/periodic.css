@@ -5,26 +5,37 @@
   width: 100%;
 }
 
-/* Control Bar: Search & Category Filter */
+/* Control Bar: Structured 2-Tier Search & Category Filter */
 .periodic-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+}
+
+/* Top Row: Search Input + Counter & Phase Control */
+.controls-top-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  padding: 12px 18px;
+  gap: 16px;
   flex-wrap: wrap;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 2px 12px -2px rgba(15, 23, 42, 0.04);
+  width: 100%;
 }
 
 .search-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  flex: 0 1 320px;
-  min-width: 240px;
+  flex: 1 1 340px;
+  max-width: 440px;
+  min-width: 260px;
 }
 
 .search-icon {
@@ -36,10 +47,10 @@
 
 .search-input {
   width: 100%;
-  padding: 9px 12px 9px 38px;
+  padding: 8px 34px 8px 38px;
   background: #ffffff;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
   color: var(--text-primary);
   font-size: 13px;
   outline: none;
@@ -52,13 +63,130 @@
   box-shadow: 0 0 0 3px var(--accent-cyan-glow);
 }
 
-.category-filters {
+.search-clear-btn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.search-clear-btn:hover {
+  color: #0f172a;
+}
+
+.controls-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.matched-counter-badge {
+  font-size: 12px;
+  color: #475569;
+  background: #f8fafc;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.matched-counter-badge strong {
+  color: #0284c7;
+  font-weight: 700;
+}
+
+.phase-segmented-control {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.control-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  padding: 0 6px 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.phase-segment-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.phase-segment-btn:hover {
+  color: #0f172a;
+}
+
+.phase-segment-btn.active {
+  background: #ffffff;
+  color: #0284c7;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+}
+
+.reset-filter-btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  gap: 5px;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+}
+
+/* Divider Between Tiers */
+.controls-divider {
+  width: 100%;
+  height: 1px;
+  background: #f1f5f9;
+}
+
+/* Bottom Row: Category Chips */
+.controls-bottom-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.category-row-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.category-filters-list {
   display: flex;
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
   flex: 1;
-  justify-content: flex-end;
 }
 
 .filter-pill {
@@ -66,34 +194,37 @@
   align-items: center;
   gap: 6px;
   padding: 5px 12px;
-  border-radius: var(--radius-full);
+  border-radius: 20px;
   background: #ffffff;
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
+  border: 1px solid #e2e8f0;
+  color: #334155;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
   user-select: none;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
 }
 
 .filter-pill:hover {
   background: #f8fafc;
   border-color: #cbd5e1;
-  color: var(--text-primary);
+  color: #0f172a;
+  transform: translateY(-1px);
 }
 
 .filter-pill.active {
   border-color: currentColor;
-  box-shadow: 0 2px 8px currentColor;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   color: #ffffff !important;
+  transform: translateY(-1px);
 }
 
 .filter-color-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
 /* 18-Column Periodic Grid */
