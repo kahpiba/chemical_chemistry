@@ -97,7 +97,7 @@ export function App() {
   };
 
   return (
-    <div className="app-container">
+    <div className="app-layout">
       {/* Top Application Header */}
       <Header
         activeTab={activeTab}
@@ -115,8 +115,9 @@ export function App() {
         onToggleMute={handleToggleMute}
       />
 
-      {/* Main Content Body */}
-      <main className="main-content">
+      {/* Main Content Body Container */}
+      <div className="app-container">
+        <main className="main-content">
         {activeTab === 'periodic' && (
           <PeriodicTable
             selectedElement={selectedElement}
@@ -206,6 +207,7 @@ export function App() {
         {activeTab === 'compare' && <ElementComparison />}
         {activeTab === 'quiz' && <QuizArena />}
       </main>
+      </div>
 
       {/* Slide-out Inspector Drawer */}
       <DetailDrawer

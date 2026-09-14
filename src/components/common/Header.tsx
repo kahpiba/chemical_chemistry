@@ -8,7 +8,7 @@ import {
   VolumeX,
 } from 'lucide-react';
 import { playClick } from '../../utils/audio';
-import { NAV_CATEGORIES, getModuleCategory, getModuleInfo } from '../../data/navigationModules';
+import { NAV_CATEGORIES, getModuleCategory } from '../../data/navigationModules';
 import { NavIcon } from './NavIcon';
 
 export type ActiveTab =
@@ -50,6 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -60,6 +61,15 @@ export const Header: React.FC<HeaderProps> = ({
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Clear timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
   }, []);
 
   // Keyboard shortcut: Ctrl+K or Cmd+K to open Quick Switcher
@@ -75,10 +85,34 @@ export const Header: React.FC<HeaderProps> = ({
   }, [onOpenQuickSwitcher]);
 
   const activeCategory = getModuleCategory(activeTab);
-  const activeInfo = getModuleInfo(activeTab);
 
-  const handleCategoryClick = (categoryId: string) => {
-    setOpenDropdown(openDropdown === categoryId ? null : categoryId);
+  const handleMouseEnter = (categoryId: string) => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setOpenDropdown(categoryId);
+  };
+
+  const handleMouseLeave = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+    }
+    closeTimeoutRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 220);
+  };
+
+  const handleCategoryClick = (cat: (typeof NAV_CATEGORIES)[0]) => {
+    playClick();
+    if (cat.id !== activeCategory.id) {
+      // Direct navigation to this category's primary module!
+      onTabChange(cat.items[0].id);
+      setOpenDropdown(cat.id);
+    } else {
+      // Toggle dropdown if already on this category
+      setOpenDropdown((prev) => (prev === cat.id ? null : cat.id));
+    }
   };
 
   const handleSelectModule = (tabId: ActiveTab) => {
@@ -93,9 +127,10 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Brand Group */}
         <div className="header-brand-group">
           <button
+            type="button"
             className="brand-badge-link"
             onClick={() => handleSelectModule('periodic')}
-            title="Kembali ke Tabel Periodik"
+            title="Kembali ke Beranda Tabel Periodik"
           >
             <div className="brand-icon-box">
               <Atom size={22} />
@@ -105,15 +140,9 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="brand-subtitle-tag">Virtual Lab 3D</span>
             </div>
           </button>
-
-          {/* Active Module Indicator Badge (Desktop & Tablet) */}
-          <div className="active-module-pill" title={`Kategori: ${activeCategory.title}`}>
-            <NavIcon name={activeInfo.iconName} size={14} color="#0284c7" />
-            <span>{activeInfo.title}</span>
-          </div>
         </div>
 
-        {/* Desktop Categorized Navigation Hub (4 Logical Clusters) */}
+        {/* Desktop Categorized Navigation Hub (4 Symmetrical Clusters) */}
         <nav className="desktop-nav-hub" ref={dropdownRef} aria-label="Kategori Modul">
           {NAV_CATEGORIES.map((cat) => {
             const isCategoryActive = cat.id === activeCategory.id;
@@ -123,45 +152,58 @@ export const Header: React.FC<HeaderProps> = ({
               <div
                 key={cat.id}
                 className="category-nav-dropdown-trigger"
-                onMouseEnter={() => setOpenDropdown(cat.id)}
-                onMouseLeave={() => setOpenDropdown(null)}
+                onMouseEnter={() => handleMouseEnter(cat.id)}
+                onMouseLeave={handleMouseLeave}
               >
                 <button
+                  type="button"
                   className={`category-pill-btn ${isCategoryActive ? 'active' : ''} ${isOpen ? 'open' : ''}`}
-                  onClick={() => handleCategoryClick(cat.id)}
+                  onClick={() => handleCategoryClick(cat)}
                   aria-expanded={isOpen}
+                  aria-haspopup="true"
+                  title={`Kategori ${cat.title} - Klik untuk memilih modul`}
                 >
                   <NavIcon name={cat.icon} size={15} color={isCategoryActive ? '#0284c7' : '#64748b'} />
-                  <span>{cat.title}</span>
+                  <span className="category-title-text">{cat.title}</span>
+                  {isCategoryActive && <span className="category-active-dot" />}
                   <ChevronDown size={14} className="category-chevron" />
                 </button>
 
-                {/* Floating Dropdown */}
+                {/* Floating Glass Dropdown */}
                 {isOpen && (
-                  <div className="category-floating-dropdown">
+                  <div
+                    className="category-floating-dropdown"
+                    onMouseEnter={() => handleMouseEnter(cat.id)}
+                    onMouseLeave={handleMouseLeave}
+                  >
                     {cat.items.map((item) => {
                       const isSelected = activeTab === item.id;
                       return (
                         <button
                           key={item.id}
+                          type="button"
                           className={`dropdown-item-btn ${isSelected ? 'selected' : ''}`}
-                          onClick={() => handleSelectModule(item.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSelectModule(item.id);
+                          }}
                         >
                           <div className="dropdown-item-icon">
                             <NavIcon name={item.iconName} size={16} />
                           </div>
                           <div className="dropdown-item-info">
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
                               <span className="dropdown-item-title">{item.title}</span>
                               {item.badge && (
                                 <span
                                   style={{
                                     fontSize: '9px',
                                     fontWeight: 700,
-                                    padding: '1px 5px',
+                                    padding: '1px 6px',
                                     borderRadius: '4px',
                                     background: isSelected ? '#bae6fd' : '#f1f5f9',
                                     color: isSelected ? '#0369a1' : '#64748b',
+                                    flexShrink: 0,
                                   }}
                                 >
                                   {item.badge}
