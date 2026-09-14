@@ -195,6 +195,24 @@ chemical_chemistry/
 └── vite.config.ts              # Konfigurasi bundler Vite
 ```
 
+## 🔬 Sumber Rujukan & Validitas Ilmiah (*Scientific References & Standards*)
+
+Seluruh data unsur, konstanta fisik, mekanisme reaksi, spektroskopi, dan klasifikasi bahaya dalam **Chemical Chemistry** disusun berdasarkan standar konsensus internasional lembaga sains resmi:
+
+| Lembaga / Sumber Rujukan | Dokumen / Standar Resmi | Waktu Pembaruan Terakhir | Parameter Data yang Digunakan |
+| :--- | :--- | :--- | :--- |
+| **IUPAC** *(International Union of Pure and Applied Chemistry)* | **IUPAC Periodic Table of the Elements** | **4 Mei 2022** *(Latest Official Release)* | Penataan 18 golongan, 7 periode, pengesahan 118 unsur (termasuk penetapan nama resmi Nh, Mc, Ts, Og pada 28 Nov 2016). |
+| **CIAAW** *(Commission on Isotopic Abundances & Atomic Weights)* | **Standard Atomic Weights of the Elements 2021/2022** | **Mei 2022** | Nilai massa atom relatif standar ($A_r$), kelimpahan isotop alamiah, dan ketidakpastian standar. |
+| **NIST** *(National Institute of Standards and Technology)* | **NIST Atomic Spectra Database (ASD) & Physical Reference Data** | **Revisi Berkala (NIST ASD v5.11)** | Panjang gelombang garis emisi atomik Balmer-Rydberg, energi ionisasi, dan konfigurasi elektron tingkat dasar (*ground state*). |
+| **CRC Press** | **CRC Handbook of Chemistry and Physics (104th & 105th Editions)** | **2023 – 2024** | Titik leleh, titik didih, densitas, afinitas elektron, keelektronegatifan skala Pauling, dan potensial reduksi standar ($E^\circ$). |
+| **NCBI / PubChem** | **PubChem Compound & Element Database** | **Pembaruan Berkelanjutan** | Struktur 3D koordinat kristalografi, geometri molekul, muatan parsial, dan data spektra FTIR. |
+| **NFPA & OSHA / GHS** | **NFPA 704 Standard System & UN GHS Rev. 9** | **Standar Global Aktif** | Diamond hazard NFPA 704 (Kesehatan, Kemudahan Terbakar, Instabilitas, Bahaya Khusus) dan piktogram GHS K3 laboratorium. |
+
+### 📅 Riwayat Pembaruan Tabel Periodik IUPAC
+1. **4 Mei 2022**: IUPAC merilis revisi tabel periodik resmi terbaru dengan pembaruan nilai bobot atom standar untuk sejumlah unsur berdasarkan pengukuran presisi tinggi CIAAW.
+2. **28 November 2016**: IUPAC resmi meratifikasi nama dan lambang 4 unsur penutup Periode 7: **Nihonium (113, Nh)**, **Moscovium (115, Mc)**, **Tennessine (117, Ts)**, dan **Oganesson (118, Og)**.
+3. **Status Mutakhir**: Seluruh 118 unsur kimia dari Hidrogen ($Z=1$) hingga Oganesson ($Z=118$) telah terpetakan secara lengkap, terverifikasi, dan valid.
+
 ---
 
 ## 🚀 Panduan Menjalankan Secara Lokal

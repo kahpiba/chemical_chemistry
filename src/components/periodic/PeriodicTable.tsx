@@ -230,6 +230,19 @@ export const PeriodicTable: React.FC<PeriodicTableProps> = ({
             <span>Ac-Lr</span>
           </div>
         </div>
+
+        {/* IUPAC & Scientific Source Footnote */}
+        <div className="periodic-citation-bar">
+          <div className="citation-left">
+            <span className="citation-badge">STANDAR IUPAC & CIAAW</span>
+            <span className="citation-text">
+              Data tabel periodik merujuk pada standar resmi <strong>IUPAC (International Union of Pure and Applied Chemistry)</strong> rilis terbaru <strong>4 Mei 2022</strong> (Standard Atomic Weights) dan <strong>NIST Physical Reference Data</strong>.
+            </span>
+          </div>
+          <div className="citation-right">
+            <span className="citation-date">Update Terakhir IUPAC: <strong>Mei 2022</strong></span>
+          </div>
+        </div>
       </div>
 
       {/* 3D Bohr Atom Simulation & Quick Stats Bar */}

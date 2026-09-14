@@ -387,6 +387,35 @@ export function App() {
               </ul>
             </div>
 
+            {/* Scientific Standards & Data Sources Box */}
+            <div
+              style={{
+                background: '#f0f9ff',
+                border: '1px solid #bae6fd',
+                borderRadius: '10px',
+                padding: '14px 16px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#0369a1', fontSize: '13px', fontWeight: 700 }}>
+                  <Sparkles size={16} color="#0284c7" />
+                  <span>Validitas & Sumber Rujukan Ilmiah:</span>
+                </div>
+                <span style={{ fontSize: '10px', fontWeight: 700, background: '#ffffff', color: '#0284c7', padding: '2px 8px', borderRadius: '4px', border: '1px solid #bae6fd' }}>
+                  Update IUPAC: 4 Mei 2022
+                </span>
+              </div>
+              <ul style={{ fontSize: '11px', color: '#334155', paddingLeft: '18px', lineHeight: 1.6, margin: 0 }}>
+                <li><strong>IUPAC (International Union of Pure and Applied Chemistry)</strong>: Standar rilis tabel periodik terbaru (4 Mei 2022) & penetapan nama 118 unsur lengkap (28 Nov 2016).</li>
+                <li><strong>CIAAW (Commission on Isotopic Abundances & Atomic Weights)</strong>: Nilai massa atom standar resmi (A_r).</li>
+                <li><strong>NIST Physical Reference Data & ASD</strong>: Konfigurasi elektron kuantum, energi ionisasi, dan spektrum emisi atomik.</li>
+                <li><strong>PubChem (NCBI) & CRC Handbook of Chemistry and Physics</strong>: Karakteristik termofisika, keelektronegatifan Pauling, dan klasifikasi bahaya NFPA 704 / GHS.</li>
+              </ul>
+            </div>
+
             <div
               style={{
                 display: 'flex',
