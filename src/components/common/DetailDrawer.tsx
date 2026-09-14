@@ -83,7 +83,7 @@ const HazardCard: React.FC<{ identifier: string }> = ({ identifier }) => {
               <span className="nfpa-val">{profile.nfpa.special || '-'}</span>
             </div>
           </div>
-          <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600 }}>NFPA 704</span>
+          <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 600 }}>NFPA 704</span>
         </div>
 
         {/* Hazard Statements & GHS Pictograms */}
@@ -155,7 +155,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
         background: 'rgba(15, 23, 42, 0.45)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)',
-        zIndex: 1400,
+        zIndex: 'var(--z-modal-backdrop)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -190,6 +190,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
+          zIndex: 'var(--z-modal)',
           animation: 'modalCardPop 0.24s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
         onClick={(e) => e.stopPropagation()}
@@ -539,7 +540,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
           alignItems: 'center',
         }}
       >
-        <span style={{ fontSize: '12px', color: '#94a3b8' }}>
+        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
           Tekan <strong>Esc</strong> atau klik di luar untuk menutup
         </span>
         <button className="btn btn-ghost" onClick={onClose}>

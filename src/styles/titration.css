@@ -157,7 +157,7 @@
   left: 8px;
   top: -5px;
   font-size: 7px;
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
   color: #64748b;
 }

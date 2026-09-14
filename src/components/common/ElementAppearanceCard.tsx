@@ -409,7 +409,7 @@ export const ElementAppearanceCard: React.FC<ElementAppearanceCardProps> = ({ el
           <span style={{ fontStyle: 'italic' }}>
             📷 {data.imageCaption}
           </span>
-          <span style={{ fontSize: '10px', color: '#94a3b8' }}>
+          <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
             Sumber: Wikimedia Commons
           </span>
         </div>
