@@ -1,5 +1,6 @@
 # ⚛️ Chemical Chemistry (Virtual Lab 3D)
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-chemical--chemistry.vercel.app-0284c7?style=flat-square&logo=vercel&logoColor=white)](https://chemical-chemistry.vercel.app/)
 [![React](https://img.shields.io/badge/React-19.x-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL%203D-000000?style=flat-square&logo=threedotjs&logoColor=white)](https://threejs.org/)
@@ -8,6 +9,8 @@
 
 > **Platform Edukasi Kimia Interaktif & Laboratorium Virtual 3D Komprehensif**  
 > Jelajahi 118 unsur kimia dengan simulasi atom Bohr 3D, bongkar ikatan molekul (*exploded view*), simulasikan aparatus titrasi buret, uji nyala spektroskopi, sel elektrokimia, hingga investigasi kasus Detektif Kimia secara visual dan saintifik.
+
+🌐 **Demo Langsung (Live Web App)**: [https://chemical-chemistry.vercel.app/](https://chemical-chemistry.vercel.app/)
 
 ---
 
