@@ -3,6 +3,7 @@ import { Search, RotateCcw, Sparkles, Filter, X } from 'lucide-react';
 import { ELEMENTS, CATEGORIES } from '../../data/elements';
 import type { ElementData, ElementCategory } from '../../data/elements';
 import { AtomScene } from './AtomScene';
+import { ElementAppearanceCard } from '../common/ElementAppearanceCard';
 
 interface PeriodicTableProps {
   onSelectElement: (el: ElementData) => void;
@@ -283,6 +284,9 @@ export const PeriodicTable: React.FC<PeriodicTableProps> = ({
               </p>
             </div>
           </div>
+
+          {/* Real Specimen Photography & Physical Form */}
+          <ElementAppearanceCard element={currentPreview} compact />
 
           <div className="properties-grid">
             <div className="property-item">

@@ -5,6 +5,7 @@ import type { ElementData } from '../../data/elements';
 import { MOLECULE_CATEGORIES } from '../../data/molecules';
 import type { MoleculeData } from '../../data/molecules';
 import { getHazardProfile } from '../../utils/hazardsLogic';
+import { ElementAppearanceCard } from './ElementAppearanceCard';
 import '../../styles/reaction.css';
 
 interface DetailDrawerProps {
@@ -300,6 +301,9 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                 </span>
               </div>
             </div>
+
+            {/* Real Specimen Photography & Physical Appearance */}
+            <ElementAppearanceCard element={element} />
 
             {/* Quick Bohr Action */}
             {onOpenInAtomViewer && (
